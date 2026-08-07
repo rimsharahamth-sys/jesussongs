@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🙏 Jesus Songs – Admin & Public</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #f7f3ee;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #f5e6d3;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header h1 i {
+            color: #f0c040;
+        }
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        #searchInput {
+            padding: 0.5rem 1rem 0.5rem 2.2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            outline: 2px solid transparent;
+            transition: 0.3s;
+            min-width: 200px;
+        }
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        #searchInput:focus {
+            outline-color: #f0c040;
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .search-wrap {
+            position: relative;
+        }
+        .search-wrap i {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.25s;
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+        .btn:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #f0c040;
+            color: #f0c040;
+        }
+        .btn-outline:hover {
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #e74c3c;
+        }
+        .song-count {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 0.5rem;
+        }
+
+        /* ----- MAIN ----- */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* ----- SONGS GRID ----- */
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .song-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+            border-left: 5px solid #b8860b;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+        .song-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+        .song-card-header {
+            padding: 1.2rem 1.5rem 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .song-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .song-title i {
+            color: #b8860b;
+            margin-right: 0.4rem;
+        }
+        .song-card-body {
+            padding: 0 1.5rem 0.5rem;
+            flex: 1;
+        }
+        .song-preview {
+            color: #555;
+            font-style: italic;
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .song-link {
+            padding: 0 1.5rem 0.5rem;
+        }
+        .song-link a {
+            color: #1a6fb5;
+            text-decoration: none;
+            font-size: 0.9rem;
+            word-break: break-all;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .song-link a:hover {
+            text-decoration: underline;
+        }
+        .song-footer {
+            padding: 0.7rem 1.5rem 1rem;
+            border-top: 1px solid #f0ebe5;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* ----- NO RESULTS ----- */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+            color: #777;
+        }
+
+        /* ----- ADMIN PANEL (hidden by default) ----- */
+        .admin-panel {
+            display: none;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .admin-panel h2 {
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b8860b;
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .admin-song-list {
+            margin-top: 2rem;
+            border-top: 2px dashed #ddd;
+            padding-top: 1.5rem;
+        }
+        .admin-song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .admin-song-item .title {
+            font-weight: 500;
+        }
+        .admin-song-item .actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        /* ----- LOGIN MODAL ----- */
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-overlay.active {
+            display: flex;
+        }
+        .login-modal {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .login-modal h2 {
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+        .login-modal input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .login-modal input:focus {
+            border-color: #b8860b;
+            outline: none;
+        }
+        .login-modal .btn {
+            width: 100%;
+            padding: 0.7rem;
+        }
+        .login-modal .error {
+            color: #c0392b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ----- FULL PAGE SONG DETAIL MODAL ----- */
+        .song-detail-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .song-detail-overlay.active {
+            display: flex;
+        }
+        .song-detail-modal {
+            background: #fff;
+            border-radius: 28px;
+            max-width: 720px;
+            width: 100%;
+            padding: 2.5rem 2.5rem 2rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .song-detail-modal .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #888;
+            cursor: pointer;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+        .song-detail-modal .close-btn:hover {
+            color: #222;
+            transform: scale(1.1);
+        }
+        .song-detail-modal .detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
+            padding-right: 2.5rem;
+        }
+        .song-detail-modal .detail-title i {
+            color: #b8860b;
+            margin-right: 0.5rem;
+        }
+        .song-detail-modal .detail-lyrics {
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            white-space: pre-line;
+            color: #2c2c2c;
+            margin: 1.5rem 0 1rem;
+            padding: 1rem 0;
+            border-top: 2px solid #f0ebe5;
+            border-bottom: 2px solid #f0ebe5;
+        }
+        .song-detail-modal .detail-link {
+            margin-top: 1rem;
+        }
+        .song-detail-modal .detail-link a {
+            color: #1a6fb5;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .song-detail-modal .detail-link a:hover {
+            text-decoration: underline;
+        }
+        .song-detail-modal .detail-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 650px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+            }
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            #searchInput {
+                min-width: 150px;
+                width: 100%;
+            }
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-panel {
+                padding: 1.2rem;
+            }
+            .song-detail-modal {
+                padding: 1.5rem;
+            }
+            .song-detail-modal .detail-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .footer {
+            background: #1a1a2e;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 1.2rem;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+        .footer a {
+            color: #f0c040;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <h1><i class="fas fa-cross"></i> Jesus Songs</h1>
+        <div class="header-controls">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search songs..." />
+            </div>
+            <span class="song-count" id="songCount">0 songs</span>
+            <button class="btn btn-outline" id="adminToggleBtn"><i class="fas fa-user-shield"></i> Admin</button>
+        </div>
+    </header>
+
+    <!-- ===== LOGIN MODAL ===== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-modal">
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <input type="text" id="loginUser" placeholder="Username" value="admin" />
+            <input type="password" id="loginPass" placeholder="Password" value="admin123" />
+            <button class="btn" id="loginBtn">Login</button>
+            <div class="error" id="loginError"></div>
+            <p style="margin-top:1rem; font-size:0.8rem; color:#999;">Default: admin / admin123</p>
+        </div>
+    </div>
+
+    <!-- ===== FULL PAGE SONG DETAIL MODAL ===== -->
+    <div class="song-detail-overlay" id="songDetailOverlay">
+        <div class="song-detail-modal">
+            <button class="close-btn" id="detailCloseBtn">&times;</button>
+            <div class="detail-title" id="detailTitle"><i class="fas fa-music"></i> Song Title</div>
+            <div class="detail-lyrics" id="detailLyrics">Lyrics will appear here.</div>
+            <div class="detail-link" id="detailLink"></div>
+            <div class="detail-footer"><i class="fas fa-cross"></i> Glory to God</div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main">
+
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <h2><i class="fas fa-plus-circle"></i> Add New Song</h2>
+            <div class="form-group">
+                <label>Song Title *</label>
+                <input type="text" id="songTitle" placeholder="e.g. Amazing Grace" />
+            </div>
+            <div class="form-group">
+                <label>Lyrics *</label>
+                <textarea id="songLyrics" placeholder="Enter full lyrics..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Audio / YouTube Link (optional)</label>
+                <input type="url" id="songLink" placeholder="https://www.youtube.com/watch?v=... or direct mp3 URL" />
+            </div>
+            <button class="btn" id="addSongBtn"><i class="fas fa-save"></i> Add Song</button>
+            <hr style="margin: 1.5rem 0;" />
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:1.1rem;">Existing Songs</h3>
+                <button class="btn btn-danger" id="logoutBtn" style="padding:0.3rem 1rem;">Logout</button>
+            </div>
+            <div class="admin-song-list" id="adminSongList"></div>
+        </div>
+
+        <!-- Public Songs Grid -->
+        <div class="songs-grid" id="songsGrid"></div>
+    </main>
+
+    <footer class="footer">
+        <p>✝️ Admin can add songs via login · Data stored in localStorage</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        //  DATA LAYER – localStorage
+        // ============================================================
+        const STORAGE_KEY = 'jesusSongs';
+        const ADMIN_CREDENTIALS = { username: 'admin', password: 'admin123' };
+
+        const defaultSongs = [{
+            id: 1,
+            title: 'Amazing Grace',
+            lyrics: `Amazing grace! How sweet the sound\nThat saved a wretch like me!\nI once was lost, but now am found,\nWas blind, but now I see.\n\n'Twas grace that taught my heart to fear,\nAnd grace my fears relieved;\nHow precious did that grace appear\nThe hour I first believed.`,
+            link: 'https://www.youtube.com/watch?v=3o8nYBlQwP0'
+        }, {
+            id: 2,
+            title: 'How Great Thou Art',
+            lyrics: `O Lord my God, when I in awesome wonder\nConsider all the worlds Thy hands have made,\nI see the stars, I hear the rolling thunder,\nThy power throughout the universe displayed.\n\nThen sings my soul, my Savior God, to Thee,\nHow great Thou art, how great Thou art!`,
+            link: ''
+        }, {
+            id: 3,
+            title: 'What a Friend We Have in Jesus',
+            lyrics: `What a Friend we have in Jesus,\nAll our sins and griefs to bear!\nWhat a privilege to carry\nEverything to God in prayer!\n\nO what peace we often forfeit,\nO what needless pain we bear,\nAll because we do not carry\nEverything to God in prayer.`,
+            link: ''
+        }];
+
+        function getSongs() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                try { return JSON.parse(data); } catch (e) { /* ignore */ }
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultSongs));
+            return defaultSongs;
+        }
+
+        function saveSongs(songs) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(songs));
+        }
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let songs = getSongs();
+        let searchQuery = '';
+        let isAdmin = false;
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const grid = document.getElementById('songsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const songCount = document.getElementById('songCount');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminToggleBtn = document.getElementById('adminToggleBtn');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const addSongBtn = document.getElementById('addSongBtn');
+        const songTitle = document.getElementById('songTitle');
+        const songLyrics = document.getElementById('songLyrics');
+        const songLink = document.getElementById('songLink');
+        const adminSongList = document.getElementById('adminSongList');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Detail modal refs
+        const detailOverlay = document.getElementById('songDetailOverlay');
+        const detailCloseBtn = document.getElementById('detailCloseBtn');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailLyrics = document.getElementById('detailLyrics');
+        const detailLink = document.getElementById('detailLink');
+
+        // ============================================================
+        //  RENDER
+        // ============================================================
+        function render() {
+            const filtered = songs.filter(s => {
+                const q = searchQuery.toLowerCase().trim();
+                if (q === '') return true;
+                return s.title.toLowerCase().includes(q) ||
+                    s.lyrics.toLowerCase().includes(q) ||
+                    (s.link && s.link.toLowerCase().includes(q));
+            });
+
+            songCount.textContent = filtered.length + ' song' + (filtered.length !== 1 ? 's' : '');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="no-results"><i class="fas fa-music" style="font-size:2rem;opacity:0.4;"></i><p>No songs found</p></div>`;
+            } else {
+                grid.innerHTML = filtered.map(song => {
+                    const preview = song.lyrics.split('\n').filter(l => l.trim() !== '')[0] || '...';
+                    const linkHtml = song.link ?
+                        `<div class="song-link"><a href="${song.link}" target="_blank"><i class="fas fa-play-circle"></i> Play / Watch</a></div>` :
+                        '';
+                    return `
+                    <div class="song-card" data-id="${song.id}">
+                        <div class="song-card-header">
+                            <span class="song-title"><i class="fas fa-music"></i>${song.title}</span>
+                        </div>
+                        <div class="song-card-body">
+                            <div class="song-preview">${preview}</div>
+                        </div>
+                        ${linkHtml}
+                        <div class="song-footer">
+                            <span><i class="far fa-eye"></i> Tap to view full</span>
+                            <i class="fas fa-arrow-right" style="color:#b8860b;"></i>
+                        </div>
+                    </div>
+                `;
+                }).join('');
+
+                // Attach click event using delegation
+                if (grid._listener) {
+                    grid.removeEventListener('click', grid._listener);
+                }
+                const handler = function(e) {
+                    const card = e.target.closest('.song-card');
+                    if (!card) return;
+                    // ignore clicks on links inside
+                    if (e.target.closest('a')) return;
+                    const id = parseInt(card.dataset.id);
+                    const song = songs.find(s => s.id === id);
+                    if (song) {
+                        openDetail(song);
+                    }
+                };
+                grid.addEventListener('click', handler);
+                grid._listener = handler;
+            }
+
+            // Admin list
+            if (isAdmin) {
+                renderAdminList();
+            }
+        }
+
+        // ----- Admin list -----
+        function renderAdminList() {
+            if (!adminSongList) return;
+            if (songs.length === 0) {
+                adminSongList.innerHTML = '<p style="color:#999;">No songs added yet.</p>';
+                return;
+            }
+            adminSongList.innerHTML = songs.map(s => `
+                <div class="admin-song-item">
+                    <span class="title">${s.title}</span>
+                    <div class="actions">
+                        <button class="btn btn-danger" style="padding:0.2rem 0.8rem;font-size:0.8rem;" data-id="${s.id}"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            adminSongList.querySelectorAll('.btn-danger').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    if (confirm('Delete this song?')) {
+                        songs = songs.filter(s => s.id !== id);
+                        saveSongs(songs);
+                        render();
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        //  DETAIL MODAL
+        // ============================================================
+        function openDetail(song) {
+            detailTitle.innerHTML = `<i class="fas fa-music"></i> ${song.title}`;
+            detailLyrics.textContent = song.lyrics;
+            if (song.link && song.link.trim() !== '') {
+                detailLink.innerHTML = `<a href="${song.link}" target="_blank"><i class="fas fa-play-circle"></i> Play / Watch</a>`;
+            } else {
+                detailLink.innerHTML = '';
+            }
+            detailOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // prevent background scroll
+        }
+
+        function closeDetail() {
+            detailOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ----- Detail event listeners -----
+        detailCloseBtn.addEventListener('click', closeDetail);
+        detailOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeDetail();
+        });
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && detailOverlay.classList.contains('active')) {
+                closeDetail();
+            }
+        });
+
+        // ============================================================
+        //  ADMIN LOGIC
+        // ============================================================
+        function showLogin() {
+            loginOverlay.classList.add('active');
+            loginError.textContent = '';
+            loginUser.value = ADMIN_CREDENTIALS.username;
+            loginPass.value = '';
+            loginPass.focus();
+        }
+        function hideLogin() {
+            loginOverlay.classList.remove('active');
+        }
+        function login() {
+            const u = loginUser.value.trim();
+            const p = loginPass.value.trim();
+            if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
+                isAdmin = true;
+                hideLogin();
+                adminPanel.classList.add('active');
+                adminToggleBtn.textContent = '👤 Admin';
+                adminToggleBtn.style.background = '#2ecc71';
+                adminToggleBtn.style.color = '#fff';
+                render();
+            } else {
+                loginError.textContent = '❌ Invalid username or password.';
+            }
+        }
+        function logout() {
+            isAdmin = false;
+            adminPanel.classList.remove('active');
+            adminToggleBtn.textContent = '🔐 Admin';
+            adminToggleBtn.style.background = '';
+            adminToggleBtn.style.color = '';
+            render();
+        }
+
+        // ============================================================
+        //  ADD SONG
+        // ============================================================
+        function addSong() {
+            const title = songTitle.value.trim();
+            const lyrics = songLyrics.value.trim();
+            const link = songLink.value.trim();
+            if (!title || !lyrics) {
+                alert('Title and Lyrics are required.');
+                return;
+            }
+            const newSong = {
+                id: Date.now(),
+                title,
+                lyrics,
+                link: link || ''
+            };
+            songs.push(newSong);
+            saveSongs(songs);
+            songTitle.value = '';
+            songLyrics.value = '';
+            songLink.value = '';
+            render();
+            alert('✅ Song added successfully!');
+        }
+
+        // ============================================================
+        //  EVENT LISTENERS
+        // ============================================================
+        searchInput.addEventListener('input', function() {
+            searchQuery = this.value;
+            render();
+        });
+
+        adminToggleBtn.addEventListener('click', function() {
+            if (isAdmin) {
+                logout();
+            } else {
+                showLogin();
+            }
+        });
+
+        loginBtn.addEventListener('click', login);
+        loginPass.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        loginUser.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        loginOverlay.addEventListener('click', function(e) {
+            if (e.target === this) hideLogin();
+        });
+        logoutBtn.addEventListener('click', logout);
+        addSongBtn.addEventListener('click', addSong);
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        render();
+        console.log('🙏 Jesus Songs – Full page detail view ready!');
+    </script>
+</body>
+</html>
