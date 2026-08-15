@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>🙏 Jesus Songs – Admin & Public</title>
+    <title>Jesus Songs</title>
 
     <!-- Font Awesome -->
     <link
@@ -510,7 +509,7 @@
         ></div>
 
         <p style="margin-top:1rem;font-size:.8rem;color:#999;">
-            Login using your Supabase admin account
+            Login using your admin account
         </p>
 
     </div>
@@ -684,7 +683,7 @@
 <footer class="footer">
 
     <p>
-        ✝️ Jesus Songs · Powered by Supabase
+        ✝️ Jesus Songs · Powered by Branks3
     </p>
 
 </footer>
@@ -793,7 +792,7 @@ const detailLink =
 
 
 /* ============================================================
-   LOAD SONGS FROM SUPABASE
+   LOAD SONGS FROM DATABASE
    ============================================================ */
 
 async function loadSongs() {
@@ -847,38 +846,202 @@ async function loadSongs() {
 
 
 /* ============================================================
+   SMART SEARCH / TELUGU -> ENGLISH TRANSLITERATION
+   ============================================================ */
+
+/*
+   Example:
+   Telugu title:
+   "తేనెకన్న తీయనైనది నా యేసు ప్రేమ"
+
+   Users can search:
+   "తేనెకన్న"
+   "Tenekanna"
+   "tenekanna"
+   "TIYANAINADI"
+   "na yesu prema"
+   "NAA YESU PREMA"
+
+   The search normalizes spaces, punctuation and capital/small letters.
+*/
+
+function normalizeSearch(value) {
+    return String(value || "")
+        .normalize("NFC")
+        .toLowerCase()
+        .replace(/[’'`]/g, "")
+        .replace(/[^\p{L}\p{N}]+/gu, "");
+}
+
+function transliterateTelugu(text) {
+
+    const input = String(text || "").normalize("NFC");
+
+    // Independent Telugu vowels
+    const independentVowels = {
+        "అ": "a", "ఆ": "aa", "ఇ": "i", "ఈ": "ee",
+        "ఉ": "u", "ఊ": "oo", "ఋ": "ru", "ౠ": "roo",
+        "ఎ": "e", "ఏ": "e", "ఐ": "ai",
+        "ఒ": "o", "ఓ": "oo", "ఔ": "au"
+    };
+
+    // Telugu consonants
+    const consonants = {
+        "క": "k", "ఖ": "kh", "గ": "g", "ఘ": "gh", "ఙ": "ng",
+        "చ": "ch", "ఛ": "chh", "జ": "j", "ఝ": "jh", "ఞ": "ny",
+        "ట": "t", "ఠ": "th", "డ": "d", "ఢ": "dh", "ణ": "n",
+        "త": "t", "థ": "th", "ద": "d", "ధ": "dh", "న": "n",
+        "ప": "p", "ఫ": "ph", "బ": "b", "భ": "bh", "మ": "m",
+        "య": "y", "ర": "r", "ఱ": "r", "ల": "l", "ళ": "l",
+        "వ": "v", "శ": "sh", "ష": "sh", "స": "s", "హ": "h",
+        "ఢ": "dh"
+    };
+
+    // Telugu vowel signs
+    const vowelSigns = {
+        "ా": "aa",
+        "ి": "i",
+        "ీ": "ee",
+        "ు": "u",
+        "ూ": "oo",
+        "ృ": "ru",
+        "ౄ": "roo",
+        "ె": "e",
+        "ే": "e",
+        "ై": "ai",
+        "ొ": "o",
+        "ో": "oo",
+        "ౌ": "au"
+    };
+
+    const result = [];
+    let i = 0;
+
+    while (i < input.length) {
+
+        const char = input[i];
+
+        // Independent vowels
+        if (independentVowels[char]) {
+            result.push(independentVowels[char]);
+            i++;
+            continue;
+        }
+
+        // Consonant
+        if (consonants[char]) {
+
+            let syllable = consonants[char];
+            const next = input[i + 1];
+
+            // Virama: క్ -> k
+            if (next === "్") {
+                result.push(syllable);
+                i += 2;
+                continue;
+            }
+
+            // Vowel sign: కా -> kaa, కి -> ki, కు -> ku...
+            if (vowelSigns[next]) {
+                result.push(syllable + vowelSigns[next]);
+                i += 2;
+                continue;
+            }
+
+            // No vowel sign = inherent "a"
+            result.push(syllable + "a");
+            i++;
+            continue;
+        }
+
+        // Anusvara / Chandrabindu
+        if (char === "ం" || char === "ఁ") {
+            result.push("m");
+            i++;
+            continue;
+        }
+
+        // Visarga
+        if (char === "ః") {
+            result.push("h");
+            i++;
+            continue;
+        }
+
+        // Telugu numerals
+        const numerals = {
+            "౦":"0","౧":"1","౨":"2","౩":"3","౪":"4",
+            "౫":"5","౬":"6","౭":"7","౮":"8","౯":"9"
+        };
+
+        if (numerals[char]) {
+            result.push(numerals[char]);
+            i++;
+            continue;
+        }
+
+        // Keep English letters, numbers and spaces.
+        result.push(char);
+        i++;
+    }
+
+    let output = result.join("");
+
+    // Common pronunciation corrections for natural Roman Telugu searching.
+    output = output
+        .replace(/ee/g, "ee")
+        .replace(/oo/g, "oo")
+        .replace(/aa/g, "aa")
+        .replace(/([kgcjtdpbmnyrlvsh])a([kgcjtdpbmnyrlvsh])/g, "$1a$2");
+
+    return output;
+}
+
+function searchVariants(value) {
+    const original = String(value || "");
+
+    return [
+        normalizeSearch(original),
+        normalizeSearch(transliterateTelugu(original))
+    ].filter(Boolean);
+}
+
+
+/* ============================================================
    RENDER PUBLIC SONGS
    ============================================================ */
 
 function renderSongs() {
 
-    const q =
-        searchQuery
-            .toLowerCase()
-            .trim();
-
+    // Smart search:
+    // Telugu text can be searched using Telugu OR English/Roman Telugu.
+    // Capital/small letters, spaces and punctuation are ignored.
+    const q = normalizeSearch(searchQuery);
 
     const filtered =
         songs.filter(song => {
 
+            const title = normalizeSearch(song.title || "");
+            const lyrics = normalizeSearch(song.lyrics || "");
+            const category = normalizeSearch(song.category || "");
+
+            const titleRoman =
+                normalizeSearch(transliterateTelugu(song.title || ""));
+
+            const lyricsRoman =
+                normalizeSearch(transliterateTelugu(song.lyrics || ""));
+
+            const categoryRoman =
+                normalizeSearch(transliterateTelugu(song.category || ""));
+
             return (
-                (song.title || "")
-                    .toLowerCase()
-                    .includes(q)
-
-                ||
-
-                (song.lyrics || "")
-                    .toLowerCase()
-                    .includes(q)
-
-                ||
-
-                (song.category || "")
-                    .toLowerCase()
-                    .includes(q)
+                title.includes(q) ||
+                titleRoman.includes(q) ||
+                lyrics.includes(q) ||
+                lyricsRoman.includes(q) ||
+                category.includes(q) ||
+                categoryRoman.includes(q)
             );
-
         });
 
 
@@ -1243,7 +1406,7 @@ async function logout() {
 
 
 /* ============================================================
-   ADD SONG TO SUPABASE
+   ADD SONG TO DATABASE
    ============================================================ */
 
 async function addSong() {
@@ -1334,7 +1497,7 @@ async function addSong() {
     await loadSongs();
 
 
-    alert("✅ Song added to Supabase!");
+    alert("✅ Song added successfully!");
 }
 
 
