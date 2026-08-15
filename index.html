@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Jesus Songs</title>
+    <title>🙏 Jesus Songs – Admin & Public</title>
 
     <!-- Font Awesome -->
     <link
@@ -278,6 +279,58 @@
         .admin-song-item .actions {
             display: flex;
             gap: .5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+
+        .edit-badge {
+            display: inline-block;
+            margin-left: .5rem;
+            padding: .2rem .55rem;
+            border-radius: 12px;
+            background: #eaf4ff;
+            color: #2471a3;
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: .7rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-cancel {
+            background: #777;
+            color: #fff;
+        }
+
+        .status-message {
+            margin-top: .8rem;
+            font-size: .9rem;
+            min-height: 1.2rem;
+        }
+
+        @media(max-width:650px) {
+            .admin-song-item {
+                align-items: flex-start;
+                gap: .7rem;
+                flex-direction: column;
+            }
+
+            .admin-song-item .actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         .login-overlay {
@@ -509,7 +562,7 @@
         ></div>
 
         <p style="margin-top:1rem;font-size:.8rem;color:#999;">
-            Login using your admin account
+            Login using your Supabase admin account
         </p>
 
     </div>
@@ -563,6 +616,8 @@
         class="admin-panel"
         id="adminPanel"
     >
+
+        <input type="hidden" id="editingSongId" value="">
 
         <h2>
             <i class="fas fa-plus-circle"></i>
@@ -628,13 +683,29 @@
         </div>
 
 
-        <button
-            class="btn"
-            id="addSongBtn"
-        >
-            <i class="fas fa-save"></i>
-            Add Song
-        </button>
+        <div class="form-actions">
+
+            <button
+                class="btn"
+                id="addSongBtn"
+            >
+                <i class="fas fa-save"></i>
+                Add Song
+            </button>
+
+            <button
+                class="btn btn-cancel"
+                id="cancelEditBtn"
+                type="button"
+                style="display:none;"
+            >
+                <i class="fas fa-times"></i>
+                Cancel Edit
+            </button>
+
+        </div>
+
+        <div class="status-message" id="formStatus"></div>
 
 
         <hr style="margin:1.5rem 0;" />
@@ -760,6 +831,15 @@ const logoutBtn =
 const addSongBtn =
     document.getElementById("addSongBtn");
 
+const cancelEditBtn =
+    document.getElementById("cancelEditBtn");
+
+const editingSongId =
+    document.getElementById("editingSongId");
+
+const formStatus =
+    document.getElementById("formStatus");
+
 const songTitle =
     document.getElementById("songTitle");
 
@@ -792,7 +872,7 @@ const detailLink =
 
 
 /* ============================================================
-   LOAD SONGS FROM DATABASE
+   LOAD SONGS FROM SUPABASE
    ============================================================ */
 
 async function loadSongs() {
@@ -846,202 +926,38 @@ async function loadSongs() {
 
 
 /* ============================================================
-   SMART SEARCH / TELUGU -> ENGLISH TRANSLITERATION
-   ============================================================ */
-
-/*
-   Example:
-   Telugu title:
-   "తేనెకన్న తీయనైనది నా యేసు ప్రేమ"
-
-   Users can search:
-   "తేనెకన్న"
-   "Tenekanna"
-   "tenekanna"
-   "TIYANAINADI"
-   "na yesu prema"
-   "NAA YESU PREMA"
-
-   The search normalizes spaces, punctuation and capital/small letters.
-*/
-
-function normalizeSearch(value) {
-    return String(value || "")
-        .normalize("NFC")
-        .toLowerCase()
-        .replace(/[’'`]/g, "")
-        .replace(/[^\p{L}\p{N}]+/gu, "");
-}
-
-function transliterateTelugu(text) {
-
-    const input = String(text || "").normalize("NFC");
-
-    // Independent Telugu vowels
-    const independentVowels = {
-        "అ": "a", "ఆ": "aa", "ఇ": "i", "ఈ": "ee",
-        "ఉ": "u", "ఊ": "oo", "ఋ": "ru", "ౠ": "roo",
-        "ఎ": "e", "ఏ": "e", "ఐ": "ai",
-        "ఒ": "o", "ఓ": "oo", "ఔ": "au"
-    };
-
-    // Telugu consonants
-    const consonants = {
-        "క": "k", "ఖ": "kh", "గ": "g", "ఘ": "gh", "ఙ": "ng",
-        "చ": "ch", "ఛ": "chh", "జ": "j", "ఝ": "jh", "ఞ": "ny",
-        "ట": "t", "ఠ": "th", "డ": "d", "ఢ": "dh", "ణ": "n",
-        "త": "t", "థ": "th", "ద": "d", "ధ": "dh", "న": "n",
-        "ప": "p", "ఫ": "ph", "బ": "b", "భ": "bh", "మ": "m",
-        "య": "y", "ర": "r", "ఱ": "r", "ల": "l", "ళ": "l",
-        "వ": "v", "శ": "sh", "ష": "sh", "స": "s", "హ": "h",
-        "ఢ": "dh"
-    };
-
-    // Telugu vowel signs
-    const vowelSigns = {
-        "ా": "aa",
-        "ి": "i",
-        "ీ": "ee",
-        "ు": "u",
-        "ూ": "oo",
-        "ృ": "ru",
-        "ౄ": "roo",
-        "ె": "e",
-        "ే": "e",
-        "ై": "ai",
-        "ొ": "o",
-        "ో": "oo",
-        "ౌ": "au"
-    };
-
-    const result = [];
-    let i = 0;
-
-    while (i < input.length) {
-
-        const char = input[i];
-
-        // Independent vowels
-        if (independentVowels[char]) {
-            result.push(independentVowels[char]);
-            i++;
-            continue;
-        }
-
-        // Consonant
-        if (consonants[char]) {
-
-            let syllable = consonants[char];
-            const next = input[i + 1];
-
-            // Virama: క్ -> k
-            if (next === "్") {
-                result.push(syllable);
-                i += 2;
-                continue;
-            }
-
-            // Vowel sign: కా -> kaa, కి -> ki, కు -> ku...
-            if (vowelSigns[next]) {
-                result.push(syllable + vowelSigns[next]);
-                i += 2;
-                continue;
-            }
-
-            // No vowel sign = inherent "a"
-            result.push(syllable + "a");
-            i++;
-            continue;
-        }
-
-        // Anusvara / Chandrabindu
-        if (char === "ం" || char === "ఁ") {
-            result.push("m");
-            i++;
-            continue;
-        }
-
-        // Visarga
-        if (char === "ః") {
-            result.push("h");
-            i++;
-            continue;
-        }
-
-        // Telugu numerals
-        const numerals = {
-            "౦":"0","౧":"1","౨":"2","౩":"3","౪":"4",
-            "౫":"5","౬":"6","౭":"7","౮":"8","౯":"9"
-        };
-
-        if (numerals[char]) {
-            result.push(numerals[char]);
-            i++;
-            continue;
-        }
-
-        // Keep English letters, numbers and spaces.
-        result.push(char);
-        i++;
-    }
-
-    let output = result.join("");
-
-    // Common pronunciation corrections for natural Roman Telugu searching.
-    output = output
-        .replace(/ee/g, "ee")
-        .replace(/oo/g, "oo")
-        .replace(/aa/g, "aa")
-        .replace(/([kgcjtdpbmnyrlvsh])a([kgcjtdpbmnyrlvsh])/g, "$1a$2");
-
-    return output;
-}
-
-function searchVariants(value) {
-    const original = String(value || "");
-
-    return [
-        normalizeSearch(original),
-        normalizeSearch(transliterateTelugu(original))
-    ].filter(Boolean);
-}
-
-
-/* ============================================================
    RENDER PUBLIC SONGS
    ============================================================ */
 
 function renderSongs() {
 
-    // Smart search:
-    // Telugu text can be searched using Telugu OR English/Roman Telugu.
-    // Capital/small letters, spaces and punctuation are ignored.
-    const q = normalizeSearch(searchQuery);
+    const q =
+        searchQuery
+            .toLowerCase()
+            .trim();
+
 
     const filtered =
         songs.filter(song => {
 
-            const title = normalizeSearch(song.title || "");
-            const lyrics = normalizeSearch(song.lyrics || "");
-            const category = normalizeSearch(song.category || "");
-
-            const titleRoman =
-                normalizeSearch(transliterateTelugu(song.title || ""));
-
-            const lyricsRoman =
-                normalizeSearch(transliterateTelugu(song.lyrics || ""));
-
-            const categoryRoman =
-                normalizeSearch(transliterateTelugu(song.category || ""));
-
             return (
-                title.includes(q) ||
-                titleRoman.includes(q) ||
-                lyrics.includes(q) ||
-                lyricsRoman.includes(q) ||
-                category.includes(q) ||
-                categoryRoman.includes(q)
+                (song.title || "")
+                    .toLowerCase()
+                    .includes(q)
+
+                ||
+
+                (song.lyrics || "")
+                    .toLowerCase()
+                    .includes(q)
+
+                ||
+
+                (song.category || "")
+                    .toLowerCase()
+                    .includes(q)
             );
+
         });
 
 
@@ -1176,37 +1092,44 @@ function renderSongs() {
 function renderAdminList() {
 
     if (!currentUser) {
-
         adminSongList.innerHTML = "";
-
         return;
     }
-
 
     if (songs.length === 0) {
-
         adminSongList.innerHTML =
             "<p style='color:#999;'>No songs yet.</p>";
-
         return;
     }
-
 
     adminSongList.innerHTML =
         songs.map(song => {
 
             return `
-
                 <div class="admin-song-item">
 
                     <span>
-
                         ${escapeHTML(song.title)}
-
+                        ${
+                            Number(editingSongId.value) === Number(song.id)
+                            ? `<span class="edit-badge">Editing</span>`
+                            : ""
+                        }
                     </span>
 
-
                     <div class="actions">
+
+                        <button
+                            class="btn btn-edit edit-song"
+                            data-id="${song.id}"
+                            style="
+                            padding:.25rem .8rem;
+                            font-size:.8rem;
+                            "
+                        >
+                            <i class="fas fa-pen"></i>
+                            Edit
+                        </button>
 
                         <button
                             class="btn btn-danger delete-song"
@@ -1216,13 +1139,8 @@ function renderAdminList() {
                             font-size:.8rem;
                             "
                         >
-
-                            <i
-                                class="fas fa-trash"
-                            ></i>
-
+                            <i class="fas fa-trash"></i>
                             Delete
-
                         </button>
 
                     </div>
@@ -1232,25 +1150,26 @@ function renderAdminList() {
 
         }).join("");
 
+    document
+        .querySelectorAll(".edit-song")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+                startEditSong(Number(button.dataset.id));
+            });
+
+        });
 
     document
         .querySelectorAll(".delete-song")
         .forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
-
-                    deleteSong(
-                        Number(button.dataset.id)
-                    );
-
-                }
-            );
+            button.addEventListener("click", () => {
+                deleteSong(Number(button.dataset.id));
+            });
 
         });
 }
-
 
 /* ============================================================
    OPEN SONG DETAIL
@@ -1406,7 +1325,7 @@ async function logout() {
 
 
 /* ============================================================
-   ADD SONG TO DATABASE
+   ADD SONG TO SUPABASE
    ============================================================ */
 
 async function addSong() {
@@ -1415,6 +1334,15 @@ async function addSong() {
 
         alert("Please login as admin first.");
 
+        return;
+    }
+
+    // If an existing song is selected for editing,
+    // update that song instead of inserting a new row.
+    const editId = Number(editingSongId.value);
+
+    if (editId) {
+        await updateSong(editId);
         return;
     }
 
@@ -1497,7 +1425,151 @@ async function addSong() {
     await loadSongs();
 
 
-    alert("✅ Song added successfully!");
+    alert("✅ Song added to Supabase!");
+}
+
+
+/* ============================================================
+   EDIT / UPDATE SONG
+   ============================================================ */
+
+function startEditSong(id) {
+
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const song = songs.find(
+        s => Number(s.id) === Number(id)
+    );
+
+    if (!song) {
+        alert("Song not found.");
+        return;
+    }
+
+    editingSongId.value = song.id;
+
+    songTitle.value = song.title || "";
+    songLyrics.value = song.lyrics || "";
+    songLink.value = song.audio_url || "";
+    songCategory.value = song.category || "";
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-save"></i> Update Song`;
+
+    cancelEditBtn.style.display = "inline-block";
+
+    formStatus.textContent =
+        `Editing: ${song.title || "Untitled song"}`;
+
+    formStatus.style.color = "#2471a3";
+
+    renderAdminList();
+
+    document
+        .getElementById("songTitle")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    songTitle.focus();
+}
+
+
+function cancelEdit() {
+
+    editingSongId.value = "";
+
+    songTitle.value = "";
+    songLyrics.value = "";
+    songLink.value = "";
+    songCategory.value = "";
+
+    addSongBtn.disabled = false;
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-save"></i> Add Song`;
+
+    cancelEditBtn.style.display = "none";
+
+    formStatus.textContent = "";
+
+    renderAdminList();
+}
+
+
+async function updateSong(id) {
+
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const title =
+        songTitle.value.trim();
+
+    const lyrics =
+        songLyrics.value.trim();
+
+    const link =
+        songLink.value.trim();
+
+    const category =
+        songCategory.value.trim();
+
+    if (!title || !lyrics) {
+        alert("Song title and lyrics are required.");
+        return;
+    }
+
+    addSongBtn.disabled = true;
+    cancelEditBtn.disabled = true;
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-spinner fa-spin"></i> Updating...`;
+
+    formStatus.textContent = "Updating song...";
+    formStatus.style.color = "#2471a3";
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("songs")
+            .update({
+                title: title,
+                lyrics: lyrics,
+                audio_url: link || null,
+                category: category || "Worship"
+            })
+            .eq("id", id);
+
+    addSongBtn.disabled = false;
+    cancelEditBtn.disabled = false;
+
+    if (error) {
+
+        console.error(error);
+
+        formStatus.textContent =
+            "❌ Update failed: " + error.message;
+
+        formStatus.style.color = "#c0392b";
+
+        addSongBtn.innerHTML =
+            `<i class="fas fa-save"></i> Update Song`;
+
+        return;
+    }
+
+    cancelEdit();
+
+    await loadSongs();
+
+    alert("✅ Song updated successfully!");
 }
 
 
@@ -1742,6 +1814,11 @@ grid.addEventListener(
 addSongBtn.addEventListener(
     "click",
     addSong
+);
+
+cancelEditBtn.addEventListener(
+    "click",
+    cancelEdit
 );
 
 
