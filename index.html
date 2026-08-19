@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -55,6 +54,7 @@ body{
     min-height:100vh;
     transition:.25s;
 }
+
 
 /* =========================================================
    HEADER
@@ -166,6 +166,7 @@ body{
     justify-content:center;
 }
 
+
 /* =========================================================
    MAIN
 ========================================================= */
@@ -267,6 +268,7 @@ body{
     color:var(--muted);
 }
 
+
 /* =========================================================
    ADMIN
 ========================================================= */
@@ -357,6 +359,7 @@ body{
     font-weight:700;
 }
 
+
 /* =========================================================
    LOGIN
 ========================================================= */
@@ -410,6 +413,7 @@ body{
     font-size:.9rem;
     margin-top:.7rem;
 }
+
 
 /* =========================================================
    LYRICS MODAL
@@ -476,23 +480,30 @@ body{
     border-bottom:2px solid var(--border);
 }
 
+
 /* =========================================================
-   MUSIC MINI PLAYER
+   MINI MUSIC PLAYER
 ========================================================= */
 
 .youtube-player{
     position:fixed;
     right:18px;
     bottom:18px;
-    width:360px;
+    width:380px;
     max-width:calc(100vw - 36px);
+
     background:var(--surface);
     color:var(--text);
+
     border:1px solid var(--border);
     border-radius:18px;
+
     overflow:hidden;
+
     box-shadow:0 14px 40px rgba(0,0,0,.3);
+
     z-index:700;
+
     display:none;
 }
 
@@ -500,7 +511,10 @@ body{
     display:block;
 }
 
-/* Hidden YouTube player */
+
+/* =========================================================
+   HIDDEN YOUTUBE
+========================================================= */
 
 #youtubeAudioFrame{
     position:fixed;
@@ -513,52 +527,43 @@ body{
     border:0;
 }
 
-/* PLAYER HEADER */
+
+/* =========================================================
+   PLAYER HEADER
+========================================================= */
 
 .player-head{
     min-height:65px;
     padding:.7rem .8rem;
+
     background:var(--surface-2);
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     gap:.7rem;
 }
-
-/*
-   IMPORTANT:
-   Mini player song area is clickable.
-   Clicking it opens lyrics.
-*/
 
 .player-info{
     display:flex;
     align-items:center;
     min-width:0;
     gap:.7rem;
-    cursor:pointer;
-    flex:1;
-    border-radius:12px;
-    padding:.2rem;
-    transition:.2s;
-}
-
-.player-info:hover{
-    background:rgba(240,192,64,.12);
-}
-
-.player-info:active{
-    transform:scale(.98);
 }
 
 .music-icon{
     width:42px;
     height:42px;
+
     flex:0 0 42px;
+
     border-radius:50%;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     background:#f0c040;
     color:#1a1a2e;
 }
@@ -570,6 +575,7 @@ body{
 .player-title{
     font-weight:700;
     font-size:.88rem;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -584,16 +590,18 @@ body{
 .player-actions{
     display:flex;
     gap:.15rem;
-    flex-shrink:0;
 }
 
 .player-actions button{
     width:34px;
     height:34px;
+
     border:0;
     border-radius:50%;
+
     background:transparent;
     color:var(--text);
+
     cursor:pointer;
 }
 
@@ -601,14 +609,95 @@ body{
     background:var(--border);
 }
 
-/* TIME */
+
+/* =========================================================
+   MINI PLAYER LYRICS
+========================================================= */
+
+.player-lyrics-section{
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+}
+
+.player-lyrics-toggle{
+    width:100%;
+
+    padding:.55rem .8rem;
+
+    border:0;
+
+    background:var(--surface-2);
+    color:var(--text);
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    font-weight:700;
+    font-size:.82rem;
+}
+
+.player-lyrics-toggle:hover{
+    background:var(--border);
+}
+
+.player-lyrics-toggle i{
+    color:var(--gold);
+}
+
+.player-lyrics{
+    display:none;
+
+    max-height:190px;
+
+    overflow-y:auto;
+
+    padding:.8rem 1rem;
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    font-family:Georgia,serif;
+
+    font-size:.88rem;
+
+    line-height:1.7;
+
+    white-space:pre-line;
+
+    scrollbar-width:thin;
+}
+
+.player-lyrics.show{
+    display:block;
+}
+
+.player-lyrics::-webkit-scrollbar{
+    width:5px;
+}
+
+.player-lyrics::-webkit-scrollbar-thumb{
+    background:#aaa;
+    border-radius:10px;
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
 
 .player-time{
     display:flex;
     align-items:center;
     gap:.5rem;
+
     padding:.55rem .8rem .15rem;
+
     color:var(--muted);
+
     font-size:.7rem;
 }
 
@@ -620,33 +709,42 @@ body{
     text-align:right;
 }
 
-/* SEEK */
-
 #seekBar{
     width:100%;
     height:5px;
+
     accent-color:#f0c040;
+
     cursor:pointer;
 }
 
-/* CONTROLS */
+
+/* =========================================================
+   CONTROLS
+========================================================= */
 
 .player-controls{
     display:flex;
     align-items:center;
     justify-content:center;
+
     gap:.7rem;
+
     padding:.45rem .7rem .75rem;
 }
 
 .control-btn{
     width:36px;
     height:36px;
+
     border:0;
     border-radius:50%;
+
     background:transparent;
     color:var(--text);
+
     cursor:pointer;
+
     display:flex;
     align-items:center;
     justify-content:center;
@@ -659,25 +757,34 @@ body{
 .control-btn.play-pause{
     width:46px;
     height:46px;
+
     background:#f0c040;
     color:#1a1a2e;
+
     font-size:1rem;
 }
 
 .volume-wrap{
     display:flex;
     align-items:center;
+
     gap:.3rem;
+
     margin-left:.25rem;
 }
 
 #volumeBar{
     width:65px;
+
     accent-color:#f0c040;
+
     cursor:pointer;
 }
 
-/* PROGRESS */
+
+/* =========================================================
+   PROGRESS
+========================================================= */
 
 .progress-bottom{
     height:3px;
@@ -687,17 +794,23 @@ body{
 .progress-bottom span{
     display:block;
     height:100%;
+
     width:0%;
+
     background:#f0c040;
 }
 
-/* COMPACT */
+
+/* =========================================================
+   COMPACT PLAYER
+========================================================= */
 
 .youtube-player.compact{
-    width:240px;
+    width:250px;
 }
 
 .youtube-player.compact .player-status,
+.youtube-player.compact .player-lyrics-section,
 .youtube-player.compact .player-time,
 .youtube-player.compact .player-controls,
 .youtube-player.compact .progress-bottom{
@@ -708,18 +821,25 @@ body{
     min-height:58px;
 }
 
+
 /* =========================================================
    FOOTER
 ========================================================= */
 
 .footer{
     background:#1a1a2e;
+
     color:rgba(255,255,255,.4);
+
     text-align:center;
+
     padding:1.2rem;
+
     font-size:.8rem;
+
     margin-top:2rem;
 }
+
 
 /* =========================================================
    MOBILE
@@ -753,8 +873,13 @@ body{
     .youtube-player{
         right:10px;
         bottom:10px;
+
         width:calc(100vw - 20px);
         max-width:calc(100vw - 20px);
+    }
+
+    .youtube-player.compact{
+        width:calc(100vw - 20px);
     }
 
     .admin-song-item{
@@ -768,7 +893,9 @@ body{
 </style>
 </head>
 
+
 <body>
+
 
 <!-- =========================================================
      HEADER
@@ -870,7 +997,7 @@ body{
 
 
 <!-- =========================================================
-     LYRICS MODAL
+     FULL LYRICS MODAL
 ========================================================= -->
 
 <div
@@ -883,7 +1010,6 @@ body{
         <button
             class="close-btn"
             id="detailCloseBtn"
-            type="button"
         >
             &times;
         </button>
@@ -913,7 +1039,10 @@ body{
 
 <main class="main">
 
-    <!-- ADMIN -->
+
+    <!-- =====================================================
+         ADMIN PANEL
+    ===================================================== -->
 
     <div
         class="admin-panel"
@@ -930,6 +1059,7 @@ body{
             Add New Song
         </h2>
 
+
         <div class="form-group">
 
             <label>Song Title *</label>
@@ -942,6 +1072,7 @@ body{
 
         </div>
 
+
         <div class="form-group">
 
             <label>Lyrics *</label>
@@ -952,6 +1083,7 @@ body{
             ></textarea>
 
         </div>
+
 
         <div class="form-group">
 
@@ -965,6 +1097,7 @@ body{
 
         </div>
 
+
         <div class="form-group">
 
             <label>Category</label>
@@ -977,12 +1110,12 @@ body{
 
         </div>
 
+
         <div class="form-actions">
 
             <button
                 class="btn"
                 id="addSongBtn"
-                type="button"
             >
                 <i class="fas fa-save"></i>
                 Add Song
@@ -991,7 +1124,6 @@ body{
             <button
                 class="btn btn-cancel"
                 id="cancelEditBtn"
-                type="button"
                 style="display:none"
             >
                 Cancel
@@ -999,12 +1131,15 @@ body{
 
         </div>
 
+
         <div
             class="status-message"
             id="formStatus"
         ></div>
 
+
         <hr style="margin:1.5rem 0">
+
 
         <div style="
             display:flex;
@@ -1017,12 +1152,12 @@ body{
             <button
                 class="btn btn-danger"
                 id="logoutBtn"
-                type="button"
             >
                 Logout
             </button>
 
         </div>
+
 
         <div
             class="admin-song-list"
@@ -1032,7 +1167,9 @@ body{
     </div>
 
 
-    <!-- SONGS -->
+    <!-- =====================================================
+         SONG GRID
+    ===================================================== -->
 
     <div
         class="songs-grid"
@@ -1043,7 +1180,7 @@ body{
 
 
 <!-- =========================================================
-     CUSTOM MUSIC PLAYER
+     MINI MUSIC PLAYER
 ========================================================= -->
 
 <div
@@ -1051,22 +1188,15 @@ body{
     id="youtubePlayer"
 >
 
+
+    <!-- PLAYER HEADER -->
+
     <div class="player-head">
 
-        <!--
-            CLICK THIS AREA TO OPEN LYRICS
-        -->
-
-        <div
-            class="player-info"
-            id="playerInfo"
-            title="Click to view lyrics"
-        >
+        <div class="player-info">
 
             <div class="music-icon">
-
                 <i class="fas fa-music"></i>
-
             </div>
 
             <div class="player-text">
@@ -1078,8 +1208,11 @@ body{
                     Now Playing
                 </div>
 
-                <div class="player-status">
-                    ♪ Playing from YouTube · Click for lyrics
+                <div
+                    class="player-status"
+                    id="playerStatus"
+                >
+                    ♪ Playing from YouTube
                 </div>
 
             </div>
@@ -1090,9 +1223,15 @@ body{
         <div class="player-actions">
 
             <button
+                id="lyricsToggleBtn"
+                title="Show Lyrics"
+            >
+                <i class="fas fa-align-left"></i>
+            </button>
+
+            <button
                 id="compactBtn"
                 title="Mini Player"
-                type="button"
             >
                 <i class="fas fa-minus"></i>
             </button>
@@ -1100,7 +1239,6 @@ body{
             <button
                 id="closePlayerBtn"
                 title="Stop"
-                type="button"
             >
                 <i class="fas fa-times"></i>
             </button>
@@ -1110,7 +1248,44 @@ body{
     </div>
 
 
-    <!-- CURRENT TIME + TOTAL DURATION -->
+    <!-- =====================================================
+         MINI PLAYER LYRICS
+    ===================================================== -->
+
+    <div class="player-lyrics-section">
+
+        <button
+            type="button"
+            class="player-lyrics-toggle"
+            id="playerLyricsToggle"
+        >
+
+            <span>
+                <i class="fas fa-book-open"></i>
+                Lyrics
+            </span>
+
+            <i
+                class="fas fa-chevron-down"
+                id="lyricsChevron"
+            ></i>
+
+        </button>
+
+
+        <div
+            class="player-lyrics"
+            id="playerLyrics"
+        >
+            No lyrics available.
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TIME + SEEK
+    ===================================================== -->
 
     <div class="player-time">
 
@@ -1134,7 +1309,9 @@ body{
     </div>
 
 
-    <!-- CONTROLS -->
+    <!-- =====================================================
+         CONTROLS
+    ===================================================== -->
 
     <div class="player-controls">
 
@@ -1142,28 +1319,28 @@ body{
             class="control-btn"
             id="back15Btn"
             title="Back 15 seconds"
-            type="button"
         >
             <i class="fas fa-rotate-left"></i>
         </button>
+
 
         <button
             class="control-btn play-pause"
             id="playPauseBtn"
             title="Play/Pause"
-            type="button"
         >
             <i class="fas fa-pause"></i>
         </button>
+
 
         <button
             class="control-btn"
             id="forward15Btn"
             title="Forward 15 seconds"
-            type="button"
         >
             <i class="fas fa-rotate-right"></i>
         </button>
+
 
         <div class="volume-wrap">
 
@@ -1327,14 +1504,31 @@ document.getElementById("detailLink");
 const themeToggleBtn =
 document.getElementById("themeToggleBtn");
 
+
+/* =========================================================
+   PLAYER DOM
+========================================================= */
+
 const customPlayer =
 document.getElementById("youtubePlayer");
 
-const playerInfo =
-document.getElementById("playerInfo");
-
 const playerTitle =
 document.getElementById("playerTitle");
+
+const playerStatus =
+document.getElementById("playerStatus");
+
+const playerLyrics =
+document.getElementById("playerLyrics");
+
+const playerLyricsToggle =
+document.getElementById("playerLyricsToggle");
+
+const lyricsToggleBtn =
+document.getElementById("lyricsToggleBtn");
+
+const lyricsChevron =
+document.getElementById("lyricsChevron");
 
 const seekBar =
 document.getElementById("seekBar");
@@ -1377,6 +1571,7 @@ function onYouTubeIframeAPIReady(){
     new YT.Player(
         "youtubeAudioFrame",
         {
+
             width:"1",
             height:"1",
 
@@ -1437,6 +1632,7 @@ function getYouTubeId(url){
 
     ];
 
+
     for(const pattern of patterns){
 
         const match =
@@ -1450,6 +1646,7 @@ function getYouTubeId(url){
 
     }
 
+
     if(
         /^[a-zA-Z0-9_-]{11}$/.test(value)
     ){
@@ -1458,9 +1655,81 @@ function getYouTubeId(url){
 
     }
 
+
     return null;
 
 }
+
+
+/* =========================================================
+   UPDATE MINI PLAYER LYRICS
+========================================================= */
+
+function updateMiniPlayerLyrics(song){
+
+    if(!song){
+
+        playerLyrics.textContent =
+        "No lyrics available.";
+
+        return;
+
+    }
+
+
+    const lyrics =
+    String(song.lyrics || "").trim();
+
+
+    if(lyrics){
+
+        playerLyrics.textContent =
+        lyrics;
+
+    }else{
+
+        playerLyrics.textContent =
+        "No lyrics available for this song.";
+
+    }
+
+}
+
+
+/* =========================================================
+   SHOW / HIDE MINI LYRICS
+========================================================= */
+
+function togglePlayerLyrics(){
+
+    const visible =
+    playerLyrics.classList.toggle("show");
+
+
+    lyricsChevron.className =
+    visible
+    ? "fas fa-chevron-up"
+    : "fas fa-chevron-down";
+
+
+    lyricsToggleBtn.title =
+    visible
+    ? "Hide Lyrics"
+    : "Show Lyrics";
+
+}
+
+
+playerLyricsToggle.addEventListener(
+    "click",
+    togglePlayerLyrics
+);
+
+
+lyricsToggleBtn.addEventListener(
+    "click",
+    togglePlayerLyrics
+);
 
 
 /* =========================================================
@@ -1471,6 +1740,7 @@ function playYouTube(song){
 
     const videoId =
     getYouTubeId(song.audio_url);
+
 
     if(!videoId){
 
@@ -1484,39 +1754,86 @@ function playYouTube(song){
 
     }
 
-    currentSong = song;
+
+    currentSong =
+    song;
+
+
+    /* ==============================================
+       UPDATE PLAYER SONG
+    ============================================== */
 
     playerTitle.textContent =
     song.title || "Now Playing";
+
+
+    playerStatus.textContent =
+    "♪ Playing from YouTube";
+
+
+    /* ==============================================
+       UPDATE LYRICS
+    ============================================== */
+
+    updateMiniPlayerLyrics(song);
+
+
+    /* ==============================================
+       SHOW LYRICS AUTOMATICALLY
+    ============================================== */
+
+    playerLyrics.classList.add("show");
+
+    lyricsChevron.className =
+    "fas fa-chevron-up";
+
+
+    lyricsToggleBtn.title =
+    "Hide Lyrics";
+
+
+    /* ==============================================
+       SHOW PLAYER
+    ============================================== */
 
     customPlayer.classList.add("active");
 
     customPlayer.classList.remove("compact");
 
-    seekBar.value = 0;
+
+    seekBar.value =
+    0;
+
 
     playerCurrentTime.textContent =
     "0:00";
 
+
     playerDuration.textContent =
     "0:00";
+
 
     progressFill.style.width =
     "0%";
 
+
     playPauseBtn.innerHTML =
     `<i class="fas fa-pause"></i>`;
 
+
+    /* ==============================================
+       YOUTUBE READY CHECK
+    ============================================== */
+
     if(!playerReady){
 
-        alert(
-            "YouTube player is still loading. " +
-            "Please click Play again."
-        );
+        playerStatus.textContent =
+        "♪ YouTube player loading...";
 
         return;
 
     }
+
 
     youtubePlayerAPI.loadVideoById({
 
@@ -1526,41 +1843,18 @@ function playYouTube(song){
 
     });
 
+
     youtubePlayerAPI.setVolume(
         Number(volumeBar.value)
     );
 
+
     youtubePlayerAPI.playVideo();
+
 
     startPlayerTimer();
 
 }
-
-
-/* =========================================================
-   MINI PLAYER → LYRICS
-========================================================= */
-
-/*
-   NEW FEATURE:
-   Click song title / music icon in mini player
-   → open current song lyrics.
-*/
-
-playerInfo.addEventListener(
-    "click",
-    function(){
-
-        if(!currentSong){
-
-            return;
-
-        }
-
-        openDetail(currentSong);
-
-    }
-);
 
 
 /* =========================================================
@@ -1574,9 +1868,13 @@ function handlePlayerState(event){
         playPauseBtn.innerHTML =
         `<i class="fas fa-pause"></i>`;
 
+        playerStatus.textContent =
+        "♪ Playing from YouTube";
+
         startPlayerTimer();
 
     }
+
 
     else if(
         event.data === YT.PlayerState.PAUSED
@@ -1585,9 +1883,13 @@ function handlePlayerState(event){
         playPauseBtn.innerHTML =
         `<i class="fas fa-play"></i>`;
 
+        playerStatus.textContent =
+        "⏸ Paused";
+
         stopPlayerTimer();
 
     }
+
 
     else if(
         event.data === YT.PlayerState.ENDED
@@ -1596,12 +1898,26 @@ function handlePlayerState(event){
         playPauseBtn.innerHTML =
         `<i class="fas fa-play"></i>`;
 
+        playerStatus.textContent =
+        "✓ Song finished";
+
         stopPlayerTimer();
 
-        seekBar.value = 100;
+        seekBar.value =
+        100;
 
         progressFill.style.width =
         "100%";
+
+    }
+
+
+    else if(
+        event.data === YT.PlayerState.BUFFERING
+    ){
+
+        playerStatus.textContent =
+        "⏳ Buffering...";
 
     }
 
@@ -1650,11 +1966,14 @@ function updatePlayerProgress(){
 
     }
 
+
     const duration =
     youtubePlayerAPI.getDuration();
 
+
     const current =
     youtubePlayerAPI.getCurrentTime();
+
 
     if(!duration || duration <= 0){
 
@@ -1662,20 +1981,28 @@ function updatePlayerProgress(){
 
     }
 
+
     playerCurrentTime.textContent =
     formatTime(current);
+
 
     playerDuration.textContent =
     formatTime(duration);
 
+
     const percent =
     (current / duration) * 100;
+
 
     seekBar.value =
     Math.min(
         100,
-        Math.max(0,percent)
+        Math.max(
+            0,
+            percent
+        )
     );
+
 
     progressFill.style.width =
     percent + "%";
@@ -1697,20 +2024,27 @@ function formatTime(seconds){
         )
     );
 
+
     const hours =
     Math.floor(
         seconds / 3600
     );
+
 
     const minutes =
     Math.floor(
         (seconds % 3600) / 60
     );
 
+
     const secs =
     String(
         seconds % 60
-    ).padStart(2,"0");
+    ).padStart(
+        2,
+        "0"
+    );
+
 
     if(hours > 0){
 
@@ -1724,6 +2058,7 @@ function formatTime(seconds){
 
     }
 
+
     return (
         minutes +
         ":" +
@@ -1734,7 +2069,7 @@ function formatTime(seconds){
 
 
 /* =========================================================
-   SEEK BAR
+   SEEK
 ========================================================= */
 
 seekBar.addEventListener(
@@ -1746,6 +2081,7 @@ seekBar.addEventListener(
     }
 );
 
+
 seekBar.addEventListener(
     "touchstart",
     function(){
@@ -1756,6 +2092,7 @@ seekBar.addEventListener(
     {passive:true}
 );
 
+
 seekBar.addEventListener(
     "input",
     function(){
@@ -1765,15 +2102,19 @@ seekBar.addEventListener(
         ? youtubePlayerAPI.getDuration()
         : 0;
 
+
         if(!duration) return;
+
 
         const target =
         (
             Number(this.value) / 100
         ) * duration;
 
+
         playerCurrentTime.textContent =
         formatTime(target);
+
 
         progressFill.style.width =
         this.value + "%";
@@ -1792,8 +2133,10 @@ function finishSeek(){
 
     }
 
+
     const duration =
     youtubePlayerAPI.getDuration();
+
 
     if(duration){
 
@@ -1802,12 +2145,14 @@ function finishSeek(){
             Number(seekBar.value) / 100
         ) * duration;
 
+
         youtubePlayerAPI.seekTo(
             target,
             true
         );
 
     }
+
 
     userSeeking = false;
 
@@ -1840,11 +2185,14 @@ playPauseBtn.addEventListener(
 
         if(!youtubePlayerAPI) return;
 
+
         const state =
         youtubePlayerAPI.getPlayerState();
 
+
         if(
-            state === YT.PlayerState.PLAYING
+            state ===
+            YT.PlayerState.PLAYING
         ){
 
             youtubePlayerAPI.pauseVideo();
@@ -1869,8 +2217,10 @@ back15Btn.addEventListener(
 
         if(!youtubePlayerAPI) return;
 
+
         const current =
         youtubePlayerAPI.getCurrentTime();
+
 
         youtubePlayerAPI.seekTo(
             Math.max(
@@ -1894,11 +2244,14 @@ forward15Btn.addEventListener(
 
         if(!youtubePlayerAPI) return;
 
+
         const current =
         youtubePlayerAPI.getCurrentTime();
 
+
         const duration =
         youtubePlayerAPI.getDuration();
+
 
         youtubePlayerAPI.seekTo(
             Math.min(
@@ -1922,6 +2275,7 @@ volumeBar.addEventListener(
 
         if(!youtubePlayerAPI) return;
 
+
         youtubePlayerAPI.setVolume(
             Number(this.value)
         );
@@ -1931,7 +2285,7 @@ volumeBar.addEventListener(
 
 
 /* =========================================================
-   CLOSE / STOP
+   CLOSE PLAYER
 ========================================================= */
 
 closePlayerBtn.addEventListener(
@@ -1944,9 +2298,13 @@ closePlayerBtn.addEventListener(
 
         }
 
+
         stopPlayerTimer();
 
-        currentSong = null;
+
+        currentSong =
+        null;
+
 
         customPlayer.classList.remove(
             "active"
@@ -1968,8 +2326,10 @@ compactBtn.addEventListener(
             "compact"
         );
 
+
         const icon =
         compactBtn.querySelector("i");
+
 
         if(
             customPlayer.classList.contains(
@@ -2006,15 +2366,18 @@ function applyTheme(theme){
     const dark =
     theme === "dark";
 
+
     document.body.classList.toggle(
         "dark",
         dark
     );
 
+
     themeToggleBtn.innerHTML =
     dark
     ? `<i class="fas fa-sun"></i>`
     : `<i class="fas fa-moon"></i>`;
+
 
     localStorage.setItem(
         "jesusSongsTheme",
@@ -2031,6 +2394,7 @@ function initTheme(){
         "jesusSongsTheme"
     );
 
+
     if(
         saved === "dark" ||
         saved === "light"
@@ -2042,14 +2406,18 @@ function initTheme(){
 
     }
 
+
     const dark =
     window.matchMedia &&
     window.matchMedia(
         "(prefers-color-scheme: dark)"
     ).matches;
 
+
     applyTheme(
-        dark ? "dark" : "light"
+        dark
+        ? "dark"
+        : "light"
     );
 
 }
@@ -2078,6 +2446,7 @@ async function loadSongs(){
     songCount.textContent =
     "Loading...";
 
+
     const {
         data,
         error
@@ -2085,11 +2454,18 @@ async function loadSongs(){
     await supabaseClient
     .from("songs")
     .select("*")
-    .order("id",{ascending:true});
+    .order(
+        "id",
+        {
+            ascending:true
+        }
+    );
+
 
     if(error){
 
         console.error(error);
+
 
         grid.innerHTML = `
 
@@ -2112,15 +2488,19 @@ async function loadSongs(){
 
         `;
 
+
         songCount.textContent =
         "0 songs";
+
 
         return;
 
     }
 
+
     songs =
     data || [];
+
 
     renderSongs();
 
@@ -2140,24 +2520,31 @@ function renderSongs(){
     .toLowerCase()
     .trim();
 
+
     const filtered =
     songs.filter(song => {
 
         return (
 
-            String(song.title || "")
+            String(
+                song.title || ""
+            )
             .toLowerCase()
             .includes(q)
 
             ||
 
-            String(song.lyrics || "")
+            String(
+                song.lyrics || ""
+            )
             .toLowerCase()
             .includes(q)
 
             ||
 
-            String(song.category || "")
+            String(
+                song.category || ""
+            )
             .toLowerCase()
             .includes(q)
 
@@ -2167,7 +2554,11 @@ function renderSongs(){
 
 
     songCount.textContent =
-    `${filtered.length} song${filtered.length !== 1 ? "s" : ""}`;
+    `${filtered.length} song${
+        filtered.length !== 1
+        ? "s"
+        : ""
+    }`;
 
 
     if(filtered.length === 0){
@@ -2178,7 +2569,10 @@ function renderSongs(){
 
                 <i
                     class="fas fa-music"
-                    style="font-size:2rem;opacity:.4"
+                    style="
+                        font-size:2rem;
+                        opacity:.4
+                    "
                 ></i>
 
                 <p>
@@ -2198,7 +2592,9 @@ function renderSongs(){
     filtered.map(song => {
 
         const preview =
-        String(song.lyrics || "")
+        String(
+            song.lyrics || ""
+        )
         .split("\n")
         .find(
             x => x.trim()
@@ -2206,8 +2602,10 @@ function renderSongs(){
         ||
         "...";
 
+
         const link =
         song.audio_url || "";
+
 
         return `
 
@@ -2246,6 +2644,7 @@ function renderSongs(){
                     link
                     ?
                     `
+
                     <button
                         type="button"
                         class="song-action-btn play-song"
@@ -2257,6 +2656,7 @@ function renderSongs(){
                         Play
 
                     </button>
+
                     `
                     :
                     ""
@@ -2315,21 +2715,28 @@ grid.addEventListener(
         const playButton =
         e.target.closest(".play-song");
 
+
         const viewButton =
         e.target.closest(".view-song");
 
 
-        if(playButton || viewButton){
+        if(
+            playButton ||
+            viewButton
+        ){
 
             e.stopPropagation();
+
 
             const id =
             Number(
                 (
                     playButton ||
                     viewButton
-                ).dataset.id
+                )
+                .dataset.id
             );
+
 
             const song =
             songs.find(
@@ -2337,10 +2744,16 @@ grid.addEventListener(
                 Number(s.id) === id
             );
 
+
             if(!song) return;
 
 
             if(playButton){
+
+                /*
+                 * PLAY CLICK:
+                 * Song + Lyrics Mini Player
+                 */
 
                 playYouTube(song);
 
@@ -2350,6 +2763,7 @@ grid.addEventListener(
 
             }
 
+
             return;
 
         }
@@ -2358,16 +2772,22 @@ grid.addEventListener(
         const card =
         e.target.closest(".song-card");
 
+
         if(!card) return;
 
+
         const id =
-        Number(card.dataset.id);
+        Number(
+            card.dataset.id
+        );
+
 
         const song =
         songs.find(
             s =>
             Number(s.id) === id
         );
+
 
         if(song){
 
@@ -2380,16 +2800,10 @@ grid.addEventListener(
 
 
 /* =========================================================
-   LYRICS
+   FULL LYRICS MODAL
 ========================================================= */
 
 function openDetail(song){
-
-    if(!song){
-
-        return;
-
-    }
 
     detailTitle.innerHTML = `
 
@@ -2430,11 +2844,6 @@ function openDetail(song){
             "click",
             function(){
 
-                /*
-                   Keep lyrics modal open.
-                   Start/restart this song.
-                */
-
                 playYouTube(song);
 
             }
@@ -2444,7 +2853,9 @@ function openDetail(song){
 
         detailLink.innerHTML = `
 
-            <span style="color:var(--muted)">
+            <span
+                style="color:var(--muted)"
+            >
 
                 <i class="fas fa-info-circle"></i>
 
@@ -2461,6 +2872,7 @@ function openDetail(song){
         "active"
     );
 
+
     document.body.style.overflow =
     "hidden";
 
@@ -2472,6 +2884,7 @@ function closeDetail(){
     detailOverlay.classList.remove(
         "active"
     );
+
 
     document.body.style.overflow =
     "";
@@ -2553,8 +2966,7 @@ function renderAdminList(){
 
                 ${
                     Number(editingSongId.value)
-                    ===
-                    Number(song.id)
+                    === Number(song.id)
 
                     ?
 
@@ -2573,9 +2985,8 @@ function renderAdminList(){
             <div class="actions">
 
                 <button
-                    type="button"
                     class="btn btn-edit edit-song"
-                    data-id="${escapeAttribute(song.id)}"
+                    data-id="${song.id}"
                 >
 
                     <i class="fas fa-pen"></i>
@@ -2586,9 +2997,8 @@ function renderAdminList(){
 
 
                 <button
-                    type="button"
                     class="btn btn-danger delete-song"
-                    data-id="${escapeAttribute(song.id)}"
+                    data-id="${song.id}"
                 >
 
                     <i class="fas fa-trash"></i>
@@ -2613,7 +3023,9 @@ function renderAdminList(){
             function(){
 
                 startEditSong(
-                    Number(this.dataset.id)
+                    Number(
+                        this.dataset.id
+                    )
                 );
 
             }
@@ -2631,7 +3043,9 @@ function renderAdminList(){
             function(){
 
                 deleteSong(
-                    Number(this.dataset.id)
+                    Number(
+                        this.dataset.id
+                    )
                 );
 
             }
@@ -2651,11 +3065,15 @@ async function login(){
     const email =
     loginEmail.value.trim();
 
+
     const password =
     loginPassword.value;
 
 
-    if(!email || !password){
+    if(
+        !email ||
+        !password
+    ){
 
         loginError.textContent =
         "Please enter email and password.";
@@ -2677,7 +3095,6 @@ async function login(){
     .signInWithPassword({
 
         email,
-
         password
 
     });
@@ -2715,7 +3132,7 @@ async function login(){
 
 
 /* =========================================================
-   SET ADMIN LOGGED IN
+   ADMIN LOGGED IN
 ========================================================= */
 
 function setAdminLoggedIn(){
@@ -2723,8 +3140,10 @@ function setAdminLoggedIn(){
     adminToggleBtn.innerHTML =
     `<i class="fas fa-user"></i> Logout`;
 
+
     adminToggleBtn.style.background =
     "#2ecc71";
+
 
     adminToggleBtn.style.color =
     "#fff";
@@ -2740,20 +3159,27 @@ async function logout(){
 
     await supabaseClient.auth.signOut();
 
-    currentUser = null;
+
+    currentUser =
+    null;
+
 
     adminPanel.classList.remove(
         "active"
     );
 
+
     adminToggleBtn.innerHTML =
     `<i class="fas fa-user-shield"></i> Admin`;
+
 
     adminToggleBtn.style.background =
     "";
 
+
     adminToggleBtn.style.color =
     "";
+
 
     renderAdminList();
 
@@ -2778,8 +3204,10 @@ adminToggleBtn.addEventListener(
                 "active"
             );
 
+
             loginError.textContent =
             "";
+
 
             loginEmail.focus();
 
@@ -2807,7 +3235,9 @@ async function addSong(){
 
 
     const editId =
-    Number(editingSongId.value);
+    Number(
+        editingSongId.value
+    );
 
 
     if(editId){
@@ -2822,17 +3252,23 @@ async function addSong(){
     const title =
     songTitle.value.trim();
 
+
     const lyrics =
     songLyrics.value.trim();
 
+
     const link =
     songLink.value.trim();
+
 
     const category =
     songCategory.value.trim();
 
 
-    if(!title || !lyrics){
+    if(
+        !title ||
+        !lyrics
+    ){
 
         alert(
             "Song title and lyrics are required."
@@ -2845,6 +3281,7 @@ async function addSong(){
 
     addSongBtn.disabled =
     true;
+
 
     addSongBtn.textContent =
     "Saving...";
@@ -2875,6 +3312,7 @@ async function addSong(){
     addSongBtn.disabled =
     false;
 
+
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Add Song`;
 
@@ -2893,7 +3331,9 @@ async function addSong(){
 
     clearForm();
 
+
     await loadSongs();
+
 
     alert(
         "✅ Song added successfully!"
@@ -2902,14 +3342,8 @@ async function addSong(){
 }
 
 
-addSongBtn.addEventListener(
-    "click",
-    addSong
-);
-
-
 /* =========================================================
-   EDIT
+   EDIT SONG
 ========================================================= */
 
 function startEditSong(id){
@@ -2917,8 +3351,10 @@ function startEditSong(id){
     const song =
     songs.find(
         s =>
-        Number(s.id) === Number(id)
+        Number(s.id) ===
+        Number(id)
     );
+
 
     if(!song) return;
 
@@ -2926,14 +3362,18 @@ function startEditSong(id){
     editingSongId.value =
     song.id;
 
+
     songTitle.value =
     song.title || "";
+
 
     songLyrics.value =
     song.lyrics || "";
 
+
     songLink.value =
     song.audio_url || "";
+
 
     songCategory.value =
     song.category || "";
@@ -2942,43 +3382,60 @@ function startEditSong(id){
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Update Song`;
 
+
     cancelEditBtn.style.display =
     "inline-block";
 
+
     formStatus.textContent =
     "Editing: " +
-    (song.title || "Song");
+    (
+        song.title ||
+        "Song"
+    );
 
 
     renderAdminList();
+
 
     songTitle.focus();
 
 }
 
 
+/* =========================================================
+   CLEAR FORM
+========================================================= */
+
 function clearForm(){
 
     editingSongId.value =
     "";
 
+
     songTitle.value =
     "";
+
 
     songLyrics.value =
     "";
 
+
     songLink.value =
     "";
+
 
     songCategory.value =
     "";
 
+
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Add Song`;
 
+
     cancelEditBtn.style.display =
     "none";
+
 
     formStatus.textContent =
     "";
@@ -2993,7 +3450,7 @@ cancelEditBtn.addEventListener(
 
 
 /* =========================================================
-   UPDATE
+   UPDATE SONG
 ========================================================= */
 
 async function updateSong(id){
@@ -3001,17 +3458,23 @@ async function updateSong(id){
     const title =
     songTitle.value.trim();
 
+
     const lyrics =
     songLyrics.value.trim();
 
+
     const link =
     songLink.value.trim();
+
 
     const category =
     songCategory.value.trim();
 
 
-    if(!title || !lyrics){
+    if(
+        !title ||
+        !lyrics
+    ){
 
         alert(
             "Song title and lyrics are required."
@@ -3040,7 +3503,10 @@ async function updateSong(id){
         category || "Worship"
 
     })
-    .eq("id",id);
+    .eq(
+        "id",
+        id
+    );
 
 
     if(error){
@@ -3055,9 +3521,50 @@ async function updateSong(id){
     }
 
 
+    /*
+     * If currently playing song was edited,
+     * update lyrics in Mini Player immediately.
+     */
+
+    if(
+        currentSong &&
+        Number(currentSong.id) ===
+        Number(id)
+    ){
+
+        currentSong =
+        {
+            ...currentSong,
+
+            title:title,
+
+            lyrics:lyrics,
+
+            audio_url:
+            link || null,
+
+            category:
+            category || "Worship"
+
+        };
+
+
+        playerTitle.textContent =
+        title;
+
+
+        updateMiniPlayerLyrics(
+            currentSong
+        );
+
+    }
+
+
     clearForm();
 
+
     await loadSongs();
+
 
     alert(
         "✅ Song updated!"
@@ -3067,14 +3574,16 @@ async function updateSong(id){
 
 
 /* =========================================================
-   DELETE
+   DELETE SONG
 ========================================================= */
 
 async function deleteSong(id){
 
-    if(!confirm(
-        "Are you sure you want to delete this song?"
-    )){
+    if(
+        !confirm(
+            "Are you sure you want to delete this song?"
+        )
+    ){
 
         return;
 
@@ -3087,7 +3596,10 @@ async function deleteSong(id){
     await supabaseClient
     .from("songs")
     .delete()
-    .eq("id",id);
+    .eq(
+        "id",
+        id
+    );
 
 
     if(error){
@@ -3102,7 +3614,24 @@ async function deleteSong(id){
     }
 
 
+    /*
+     * If deleted song is playing,
+     * close Mini Player.
+     */
+
+    if(
+        currentSong &&
+        Number(currentSong.id) ===
+        Number(id)
+    ){
+
+        closePlayerBtn.click();
+
+    }
+
+
     await loadSongs();
+
 
     alert(
         "✅ Song deleted."
@@ -3181,12 +3710,29 @@ logoutBtn.addEventListener(
 
 function escapeHTML(value){
 
-    return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -3211,14 +3757,19 @@ async function checkUser(){
     .getUser();
 
 
-    if(data && data.user){
+    if(
+        data &&
+        data.user
+    ){
 
         currentUser =
         data.user;
 
+
         adminPanel.classList.add(
             "active"
         );
+
 
         setAdminLoggedIn();
 
@@ -3249,11 +3800,14 @@ async function init(){
 
     initTheme();
 
+
     await checkUser();
+
 
     await loadSongs();
 
 }
+
 
 init();
 
