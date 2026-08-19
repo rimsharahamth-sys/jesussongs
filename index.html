@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,7 +12,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.mi
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <style>
@@ -500,10 +500,8 @@ body{
     display:block;
 }
 
-/*
-   Hidden YouTube player.
-   It is kept at 1px and outside the visible screen.
-*/
+/* Hidden YouTube player */
+
 #youtubeAudioFrame{
     position:fixed;
     width:1px;
@@ -527,11 +525,30 @@ body{
     gap:.7rem;
 }
 
+/*
+   IMPORTANT:
+   Mini player song area is clickable.
+   Clicking it opens lyrics.
+*/
+
 .player-info{
     display:flex;
     align-items:center;
     min-width:0;
     gap:.7rem;
+    cursor:pointer;
+    flex:1;
+    border-radius:12px;
+    padding:.2rem;
+    transition:.2s;
+}
+
+.player-info:hover{
+    background:rgba(240,192,64,.12);
+}
+
+.player-info:active{
+    transform:scale(.98);
 }
 
 .music-icon{
@@ -567,6 +584,7 @@ body{
 .player-actions{
     display:flex;
     gap:.15rem;
+    flex-shrink:0;
 }
 
 .player-actions button{
@@ -744,6 +762,7 @@ body{
         align-items:flex-start;
         gap:.7rem;
     }
+
 }
 
 </style>
@@ -851,7 +870,7 @@ body{
 
 
 <!-- =========================================================
-     LYRICS
+     LYRICS MODAL
 ========================================================= -->
 
 <div
@@ -864,6 +883,7 @@ body{
         <button
             class="close-btn"
             id="detailCloseBtn"
+            type="button"
         >
             &times;
         </button>
@@ -962,6 +982,7 @@ body{
             <button
                 class="btn"
                 id="addSongBtn"
+                type="button"
             >
                 <i class="fas fa-save"></i>
                 Add Song
@@ -970,6 +991,7 @@ body{
             <button
                 class="btn btn-cancel"
                 id="cancelEditBtn"
+                type="button"
                 style="display:none"
             >
                 Cancel
@@ -995,6 +1017,7 @@ body{
             <button
                 class="btn btn-danger"
                 id="logoutBtn"
+                type="button"
             >
                 Logout
             </button>
@@ -1030,10 +1053,20 @@ body{
 
     <div class="player-head">
 
-        <div class="player-info">
+        <!--
+            CLICK THIS AREA TO OPEN LYRICS
+        -->
+
+        <div
+            class="player-info"
+            id="playerInfo"
+            title="Click to view lyrics"
+        >
 
             <div class="music-icon">
+
                 <i class="fas fa-music"></i>
+
             </div>
 
             <div class="player-text">
@@ -1046,18 +1079,20 @@ body{
                 </div>
 
                 <div class="player-status">
-                    ♪ Playing from YouTube
+                    ♪ Playing from YouTube · Click for lyrics
                 </div>
 
             </div>
 
         </div>
 
+
         <div class="player-actions">
 
             <button
                 id="compactBtn"
                 title="Mini Player"
+                type="button"
             >
                 <i class="fas fa-minus"></i>
             </button>
@@ -1065,6 +1100,7 @@ body{
             <button
                 id="closePlayerBtn"
                 title="Stop"
+                type="button"
             >
                 <i class="fas fa-times"></i>
             </button>
@@ -1106,6 +1142,7 @@ body{
             class="control-btn"
             id="back15Btn"
             title="Back 15 seconds"
+            type="button"
         >
             <i class="fas fa-rotate-left"></i>
         </button>
@@ -1114,6 +1151,7 @@ body{
             class="control-btn play-pause"
             id="playPauseBtn"
             title="Play/Pause"
+            type="button"
         >
             <i class="fas fa-pause"></i>
         </button>
@@ -1122,6 +1160,7 @@ body{
             class="control-btn"
             id="forward15Btn"
             title="Forward 15 seconds"
+            type="button"
         >
             <i class="fas fa-rotate-right"></i>
         </button>
@@ -1144,7 +1183,9 @@ body{
 
 
     <div class="progress-bottom">
+
         <span id="progressFill"></span>
+
     </div>
 
 </div>
@@ -1188,14 +1229,19 @@ window.supabase.createClient(
 ========================================================= */
 
 let songs = [];
+
 let searchQuery = "";
+
 let currentUser = null;
 
 let youtubePlayerAPI = null;
+
 let currentSong = null;
 
 let playerReady = false;
+
 let playerTimer = null;
+
 let userSeeking = false;
 
 
@@ -1284,6 +1330,9 @@ document.getElementById("themeToggleBtn");
 const customPlayer =
 document.getElementById("youtubePlayer");
 
+const playerInfo =
+document.getElementById("playerInfo");
+
 const playerTitle =
 document.getElementById("playerTitle");
 
@@ -1342,6 +1391,7 @@ function onYouTubeIframeAPIReady(){
             },
 
             events:{
+
                 onReady:function(){
 
                     playerReady = true;
@@ -1353,9 +1403,12 @@ function onYouTubeIframeAPIReady(){
                     handlePlayerState(event);
 
                 }
+
             }
+
         }
     );
+
 }
 
 
@@ -1390,7 +1443,9 @@ function getYouTubeId(url){
         value.match(pattern);
 
         if(match && match[1]){
+
             return match[1];
+
         }
 
     }
@@ -1398,10 +1453,13 @@ function getYouTubeId(url){
     if(
         /^[a-zA-Z0-9_-]{11}$/.test(value)
     ){
+
         return value;
+
     }
 
     return null;
+
 }
 
 
@@ -1423,6 +1481,7 @@ function playYouTube(song){
         );
 
         return;
+
     }
 
     currentSong = song;
@@ -1431,6 +1490,7 @@ function playYouTube(song){
     song.title || "Now Playing";
 
     customPlayer.classList.add("active");
+
     customPlayer.classList.remove("compact");
 
     seekBar.value = 0;
@@ -1455,11 +1515,15 @@ function playYouTube(song){
         );
 
         return;
+
     }
 
     youtubePlayerAPI.loadVideoById({
+
         videoId:videoId,
+
         startSeconds:0
+
     });
 
     youtubePlayerAPI.setVolume(
@@ -1471,6 +1535,32 @@ function playYouTube(song){
     startPlayerTimer();
 
 }
+
+
+/* =========================================================
+   MINI PLAYER → LYRICS
+========================================================= */
+
+/*
+   NEW FEATURE:
+   Click song title / music icon in mini player
+   → open current song lyrics.
+*/
+
+playerInfo.addEventListener(
+    "click",
+    function(){
+
+        if(!currentSong){
+
+            return;
+
+        }
+
+        openDetail(currentSong);
+
+    }
+);
 
 
 /* =========================================================
@@ -1527,7 +1617,10 @@ function startPlayerTimer(){
     stopPlayerTimer();
 
     playerTimer =
-    setInterval(updatePlayerProgress,500);
+    setInterval(
+        updatePlayerProgress,
+        500
+    );
 
 }
 
@@ -1552,7 +1645,9 @@ function updatePlayerProgress(){
         !playerReady ||
         userSeeking
     ){
+
         return;
+
     }
 
     const duration =
@@ -1562,7 +1657,9 @@ function updatePlayerProgress(){
     youtubePlayerAPI.getCurrentTime();
 
     if(!duration || duration <= 0){
+
         return;
+
     }
 
     playerCurrentTime.textContent =
@@ -1575,7 +1672,10 @@ function updatePlayerProgress(){
     (current / duration) * 100;
 
     seekBar.value =
-    Math.min(100,Math.max(0,percent));
+    Math.min(
+        100,
+        Math.max(0,percent)
+    );
 
     progressFill.style.width =
     percent + "%";
@@ -1592,11 +1692,15 @@ function formatTime(seconds){
     seconds =
     Math.max(
         0,
-        Math.floor(Number(seconds) || 0)
+        Math.floor(
+            Number(seconds) || 0
+        )
     );
 
     const hours =
-    Math.floor(seconds / 3600);
+    Math.floor(
+        seconds / 3600
+    );
 
     const minutes =
     Math.floor(
@@ -1652,7 +1756,6 @@ seekBar.addEventListener(
     {passive:true}
 );
 
-
 seekBar.addEventListener(
     "input",
     function(){
@@ -1686,6 +1789,7 @@ function finishSeek(){
         userSeeking = false;
 
         return;
+
     }
 
     const duration =
@@ -1708,6 +1812,7 @@ function finishSeek(){
     userSeeking = false;
 
 }
+
 
 seekBar.addEventListener(
     "change",
@@ -1768,7 +1873,10 @@ back15Btn.addEventListener(
         youtubePlayerAPI.getCurrentTime();
 
         youtubePlayerAPI.seekTo(
-            Math.max(0,current - 15),
+            Math.max(
+                0,
+                current - 15
+            ),
             true
         );
 
@@ -1984,24 +2092,38 @@ async function loadSongs(){
         console.error(error);
 
         grid.innerHTML = `
+
             <div class="no-results">
-                <i class="fas fa-exclamation-triangle"
-                   style="font-size:2rem"></i>
-                <p>Failed to load songs.</p>
-                <small>${escapeHTML(error.message)}</small>
+
+                <i
+                    class="fas fa-exclamation-triangle"
+                    style="font-size:2rem"
+                ></i>
+
+                <p>
+                    Failed to load songs.
+                </p>
+
+                <small>
+                    ${escapeHTML(error.message)}
+                </small>
+
             </div>
+
         `;
 
         songCount.textContent =
         "0 songs";
 
         return;
+
     }
 
     songs =
     data || [];
 
     renderSongs();
+
     renderAdminList();
 
 }
@@ -2051,11 +2173,20 @@ function renderSongs(){
     if(filtered.length === 0){
 
         grid.innerHTML = `
+
             <div class="no-results">
-                <i class="fas fa-music"
-                   style="font-size:2rem;opacity:.4"></i>
-                <p>No songs found</p>
+
+                <i
+                    class="fas fa-music"
+                    style="font-size:2rem;opacity:.4"
+                ></i>
+
+                <p>
+                    No songs found
+                </p>
+
             </div>
+
         `;
 
         return;
@@ -2069,8 +2200,11 @@ function renderSongs(){
         const preview =
         String(song.lyrics || "")
         .split("\n")
-        .find(x => x.trim())
-        || "...";
+        .find(
+            x => x.trim()
+        )
+        ||
+        "...";
 
         const link =
         song.audio_url || "";
@@ -2094,6 +2228,7 @@ function renderSongs(){
 
             </div>
 
+
             <div class="song-card-body">
 
                 <div class="song-preview">
@@ -2103,6 +2238,7 @@ function renderSongs(){
                 </div>
 
             </div>
+
 
             <div class="song-actions">
 
@@ -2115,34 +2251,47 @@ function renderSongs(){
                         class="song-action-btn play-song"
                         data-id="${escapeAttribute(song.id)}"
                     >
+
                         <i class="fas fa-play"></i>
+
                         Play
+
                     </button>
                     `
                     :
                     ""
                 }
 
+
                 <button
                     type="button"
                     class="song-action-btn secondary view-song"
                     data-id="${escapeAttribute(song.id)}"
                 >
+
                     <i class="far fa-eye"></i>
+
                     View
+
                 </button>
 
             </div>
 
+
             <div class="song-footer">
 
                 <span>
+
                     <i class="far fa-eye"></i>
+
                     Tap to view full
+
                 </span>
 
-                <i class="fas fa-arrow-right"
-                   style="color:var(--gold)"></i>
+                <i
+                    class="fas fa-arrow-right"
+                    style="color:var(--gold)"
+                ></i>
 
             </div>
 
@@ -2176,16 +2325,20 @@ grid.addEventListener(
 
             const id =
             Number(
-                (playButton || viewButton)
-                .dataset.id
+                (
+                    playButton ||
+                    viewButton
+                ).dataset.id
             );
 
             const song =
             songs.find(
-                s => Number(s.id) === id
+                s =>
+                Number(s.id) === id
             );
 
             if(!song) return;
+
 
             if(playButton){
 
@@ -2212,7 +2365,8 @@ grid.addEventListener(
 
         const song =
         songs.find(
-            s => Number(s.id) === id
+            s =>
+            Number(s.id) === id
         );
 
         if(song){
@@ -2231,10 +2385,20 @@ grid.addEventListener(
 
 function openDetail(song){
 
+    if(!song){
+
+        return;
+
+    }
+
     detailTitle.innerHTML = `
+
         <i class="fas fa-music"></i>
+
         ${escapeHTML(song.title)}
+
     `;
+
 
     detailLyrics.textContent =
     song.lyrics ||
@@ -2250,17 +2414,26 @@ function openDetail(song){
                 class="song-action-btn"
                 id="detailPlayBtn"
             >
+
                 <i class="fas fa-play"></i>
+
                 Play Song
+
             </button>
 
         `;
+
 
         document
         .getElementById("detailPlayBtn")
         .addEventListener(
             "click",
             function(){
+
+                /*
+                   Keep lyrics modal open.
+                   Start/restart this song.
+                */
 
                 playYouTube(song);
 
@@ -2270,20 +2443,19 @@ function openDetail(song){
     }else{
 
         detailLink.innerHTML = `
+
             <span style="color:var(--muted)">
+
                 <i class="fas fa-info-circle"></i>
+
                 No YouTube link added.
+
             </span>
+
         `;
 
     }
 
-
-    /*
-       IMPORTANT:
-       Lyrics modal has higher z-index than player.
-       Therefore player never blocks the lyrics.
-    */
 
     detailOverlay.classList.add(
         "active"
@@ -2381,7 +2553,8 @@ function renderAdminList(){
 
                 ${
                     Number(editingSongId.value)
-                    === Number(song.id)
+                    ===
+                    Number(song.id)
 
                     ?
 
@@ -2396,22 +2569,32 @@ function renderAdminList(){
 
             </span>
 
+
             <div class="actions">
 
                 <button
+                    type="button"
                     class="btn btn-edit edit-song"
-                    data-id="${song.id}"
+                    data-id="${escapeAttribute(song.id)}"
                 >
+
                     <i class="fas fa-pen"></i>
+
                     Edit
+
                 </button>
 
+
                 <button
+                    type="button"
                     class="btn btn-danger delete-song"
-                    data-id="${song.id}"
+                    data-id="${escapeAttribute(song.id)}"
                 >
+
                     <i class="fas fa-trash"></i>
+
                     Delete
+
                 </button>
 
             </div>
@@ -2492,8 +2675,11 @@ async function login(){
     } =
     await supabaseClient.auth
     .signInWithPassword({
+
         email,
+
         password
+
     });
 
 
@@ -2510,13 +2696,16 @@ async function login(){
     currentUser =
     data.user;
 
+
     loginOverlay.classList.remove(
         "active"
     );
 
+
     adminPanel.classList.add(
         "active"
     );
+
 
     setAdminLoggedIn();
 
@@ -2524,6 +2713,10 @@ async function login(){
 
 }
 
+
+/* =========================================================
+   SET ADMIN LOGGED IN
+========================================================= */
 
 function setAdminLoggedIn(){
 
@@ -2709,6 +2902,12 @@ async function addSong(){
 }
 
 
+addSongBtn.addEventListener(
+    "click",
+    addSong
+);
+
+
 /* =========================================================
    EDIT
 ========================================================= */
@@ -2717,7 +2916,8 @@ function startEditSong(id){
 
     const song =
     songs.find(
-        s => Number(s.id) === Number(id)
+        s =>
+        Number(s.id) === Number(id)
     );
 
     if(!song) return;
@@ -2920,23 +3120,29 @@ loginBtn.addEventListener(
     login
 );
 
+
 loginPassword.addEventListener(
     "keydown",
     e => {
 
         if(e.key === "Enter"){
+
             login();
+
         }
 
     }
 );
+
 
 loginEmail.addEventListener(
     "keydown",
     e => {
 
         if(e.key === "Enter"){
+
             login();
+
         }
 
     }
