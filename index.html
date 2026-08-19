@@ -355,101 +355,107 @@
             font-size: 1rem;
         }
 
-        /* BACKGROUND YOUTUBE PLAYER */
+        /* AUDIO-ONLY MINI PLAYER */
         .youtube-player {
             position: fixed;
             right: 18px;
             bottom: 18px;
-            width: 360px;
+            width: 340px;
             max-width: calc(100vw - 36px);
-            background: #000;
+            background: #111;
+            color: #fff;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 14px 40px rgba(0,0,0,.35);
+            box-shadow: 0 14px 40px rgba(0,0,0,.4);
             z-index: 500;
             display: none;
         }
+
         .youtube-player.active { display: block; }
 
-.youtube-player.mini {
-    width: 210px !important;
-}
-
-.youtube-player.mini .youtube-frame {
-    width: 100%;
-    height: 118px;
-    aspect-ratio: auto;
-}
-
-.youtube-player.mini .youtube-player-head {
-    height: 36px;
-}
-
-@media(max-width:650px) {
-    .youtube-player.mini {
-        width: 190px !important;
-        right: 10px;
-        bottom: 10px;
-    }
-
-    .youtube-player.mini .youtube-frame {
-        height: 107px;
-    }
-}
         .youtube-player-head {
-            height: 38px;
-            padding: 0 .65rem;
-            background: #111;
+            min-height: 52px;
+            padding: .65rem .75rem;
+            background: #181818;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: .5rem;
-            font-size: .78rem;
+            gap: .6rem;
+            font-size: .82rem;
         }
+
+        .youtube-player-title-wrap {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .mini-player-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0c040;
+            color: #1a1a2e;
+            flex: 0 0 auto;
+        }
+
         .youtube-player-title {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            font-weight: 700;
         }
+
         .youtube-player-actions button {
             border: 0;
             background: transparent;
             color: #fff;
             cursor: pointer;
             font-size: 1rem;
-            margin-left: .4rem;
-        }
-        .youtube-frame {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            border: 0;
-            display: block;
+            margin-left: .35rem;
         }
 
-        .song-actions {
-            display: flex;
-            gap: .55rem;
-            flex-wrap: wrap;
-            padding: .2rem 1.5rem .9rem;
+        .youtube-player-actions button:hover {
+            color: #f0c040;
         }
-        .song-action-btn {
-            padding: .45rem .8rem;
+
+        /* Hidden YouTube iframe: audio continues, YouTube UI/video is never visible */
+        .youtube-frame {
+            position: absolute;
+            width: 1px;
+            height: 1px;
             border: 0;
-            border-radius: 22px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: .82rem;
-            background: #f0c040;
-            color: #1a1a2e;
+            opacity: 0;
+            pointer-events: none;
+            left: -9999px;
+            top: -9999px;
         }
-        .song-action-btn.secondary {
-            background: var(--surface-2);
-            color: var(--text);
-            border: 1px solid var(--border);
+
+        .mini-player-status {
+            padding: .55rem .8rem .7rem;
+            background: #111;
+            color: #aaa;
+            font-size: .75rem;
+            display: flex;
+            align-items: center;
+            gap: .45rem;
         }
-        body.dark .song-action-btn.secondary {
-            background: #252a36;
+
+        .mini-player-status i {
+            color: #f0c040;
+        }
+
+        .youtube-player.mini {
+            width: 245px;
+        }
+
+        .youtube-player.mini .mini-player-status {
+            display: none;
         }
 
         @media(max-width:650px) {
@@ -901,21 +907,37 @@
 </main>
 
 
-<!-- BACKGROUND YOUTUBE PLAYER -->
+<!-- AUDIO-ONLY MINI PLAYER -->
 <div class="youtube-player" id="youtubePlayer">
     <div class="youtube-player-head">
-        <span class="youtube-player-title" id="youtubePlayerTitle">Now Playing</span>
+        <div class="youtube-player-title-wrap">
+            <span class="mini-player-icon">
+                <i class="fas fa-music"></i>
+            </span>
+            <span class="youtube-player-title" id="youtubePlayerTitle">Now Playing</span>
+        </div>
+
         <span class="youtube-player-actions">
-            <button id="youtubeMinBtn" type="button" title="Minimize"><i class="fas fa-minus"></i></button>
-            <button id="youtubeCloseBtn" type="button" title="Stop"><i class="fas fa-times"></i></button>
+            <button id="youtubeMinBtn" type="button" title="Minimize">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button id="youtubeCloseBtn" type="button" title="Stop">
+                <i class="fas fa-times"></i>
+            </button>
         </span>
     </div>
+
+    <div class="mini-player-status">
+        <i class="fas fa-volume-up"></i>
+        <span>Playing song audio</span>
+    </div>
+
+    <!-- Hidden YouTube player. Video/UI is not displayed. -->
     <iframe
         id="youtubeFrame"
         class="youtube-frame"
-        title="YouTube player"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
+        title="Audio player"
+        allow="autoplay; encrypted-media"
     ></iframe>
 </div>
 
@@ -1510,12 +1532,10 @@ function minimizeYouTube() {
 
     if (youtubePlayer.classList.contains("mini")) {
         youtubePlayer.style.width = "180px";
-        youtubePlayer.querySelector(".youtube-frame").style.display = "block";
-        youtubePlayer.querySelector(".youtube-frame").style.height = "100px";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "none";
     } else {
         youtubePlayer.style.width = "";
         youtubePlayer.querySelector(".youtube-frame").style.display = "block";
-        youtubePlayer.querySelector(".youtube-frame").style.height = "";
     }
 }
 
