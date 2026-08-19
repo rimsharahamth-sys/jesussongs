@@ -1844,154 +1844,117 @@
 
         function renderSongs() {
 
-            const q =
-                searchQuery.trim();
+            const q = searchQuery.trim();
 
             if (!songs.length) {
-
-                songCount.textContent =
-                    "0 songs";
-
+                songCount.textContent = "0 songs";
                 grid.innerHTML = `
-
-                        <div class="no-results">
-
-                            <div class="no-results-icon">
-                                <i class="fas fa-music"></i>
-                            </div>
-
-                            <div class="no-results-title">
-                                No songs found
-                            </div>
-
-                            <div class="no-results-text">
-                                Admin hasn't added any songs yet.
-                            </div>
-
-                        </div>
-
-                    `;
-
-                searchStatus.classList.remove(
-                    "active"
-                );
-
+                    <div class="no-results">
+                        <div class="no-results-icon"><i class="fas fa-music"></i></div>
+                        <div class="no-results-title">No songs found</div>
+                        <div class="no-results-text">Admin hasn't added any songs yet.</div>
+                    </div>
+                `;
+                searchStatus.classList.remove("active");
                 return;
             }
 
-            /*
-               ========================================================
-               NO SEARCH
-               ========================================================
-            */
-
+            /* Empty search = show every song */
             if (!q) {
-
-                const normalSongs =
-                    songs.map(
-                        song => ({
-                            song,
-                            score: 0
-                        })
-                    );
-
                 renderSongCards(
-                    normalSongs,
+                    songs.map(song => ({ song, score: 0 })),
                     false
                 );
-
-                songCount.textContent =
-                    `${songs.length} song${songs.length !== 1 ? "s" : ""}`;
-
-                searchStatus.classList.remove(
-                    "active"
-                );
-
+                songCount.textContent = `${songs.length} song${songs.length !== 1 ? "s" : ""}`;
+                searchStatus.classList.remove("active");
                 return;
             }
 
             /*
-               ========================================================
-               SEARCH + SCORE
-               ========================================================
+               STARTING-NAME SEARCH
+
+               Example: Search "yesu"
+               Shows: Yesu Naa Rakshaka, Yesu Naa Prabhu, Yesu Neeve
+               Does NOT show: Naa Yesu Prabhu, Naatho Yesu, Oka Yesu Song
+
+               The COMPLETE song title must START with the searched name.
+               Telugu and Roman-Telugu are both supported.
             */
 
-            const results =
-                songs
-
-                .map(
-                    song => ({
-                        song,
-                        score:
-                            scoreSong(
-                                song,
-                                q
-                            )
-                    })
+            const variants = [
+                ...new Set(
+                    getQueryVariants(q)
+                        .map(v => normalizeBasic(v))
+                        .filter(Boolean)
                 )
+            ];
 
-                .filter(
-                    item =>
-                    item.score > 0
-                )
+            function startsWithSearch(song) {
+                const data = buildSearchData(song);
+                const titleOriginal = data.titleOriginal || "";
+                const titleRoman = data.titleRoman || "";
 
-                .sort(
-                    (a, b) =>
-                    b.score - a.score
+                return variants.some(v =>
+                    titleOriginal.startsWith(v) ||
+                    titleRoman.startsWith(v)
                 );
+            }
 
-            songCount.textContent =
-                `${results.length} result${results.length !== 1 ? "s" : ""}`;
+            const startingMatches = songs
+                .map((song, originalIndex) => ({
+                    song,
+                    originalIndex,
+                    score: scoreSong(song, q)
+                }))
+                .filter(item => startsWithSearch(item.song))
+                .sort((a, b) => {
+                    const aTitle = normalizeBasic(a.song.title || "");
+                    const bTitle = normalizeBasic(b.song.title || "");
+                    const aRoman = normalizeBasic(transliterateTelugu(a.song.title || ""));
+                    const bRoman = normalizeBasic(transliterateTelugu(b.song.title || ""));
 
-            searchStatus.classList.add(
-                "active"
-            );
+                    const aExact = variants.some(v => aTitle === v || aRoman === v);
+                    const bExact = variants.some(v => bTitle === v || bRoman === v);
 
-            searchStatus.innerHTML = `
+                    if (aExact !== bExact) return aExact ? -1 : 1;
 
+                    /* Shorter matching title first; database order for ties. */
+                    if (aTitle.length !== bTitle.length) {
+                        return aTitle.length - bTitle.length;
+                    }
+
+                    return a.originalIndex - b.originalIndex;
+                });
+
+            if (!startingMatches.length) {
+                songCount.textContent = "0 results";
+                searchStatus.classList.add("active");
+                searchStatus.innerHTML = `
                     <i class="fas fa-search"></i>
-
-                    Showing
-                    <strong>
-                        ${results.length}
-                    </strong>
-                    result${results.length !== 1 ? "s" : ""}
-                    for
-                    <strong>
-                        "${escapeHTML(q)}"
-                    </strong>
-
+                    No song title starts with <strong>"${escapeHTML(q)}"</strong>
                 `;
 
-            if (!results.length) {
-
                 grid.innerHTML = `
-
-                        <div class="no-results">
-
-                            <div class="no-results-icon">
-                                <i class="fas fa-search"></i>
-                            </div>
-
-                            <div class="no-results-title">
-                                No matching songs found
-                            </div>
-
-                            <div class="no-results-text">
-                                Try a different song name.
-                            </div>
-
-                        </div>
-
-                    `;
-
+                    <div class="no-results">
+                        <div class="no-results-icon"><i class="fas fa-search"></i></div>
+                        <div class="no-results-title">No starting-name matches</div>
+                        <div class="no-results-text">Try the beginning of the song name.</div>
+                    </div>
+                `;
                 return;
             }
 
-            renderSongCards(
-                results,
-                true
-            );
+            songCount.textContent =
+                `${startingMatches.length} result${startingMatches.length !== 1 ? "s" : ""}`;
+
+            searchStatus.classList.add("active");
+            searchStatus.innerHTML = `
+                <i class="fas fa-search"></i>
+                Songs starting with <strong>"${escapeHTML(q)}"</strong>
+                <span style="opacity:.75;"> · ${startingMatches.length} found</span>
+            `;
+
+            renderSongCards(startingMatches, true);
         }
 
         /* ============================================================
@@ -2045,9 +2008,9 @@
 
                                             <span class="relevance-badge">
 
-                                                <i class="fas fa-bolt"></i>
+                                                <i class="fas fa-play"></i>
 
-                                                Best Match
+                                                Starts With
 
                                             </span>
 
