@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -55,7 +54,6 @@ body{
     min-height:100vh;
     transition:.25s;
 }
-
 
 /* =========================================================
    HEADER
@@ -167,7 +165,6 @@ body{
     justify-content:center;
 }
 
-
 /* =========================================================
    MAIN
 ========================================================= */
@@ -269,7 +266,6 @@ body{
     color:var(--muted);
 }
 
-
 /* =========================================================
    ADMIN
 ========================================================= */
@@ -360,7 +356,6 @@ body{
     font-weight:700;
 }
 
-
 /* =========================================================
    LOGIN
 ========================================================= */
@@ -415,7 +410,6 @@ body{
     margin-top:.7rem;
 }
 
-
 /* =========================================================
    LYRICS MODAL
 ========================================================= */
@@ -445,7 +439,6 @@ body{
     max-height:90vh;
     overflow-y:auto;
     position:relative;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
 
 .close-btn{
@@ -457,10 +450,6 @@ body{
     cursor:pointer;
     border:none;
     background:none;
-}
-
-.close-btn:hover{
-    color:var(--text);
 }
 
 .detail-title{
@@ -486,9 +475,8 @@ body{
     border-bottom:2px solid var(--border);
 }
 
-
 /* =========================================================
-   MUSIC MINI PLAYER
+   MINI PLAYER
 ========================================================= */
 
 .youtube-player{
@@ -511,33 +499,7 @@ body{
     display:block;
 }
 
-
-/* =========================================================
-   CLICKABLE MINI PLAYER SONG AREA
-========================================================= */
-
-.player-info{
-    cursor:pointer;
-    min-width:0;
-    flex:1;
-}
-
-.player-info:hover .player-title{
-    color:#b8860b;
-}
-
-body.dark .player-info:hover .player-title{
-    color:#f0c040;
-}
-
-.player-info:active{
-    transform:scale(.99);
-}
-
-
-/*
-   Hidden YouTube player
-*/
+/* Hidden YouTube */
 
 #youtubeAudioFrame{
     position:fixed;
@@ -549,7 +511,6 @@ body.dark .player-info:hover .player-title{
     pointer-events:none;
     border:0;
 }
-
 
 /* PLAYER HEADER */
 
@@ -568,6 +529,19 @@ body.dark .player-info:hover .player-title{
     align-items:center;
     min-width:0;
     gap:.7rem;
+    cursor:pointer;
+    flex:1;
+    border-radius:12px;
+    padding:3px;
+    transition:.2s;
+}
+
+.player-info:hover{
+    background:var(--border);
+}
+
+.player-info:active{
+    transform:scale(.98);
 }
 
 .music-icon{
@@ -603,7 +577,6 @@ body.dark .player-info:hover .player-title{
 .player-actions{
     display:flex;
     gap:.15rem;
-    flex-shrink:0;
 }
 
 .player-actions button{
@@ -620,6 +593,28 @@ body.dark .player-info:hover .player-title{
     background:var(--border);
 }
 
+/* LYRICS BUTTON */
+
+.player-lyrics-btn{
+    width:100%;
+    border:0;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:.55rem;
+    background:var(--surface-2);
+    color:var(--gold);
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.player-lyrics-btn:hover{
+    background:var(--border);
+}
+
+.player-lyrics-btn i{
+    margin-right:.3rem;
+}
 
 /* TIME */
 
@@ -640,7 +635,6 @@ body.dark .player-info:hover .player-title{
     text-align:right;
 }
 
-
 /* SEEK */
 
 #seekBar{
@@ -649,7 +643,6 @@ body.dark .player-info:hover .player-title{
     accent-color:#f0c040;
     cursor:pointer;
 }
-
 
 /* CONTROLS */
 
@@ -699,7 +692,6 @@ body.dark .player-info:hover .player-title{
     cursor:pointer;
 }
 
-
 /* PROGRESS */
 
 .progress-bottom{
@@ -714,7 +706,6 @@ body.dark .player-info:hover .player-title{
     background:#f0c040;
 }
 
-
 /* COMPACT */
 
 .youtube-player.compact{
@@ -722,6 +713,7 @@ body.dark .player-info:hover .player-title{
 }
 
 .youtube-player.compact .player-status,
+.youtube-player.compact .player-lyrics-btn,
 .youtube-player.compact .player-time,
 .youtube-player.compact .player-controls,
 .youtube-player.compact .progress-bottom{
@@ -731,7 +723,6 @@ body.dark .player-info:hover .player-title{
 .youtube-player.compact .player-head{
     min-height:58px;
 }
-
 
 /* =========================================================
    FOOTER
@@ -745,7 +736,6 @@ body.dark .player-info:hover .player-title{
     font-size:.8rem;
     margin-top:2rem;
 }
-
 
 /* =========================================================
    MOBILE
@@ -776,15 +766,6 @@ body.dark .player-info:hover .player-title{
         max-height:88vh;
     }
 
-    .detail-title{
-        font-size:1.5rem;
-    }
-
-    .detail-lyrics{
-        font-size:1rem;
-        line-height:1.8;
-    }
-
     .youtube-player{
         right:10px;
         bottom:10px;
@@ -797,15 +778,12 @@ body.dark .player-info:hover .player-title{
         align-items:flex-start;
         gap:.7rem;
     }
-
 }
 
 </style>
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      HEADER
@@ -921,7 +899,6 @@ body.dark .player-info:hover .player-title{
             class="close-btn"
             id="detailCloseBtn"
             type="button"
-            aria-label="Close lyrics"
         >
             &times;
         </button>
@@ -951,8 +928,7 @@ body.dark .player-info:hover .player-title{
 
 <main class="main">
 
-
-    <!-- ADMIN PANEL -->
+    <!-- ADMIN -->
 
     <div
         class="admin-panel"
@@ -969,7 +945,6 @@ body.dark .player-info:hover .player-title{
             Add New Song
         </h2>
 
-
         <div class="form-group">
 
             <label>Song Title *</label>
@@ -982,7 +957,6 @@ body.dark .player-info:hover .player-title{
 
         </div>
 
-
         <div class="form-group">
 
             <label>Lyrics *</label>
@@ -993,7 +967,6 @@ body.dark .player-info:hover .player-title{
             ></textarea>
 
         </div>
-
 
         <div class="form-group">
 
@@ -1007,7 +980,6 @@ body.dark .player-info:hover .player-title{
 
         </div>
 
-
         <div class="form-group">
 
             <label>Category</label>
@@ -1019,7 +991,6 @@ body.dark .player-info:hover .player-title{
             >
 
         </div>
-
 
         <div class="form-actions">
 
@@ -1043,15 +1014,12 @@ body.dark .player-info:hover .player-title{
 
         </div>
 
-
         <div
             class="status-message"
             id="formStatus"
         ></div>
 
-
         <hr style="margin:1.5rem 0">
-
 
         <div style="
             display:flex;
@@ -1070,7 +1038,6 @@ body.dark .player-info:hover .player-title{
             </button>
 
         </div>
-
 
         <div
             class="admin-song-list"
@@ -1091,7 +1058,7 @@ body.dark .player-info:hover .player-title{
 
 
 <!-- =========================================================
-     CUSTOM MINI PLAYER
+     CUSTOM MINI MUSIC PLAYER
 ========================================================= -->
 
 <div
@@ -1099,30 +1066,21 @@ body.dark .player-info:hover .player-title{
     id="youtubePlayer"
 >
 
-
     <div class="player-head">
 
-
         <!--
-            IMPORTANT:
-            Clicking this entire area opens
-            the current song lyrics.
+            CLICKING THIS AREA OPENS CURRENT SONG LYRICS
         -->
 
         <div
             class="player-info"
             id="playerInfo"
             title="Click to view lyrics"
-            role="button"
-            tabindex="0"
         >
 
             <div class="music-icon">
-
                 <i class="fas fa-music"></i>
-
             </div>
-
 
             <div class="player-text">
 
@@ -1152,7 +1110,6 @@ body.dark .player-info:hover .player-title{
                 <i class="fas fa-minus"></i>
             </button>
 
-
             <button
                 id="closePlayerBtn"
                 title="Stop"
@@ -1166,7 +1123,21 @@ body.dark .player-info:hover .player-title{
     </div>
 
 
-    <!-- TIME -->
+    <!-- =====================================================
+         LYRICS BUTTON INSIDE MINI PLAYER
+    ====================================================== -->
+
+    <button
+        class="player-lyrics-btn"
+        id="playerLyricsBtn"
+        type="button"
+    >
+        <i class="fas fa-align-left"></i>
+        View Lyrics
+    </button>
+
+
+    <!-- CURRENT TIME + TOTAL -->
 
     <div class="player-time">
 
@@ -1203,7 +1174,6 @@ body.dark .player-info:hover .player-title{
             <i class="fas fa-rotate-left"></i>
         </button>
 
-
         <button
             class="control-btn play-pause"
             id="playPauseBtn"
@@ -1213,7 +1183,6 @@ body.dark .player-info:hover .player-title{
             <i class="fas fa-pause"></i>
         </button>
 
-
         <button
             class="control-btn"
             id="forward15Btn"
@@ -1222,7 +1191,6 @@ body.dark .player-info:hover .player-title{
         >
             <i class="fas fa-rotate-right"></i>
         </button>
-
 
         <div class="volume-wrap">
 
@@ -1242,9 +1210,7 @@ body.dark .player-info:hover .player-title{
 
 
     <div class="progress-bottom">
-
         <span id="progressFill"></span>
-
     </div>
 
 </div>
@@ -1288,19 +1254,14 @@ window.supabase.createClient(
 ========================================================= */
 
 let songs = [];
-
 let searchQuery = "";
-
 let currentUser = null;
 
 let youtubePlayerAPI = null;
-
 let currentSong = null;
 
 let playerReady = false;
-
 let playerTimer = null;
-
 let userSeeking = false;
 
 
@@ -1395,6 +1356,9 @@ document.getElementById("playerInfo");
 const playerTitle =
 document.getElementById("playerTitle");
 
+const playerLyricsBtn =
+document.getElementById("playerLyricsBtn");
+
 const seekBar =
 document.getElementById("seekBar");
 
@@ -1450,7 +1414,6 @@ function onYouTubeIframeAPIReady(){
             },
 
             events:{
-
                 onReady:function(){
 
                     playerReady = true;
@@ -1462,12 +1425,9 @@ function onYouTubeIframeAPIReady(){
                     handlePlayerState(event);
 
                 }
-
             }
-
         }
     );
-
 }
 
 
@@ -1496,32 +1456,24 @@ function getYouTubeId(url){
 
     ];
 
-
     for(const pattern of patterns){
 
         const match =
         value.match(pattern);
 
         if(match && match[1]){
-
             return match[1];
-
         }
 
     }
 
-
     if(
         /^[a-zA-Z0-9_-]{11}$/.test(value)
     ){
-
         return value;
-
     }
 
-
     return null;
-
 }
 
 
@@ -1534,7 +1486,6 @@ function playYouTube(song){
     const videoId =
     getYouTubeId(song.audio_url);
 
-
     if(!videoId){
 
         alert(
@@ -1544,25 +1495,15 @@ function playYouTube(song){
         );
 
         return;
-
     }
 
-
     currentSong = song;
-
 
     playerTitle.textContent =
     song.title || "Now Playing";
 
-
-    customPlayer.classList.add(
-        "active"
-    );
-
-    customPlayer.classList.remove(
-        "compact"
-    );
-
+    customPlayer.classList.add("active");
+    customPlayer.classList.remove("compact");
 
     seekBar.value = 0;
 
@@ -1575,10 +1516,8 @@ function playYouTube(song){
     progressFill.style.width =
     "0%";
 
-
     playPauseBtn.innerHTML =
     `<i class="fas fa-pause"></i>`;
-
 
     if(!playerReady){
 
@@ -1588,81 +1527,66 @@ function playYouTube(song){
         );
 
         return;
-
     }
 
-
     youtubePlayerAPI.loadVideoById({
-
         videoId:videoId,
-
         startSeconds:0
-
     });
-
 
     youtubePlayerAPI.setVolume(
         Number(volumeBar.value)
     );
 
-
     youtubePlayerAPI.playVideo();
 
-
     startPlayerTimer();
-
 }
 
 
 /* =========================================================
-   ⭐ MINI PLAYER → LYRICS
+   MINI PLAYER → LYRICS
 ========================================================= */
 
-function openCurrentSongLyrics(){
+/*
+    Main new feature:
 
-    if(!currentSong){
-
-        return;
-
-    }
-
-    openDetail(currentSong);
-
-}
-
-
-/* =========================================================
-   MINI PLAYER CLICK
-========================================================= */
+    When user clicks the song title / music area
+    inside the Mini Player, the lyrics of the
+    currently playing song will open.
+*/
 
 playerInfo.addEventListener(
     "click",
     function(){
 
-        openCurrentSongLyrics();
+        if(!currentSong){
+
+            return;
+
+        }
+
+        openDetail(currentSong);
 
     }
 );
 
 
-/* =========================================================
-   MINI PLAYER KEYBOARD
-========================================================= */
+/*
+    Dedicated View Lyrics button
+*/
 
-playerInfo.addEventListener(
-    "keydown",
-    function(e){
+playerLyricsBtn.addEventListener(
+    "click",
+    function(){
 
-        if(
-            e.key === "Enter" ||
-            e.key === " "
-        ){
+        if(!currentSong){
 
-            e.preventDefault();
-
-            openCurrentSongLyrics();
+            return;
 
         }
+
+        openDetail(currentSong);
 
     }
 );
@@ -1674,9 +1598,7 @@ playerInfo.addEventListener(
 
 function handlePlayerState(event){
 
-    if(
-        event.data === YT.PlayerState.PLAYING
-    ){
+    if(event.data === YT.PlayerState.PLAYING){
 
         playPauseBtn.innerHTML =
         `<i class="fas fa-pause"></i>`;
@@ -1684,7 +1606,6 @@ function handlePlayerState(event){
         startPlayerTimer();
 
     }
-
 
     else if(
         event.data === YT.PlayerState.PAUSED
@@ -1696,7 +1617,6 @@ function handlePlayerState(event){
         stopPlayerTimer();
 
     }
-
 
     else if(
         event.data === YT.PlayerState.ENDED
@@ -1754,11 +1674,8 @@ function updatePlayerProgress(){
         !playerReady ||
         userSeeking
     ){
-
         return;
-
     }
-
 
     const duration =
     youtubePlayerAPI.getDuration();
@@ -1766,13 +1683,9 @@ function updatePlayerProgress(){
     const current =
     youtubePlayerAPI.getCurrentTime();
 
-
     if(!duration || duration <= 0){
-
         return;
-
     }
-
 
     playerCurrentTime.textContent =
     formatTime(current);
@@ -1780,17 +1693,14 @@ function updatePlayerProgress(){
     playerDuration.textContent =
     formatTime(duration);
 
-
     const percent =
     (current / duration) * 100;
-
 
     seekBar.value =
     Math.min(
         100,
         Math.max(0,percent)
     );
-
 
     progressFill.style.width =
     percent + "%";
@@ -1807,29 +1717,21 @@ function formatTime(seconds){
     seconds =
     Math.max(
         0,
-        Math.floor(
-            Number(seconds) || 0
-        )
+        Math.floor(Number(seconds) || 0)
     );
-
 
     const hours =
-    Math.floor(
-        seconds / 3600
-    );
-
+    Math.floor(seconds / 3600);
 
     const minutes =
     Math.floor(
         (seconds % 3600) / 60
     );
 
-
     const secs =
     String(
         seconds % 60
     ).padStart(2,"0");
-
 
     if(hours > 0){
 
@@ -1842,7 +1744,6 @@ function formatTime(seconds){
         );
 
     }
-
 
     return (
         minutes +
@@ -1866,7 +1767,6 @@ seekBar.addEventListener(
     }
 );
 
-
 seekBar.addEventListener(
     "touchstart",
     function(){
@@ -1887,23 +1787,15 @@ seekBar.addEventListener(
         ? youtubePlayerAPI.getDuration()
         : 0;
 
-
-        if(!duration){
-
-            return;
-
-        }
-
+        if(!duration) return;
 
         const target =
         (
             Number(this.value) / 100
         ) * duration;
 
-
         playerCurrentTime.textContent =
         formatTime(target);
-
 
         progressFill.style.width =
         this.value + "%";
@@ -1922,10 +1814,8 @@ function finishSeek(){
 
     }
 
-
     const duration =
     youtubePlayerAPI.getDuration();
-
 
     if(duration){
 
@@ -1934,14 +1824,12 @@ function finishSeek(){
             Number(seekBar.value) / 100
         ) * duration;
 
-
         youtubePlayerAPI.seekTo(
             target,
             true
         );
 
     }
-
 
     userSeeking = false;
 
@@ -1972,16 +1860,10 @@ playPauseBtn.addEventListener(
     "click",
     function(){
 
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
+        if(!youtubePlayerAPI) return;
 
         const state =
         youtubePlayerAPI.getPlayerState();
-
 
         if(
             state === YT.PlayerState.PLAYING
@@ -2007,16 +1889,10 @@ back15Btn.addEventListener(
     "click",
     function(){
 
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
+        if(!youtubePlayerAPI) return;
 
         const current =
         youtubePlayerAPI.getCurrentTime();
-
 
         youtubePlayerAPI.seekTo(
             Math.max(
@@ -2038,20 +1914,13 @@ forward15Btn.addEventListener(
     "click",
     function(){
 
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
+        if(!youtubePlayerAPI) return;
 
         const current =
         youtubePlayerAPI.getCurrentTime();
 
-
         const duration =
         youtubePlayerAPI.getDuration();
-
 
         youtubePlayerAPI.seekTo(
             Math.min(
@@ -2073,12 +1942,7 @@ volumeBar.addEventListener(
     "input",
     function(){
 
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
+        if(!youtubePlayerAPI) return;
 
         youtubePlayerAPI.setVolume(
             Number(this.value)
@@ -2089,7 +1953,7 @@ volumeBar.addEventListener(
 
 
 /* =========================================================
-   CLOSE PLAYER
+   CLOSE / STOP PLAYER
 ========================================================= */
 
 closePlayerBtn.addEventListener(
@@ -2102,12 +1966,9 @@ closePlayerBtn.addEventListener(
 
         }
 
-
         stopPlayerTimer();
 
-
         currentSong = null;
-
 
         customPlayer.classList.remove(
             "active"
@@ -2129,10 +1990,8 @@ compactBtn.addEventListener(
             "compact"
         );
 
-
         const icon =
         compactBtn.querySelector("i");
-
 
         if(
             customPlayer.classList.contains(
@@ -2169,18 +2028,15 @@ function applyTheme(theme){
     const dark =
     theme === "dark";
 
-
     document.body.classList.toggle(
         "dark",
         dark
     );
 
-
     themeToggleBtn.innerHTML =
     dark
     ? `<i class="fas fa-sun"></i>`
     : `<i class="fas fa-moon"></i>`;
-
 
     localStorage.setItem(
         "jesusSongsTheme",
@@ -2197,7 +2053,6 @@ function initTheme(){
         "jesusSongsTheme"
     );
 
-
     if(
         saved === "dark" ||
         saved === "light"
@@ -2209,18 +2064,14 @@ function initTheme(){
 
     }
 
-
     const dark =
     window.matchMedia &&
     window.matchMedia(
         "(prefers-color-scheme: dark)"
     ).matches;
 
-
     applyTheme(
-        dark
-        ? "dark"
-        : "light"
+        dark ? "dark" : "light"
     );
 
 }
@@ -2231,13 +2082,9 @@ themeToggleBtn.addEventListener(
     function(){
 
         applyTheme(
-
-            document.body.classList.contains(
-                "dark"
-            )
+            document.body.classList.contains("dark")
             ? "light"
             : "dark"
-
         );
 
     }
@@ -2253,7 +2100,6 @@ async function loadSongs(){
     songCount.textContent =
     "Loading...";
 
-
     const {
         data,
         error
@@ -2266,14 +2112,11 @@ async function loadSongs(){
         {ascending:true}
     );
 
-
     if(error){
 
         console.error(error);
 
-
         grid.innerHTML = `
-
             <div class="no-results">
 
                 <i
@@ -2281,31 +2124,23 @@ async function loadSongs(){
                     style="font-size:2rem"
                 ></i>
 
-                <p>
-                    Failed to load songs.
-                </p>
+                <p>Failed to load songs.</p>
 
                 <small>
                     ${escapeHTML(error.message)}
                 </small>
 
             </div>
-
         `;
-
 
         songCount.textContent =
         "0 songs";
 
-
         return;
-
     }
-
 
     songs =
     data || [];
-
 
     renderSongs();
 
@@ -2325,31 +2160,24 @@ function renderSongs(){
     .toLowerCase()
     .trim();
 
-
     const filtered =
     songs.filter(song => {
 
         return (
 
-            String(
-                song.title || ""
-            )
+            String(song.title || "")
             .toLowerCase()
             .includes(q)
 
             ||
 
-            String(
-                song.lyrics || ""
-            )
+            String(song.lyrics || "")
             .toLowerCase()
             .includes(q)
 
             ||
 
-            String(
-                song.category || ""
-            )
+            String(song.category || "")
             .toLowerCase()
             .includes(q)
 
@@ -2359,17 +2187,12 @@ function renderSongs(){
 
 
     songCount.textContent =
-    `${filtered.length} song${
-        filtered.length !== 1
-        ? "s"
-        : ""
-    }`;
+    `${filtered.length} song${filtered.length !== 1 ? "s" : ""}`;
 
 
     if(filtered.length === 0){
 
         grid.innerHTML = `
-
             <div class="no-results">
 
                 <i
@@ -2377,12 +2200,9 @@ function renderSongs(){
                     style="font-size:2rem;opacity:.4"
                 ></i>
 
-                <p>
-                    No songs found
-                </p>
+                <p>No songs found</p>
 
             </div>
-
         `;
 
         return;
@@ -2394,20 +2214,13 @@ function renderSongs(){
     filtered.map(song => {
 
         const preview =
-        String(
-            song.lyrics || ""
-        )
+        String(song.lyrics || "")
         .split("\n")
-        .find(
-            x => x.trim()
-        )
-        ||
-        "...";
-
+        .find(x => x.trim())
+        || "...";
 
         const link =
         song.audio_url || "";
-
 
         return `
 
@@ -2446,19 +2259,14 @@ function renderSongs(){
                     link
                     ?
                     `
-
                     <button
                         type="button"
                         class="song-action-btn play-song"
                         data-id="${escapeAttribute(song.id)}"
                     >
-
                         <i class="fas fa-play"></i>
-
                         Play
-
                     </button>
-
                     `
                     :
                     ""
@@ -2470,11 +2278,8 @@ function renderSongs(){
                     class="song-action-btn secondary view-song"
                     data-id="${escapeAttribute(song.id)}"
                 >
-
                     <i class="far fa-eye"></i>
-
-                    Lyrics
-
+                    View
                 </button>
 
             </div>
@@ -2486,7 +2291,7 @@ function renderSongs(){
 
                     <i class="far fa-eye"></i>
 
-                    Tap to view full lyrics
+                    Tap to view full
 
                 </span>
 
@@ -2517,41 +2322,26 @@ grid.addEventListener(
         const playButton =
         e.target.closest(".play-song");
 
-
         const viewButton =
         e.target.closest(".view-song");
 
 
-        if(
-            playButton ||
-            viewButton
-        ){
+        if(playButton || viewButton){
 
             e.stopPropagation();
 
-
             const id =
             Number(
-                (
-                    playButton ||
-                    viewButton
-                )
+                (playButton || viewButton)
                 .dataset.id
             );
 
-
             const song =
             songs.find(
-                s =>
-                Number(s.id) === id
+                s => Number(s.id) === id
             );
 
-
-            if(!song){
-
-                return;
-
-            }
+            if(!song) return;
 
 
             if(playButton){
@@ -2564,7 +2354,6 @@ grid.addEventListener(
 
             }
 
-
             return;
 
         }
@@ -2573,24 +2362,15 @@ grid.addEventListener(
         const card =
         e.target.closest(".song-card");
 
-
-        if(!card){
-
-            return;
-
-        }
-
+        if(!card) return;
 
         const id =
         Number(card.dataset.id);
 
-
         const song =
         songs.find(
-            s =>
-            Number(s.id) === id
+            s => Number(s.id) === id
         );
-
 
         if(song){
 
@@ -2616,13 +2396,8 @@ function openDetail(song){
 
 
     detailTitle.innerHTML = `
-
         <i class="fas fa-music"></i>
-
-        ${escapeHTML(
-            song.title || "Song"
-        )}
-
+        ${escapeHTML(song.title)}
     `;
 
 
@@ -2640,25 +2415,24 @@ function openDetail(song){
                 class="song-action-btn"
                 id="detailPlayBtn"
             >
-
                 <i class="fas fa-play"></i>
-
                 Play Song
-
             </button>
 
         `;
 
 
-        const detailPlayBtn =
-        document.getElementById(
-            "detailPlayBtn"
-        );
-
-
-        detailPlayBtn.addEventListener(
+        document
+        .getElementById("detailPlayBtn")
+        .addEventListener(
             "click",
             function(){
+
+                /*
+                    Keep lyrics modal open.
+                    User can continue reading lyrics
+                    while song is playing.
+                */
 
                 playYouTube(song);
 
@@ -2686,7 +2460,6 @@ function openDetail(song){
         "active"
     );
 
-
     document.body.style.overflow =
     "hidden";
 
@@ -2702,7 +2475,6 @@ function closeDetail(){
     detailOverlay.classList.remove(
         "active"
     );
-
 
     document.body.style.overflow =
     "";
@@ -2721,29 +2493,6 @@ detailOverlay.addEventListener(
     function(e){
 
         if(e.target === this){
-
-            closeDetail();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   ESCAPE KEY FOR LYRICS
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(e){
-
-        if(
-            e.key === "Escape" &&
-            detailOverlay.classList.contains(
-                "active"
-            )
-        ){
 
             closeDetail();
 
@@ -2811,9 +2560,11 @@ function renderAdminList(){
 
                     ?
 
-                    `<span class="edit-badge">
+                    `
+                    <span class="edit-badge">
                         Editing
-                    </span>`
+                    </span>
+                    `
 
                     :
 
@@ -2827,27 +2578,21 @@ function renderAdminList(){
 
                 <button
                     class="btn btn-edit edit-song"
-                    data-id="${escapeAttribute(song.id)}"
+                    data-id="${song.id}"
                     type="button"
                 >
-
                     <i class="fas fa-pen"></i>
-
                     Edit
-
                 </button>
 
 
                 <button
                     class="btn btn-danger delete-song"
-                    data-id="${escapeAttribute(song.id)}"
+                    data-id="${song.id}"
                     type="button"
                 >
-
                     <i class="fas fa-trash"></i>
-
                     Delete
-
                 </button>
 
             </div>
@@ -2866,9 +2611,7 @@ function renderAdminList(){
             function(){
 
                 startEditSong(
-                    Number(
-                        this.dataset.id
-                    )
+                    Number(this.dataset.id)
                 );
 
             }
@@ -2886,9 +2629,7 @@ function renderAdminList(){
             function(){
 
                 deleteSong(
-                    Number(
-                        this.dataset.id
-                    )
+                    Number(this.dataset.id)
                 );
 
             }
@@ -2908,15 +2649,11 @@ async function login(){
     const email =
     loginEmail.value.trim();
 
-
     const password =
     loginPassword.value;
 
 
-    if(
-        !email ||
-        !password
-    ){
+    if(!email || !password){
 
         loginError.textContent =
         "Please enter email and password.";
@@ -2936,11 +2673,8 @@ async function login(){
     } =
     await supabaseClient.auth
     .signInWithPassword({
-
         email,
-
         password
-
     });
 
 
@@ -2970,7 +2704,6 @@ async function login(){
 
     setAdminLoggedIn();
 
-
     renderAdminList();
 
 }
@@ -2985,10 +2718,8 @@ function setAdminLoggedIn(){
     adminToggleBtn.innerHTML =
     `<i class="fas fa-user"></i> Logout`;
 
-
     adminToggleBtn.style.background =
     "#2ecc71";
-
 
     adminToggleBtn.style.color =
     "#fff";
@@ -3004,26 +2735,20 @@ async function logout(){
 
     await supabaseClient.auth.signOut();
 
-
     currentUser = null;
-
 
     adminPanel.classList.remove(
         "active"
     );
 
-
     adminToggleBtn.innerHTML =
     `<i class="fas fa-user-shield"></i> Admin`;
-
 
     adminToggleBtn.style.background =
     "";
 
-
     adminToggleBtn.style.color =
     "";
-
 
     renderAdminList();
 
@@ -3048,10 +2773,8 @@ adminToggleBtn.addEventListener(
                 "active"
             );
 
-
             loginError.textContent =
             "";
-
 
             loginEmail.focus();
 
@@ -3079,9 +2802,7 @@ async function addSong(){
 
 
     const editId =
-    Number(
-        editingSongId.value
-    );
+    Number(editingSongId.value);
 
 
     if(editId){
@@ -3096,23 +2817,17 @@ async function addSong(){
     const title =
     songTitle.value.trim();
 
-
     const lyrics =
     songLyrics.value.trim();
 
-
     const link =
     songLink.value.trim();
-
 
     const category =
     songCategory.value.trim();
 
 
-    if(
-        !title ||
-        !lyrics
-    ){
+    if(!title || !lyrics){
 
         alert(
             "Song title and lyrics are required."
@@ -3125,7 +2840,6 @@ async function addSong(){
 
     addSongBtn.disabled =
     true;
-
 
     addSongBtn.textContent =
     "Saving...";
@@ -3156,7 +2870,6 @@ async function addSong(){
     addSongBtn.disabled =
     false;
 
-
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Add Song`;
 
@@ -3175,9 +2888,7 @@ async function addSong(){
 
     clearForm();
 
-
     await loadSongs();
-
 
     alert(
         "✅ Song added successfully!"
@@ -3187,41 +2898,30 @@ async function addSong(){
 
 
 /* =========================================================
-   EDIT
+   EDIT SONG
 ========================================================= */
 
 function startEditSong(id){
 
     const song =
     songs.find(
-        s =>
-        Number(s.id) ===
-        Number(id)
+        s => Number(s.id) === Number(id)
     );
 
-
-    if(!song){
-
-        return;
-
-    }
+    if(!song) return;
 
 
     editingSongId.value =
     song.id;
 
-
     songTitle.value =
     song.title || "";
-
 
     songLyrics.value =
     song.lyrics || "";
 
-
     songLink.value =
     song.audio_url || "";
-
 
     songCategory.value =
     song.category || "";
@@ -3230,21 +2930,15 @@ function startEditSong(id){
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Update Song`;
 
-
     cancelEditBtn.style.display =
     "inline-block";
 
-
     formStatus.textContent =
     "Editing: " +
-    (
-        song.title ||
-        "Song"
-    );
+    (song.title || "Song");
 
 
     renderAdminList();
-
 
     songTitle.focus();
 
@@ -3260,30 +2954,23 @@ function clearForm(){
     editingSongId.value =
     "";
 
-
     songTitle.value =
     "";
-
 
     songLyrics.value =
     "";
 
-
     songLink.value =
     "";
-
 
     songCategory.value =
     "";
 
-
     addSongBtn.innerHTML =
     `<i class="fas fa-save"></i> Add Song`;
 
-
     cancelEditBtn.style.display =
     "none";
-
 
     formStatus.textContent =
     "";
@@ -3298,7 +2985,7 @@ cancelEditBtn.addEventListener(
 
 
 /* =========================================================
-   UPDATE
+   UPDATE SONG
 ========================================================= */
 
 async function updateSong(id){
@@ -3306,23 +2993,17 @@ async function updateSong(id){
     const title =
     songTitle.value.trim();
 
-
     const lyrics =
     songLyrics.value.trim();
 
-
     const link =
     songLink.value.trim();
-
 
     const category =
     songCategory.value.trim();
 
 
-    if(
-        !title ||
-        !lyrics
-    ){
+    if(!title || !lyrics){
 
         alert(
             "Song title and lyrics are required."
@@ -3369,42 +3050,9 @@ async function updateSong(id){
     }
 
 
-    /*
-       If the edited song is currently
-       playing, update Mini Player title
-       and lyrics immediately.
-    */
-
-    if(
-        currentSong &&
-        Number(currentSong.id) ===
-        Number(id)
-    ){
-
-        currentSong.title =
-        title;
-
-        currentSong.lyrics =
-        lyrics;
-
-        currentSong.audio_url =
-        link || null;
-
-        currentSong.category =
-        category || "Worship";
-
-
-        playerTitle.textContent =
-        title;
-
-    }
-
-
     clearForm();
 
-
     await loadSongs();
-
 
     alert(
         "✅ Song updated!"
@@ -3414,16 +3062,14 @@ async function updateSong(id){
 
 
 /* =========================================================
-   DELETE
+   DELETE SONG
 ========================================================= */
 
 async function deleteSong(id){
 
-    if(
-        !confirm(
-            "Are you sure you want to delete this song?"
-        )
-    ){
+    if(!confirm(
+        "Are you sure you want to delete this song?"
+    )){
 
         return;
 
@@ -3454,39 +3100,7 @@ async function deleteSong(id){
     }
 
 
-    /*
-       If deleted song is currently playing,
-       stop Mini Player.
-    */
-
-    if(
-        currentSong &&
-        Number(currentSong.id) ===
-        Number(id)
-    ){
-
-        if(youtubePlayerAPI){
-
-            youtubePlayerAPI.stopVideo();
-
-        }
-
-
-        stopPlayerTimer();
-
-
-        currentSong = null;
-
-
-        customPlayer.classList.remove(
-            "active"
-        );
-
-    }
-
-
     await loadSongs();
-
 
     alert(
         "✅ Song deleted."
@@ -3550,7 +3164,7 @@ loginOverlay.addEventListener(
 
 
 /* =========================================================
-   LOGOUT
+   LOGOUT BUTTON
 ========================================================= */
 
 logoutBtn.addEventListener(
@@ -3565,34 +3179,12 @@ logoutBtn.addEventListener(
 
 function escapeHTML(value){
 
-    return String(
-        value ?? ""
-    )
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    )
-
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+    return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -3617,19 +3209,14 @@ async function checkUser(){
     .getUser();
 
 
-    if(
-        data &&
-        data.user
-    ){
+    if(data && data.user){
 
         currentUser =
         data.user;
 
-
         adminPanel.classList.add(
             "active"
         );
-
 
         setAdminLoggedIn();
 
@@ -3660,14 +3247,11 @@ async function init(){
 
     initTheme();
 
-
     await checkUser();
-
 
     await loadSongs();
 
 }
-
 
 init();
 
