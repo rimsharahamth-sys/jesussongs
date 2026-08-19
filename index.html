@@ -15,6 +15,7 @@
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         * {
@@ -483,6 +484,20 @@
             min-height: 50px;
             padding: .5rem .6rem;
         }
+
+        /* MUSIC APP STYLE CONTROLS */
+        .mini-player-time-row {
+            display:flex; align-items:center; gap:.55rem; padding:.5rem .8rem .15rem;
+            color:var(--muted); font-size:.68rem; font-variant-numeric:tabular-nums;
+        }
+        .mini-player-seek { flex:1; min-width:0; accent-color:#f0c040; cursor:pointer; }
+        .mini-player-controls { display:flex; align-items:center; justify-content:center; gap:.45rem; padding:.35rem .7rem .65rem; }
+        .mini-control-btn { width:34px; height:34px; border:0; border-radius:50%; background:transparent; color:var(--text); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+        .mini-control-btn:hover { background:var(--border); }
+        .mini-control-btn.main { width:42px; height:42px; background:#f0c040; color:#1a1a2e; }
+        .mini-volume { width:70px; accent-color:#f0c040; cursor:pointer; }
+        .youtube-player.mini .mini-player-time-row, .youtube-player.mini .mini-player-controls { display:none; }
+        .youtube-player.mini .mini-player-progress { display:none; }
 
         .song-actions {
             display: flex;
@@ -958,42 +973,35 @@
 </main>
 
 
-<!-- CUSTOM MINI PLAYER
-     The YouTube iframe below is hidden completely.
-     Only this custom mini-player UI is displayed. -->
+<!-- CUSTOM MUSIC MINI PLAYER -->
 <div class="youtube-player" id="youtubePlayer">
     <div class="youtube-player-head">
         <div class="youtube-player-info">
-            <div class="mini-music-icon">
-                <i class="fas fa-music"></i>
-            </div>
+            <div class="mini-music-icon"><i class="fas fa-music"></i></div>
             <div style="min-width:0;">
                 <div class="youtube-player-title" id="youtubePlayerTitle">Now Playing</div>
                 <span class="mini-playing">♪ Playing from YouTube</span>
             </div>
         </div>
-
         <div class="youtube-player-actions">
-            <button id="youtubeMinBtn" type="button" title="Mini Player">
-                <i class="fas fa-minus"></i>
-            </button>
-            <button id="youtubeCloseBtn" type="button" title="Stop">
-                <i class="fas fa-times"></i>
-            </button>
+            <button id="youtubeMinBtn" type="button" title="Compact player"><i class="fas fa-minus"></i></button>
+            <button id="youtubeCloseBtn" type="button" title="Stop"><i class="fas fa-times"></i></button>
         </div>
     </div>
-
-    <div class="mini-player-progress">
-        <span id="miniPlayerProgress"></span>
+    <div class="mini-player-time-row">
+        <span id="miniCurrentTime">0:00</span>
+        <input id="miniSeek" class="mini-player-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Song progress">
+        <span id="miniDuration">0:00</span>
     </div>
-
-    <!-- Hidden YouTube audio source -->
-    <iframe
-        id="youtubeFrame"
-        class="youtube-frame"
-        title="Audio source"
-        allow="autoplay; encrypted-media"
-    ></iframe>
+    <div class="mini-player-controls">
+        <button class="mini-control-btn" id="miniBack15" type="button" title="Back 15 seconds"><i class="fas fa-rotate-left"></i></button>
+        <button class="mini-control-btn main" id="miniPlayPause" type="button" title="Play/Pause"><i class="fas fa-play"></i></button>
+        <button class="mini-control-btn" id="miniForward15" type="button" title="Forward 15 seconds"><i class="fas fa-rotate-right"></i></button>
+        <i class="fas fa-volume-high" style="font-size:.75rem;color:var(--muted);margin-left:.15rem;"></i>
+        <input id="miniVolume" class="mini-volume" type="range" min="0" max="100" value="100" aria-label="Volume">
+    </div>
+    <div class="mini-player-progress"><span id="miniPlayerProgress"></span></div>
+    <div id="youtubeFrameHost" class="youtube-frame" aria-hidden="true"></div>
 </div>
 
 <footer class="footer">
@@ -1121,8 +1129,8 @@ const themeToggleBtn =
 const youtubePlayer =
     document.getElementById("youtubePlayer");
 
-const youtubeFrame =
-    document.getElementById("youtubeFrame");
+const youtubeFrameHost =
+    document.getElementById("youtubeFrameHost");
 
 const youtubePlayerTitle =
     document.getElementById("youtubePlayerTitle");
@@ -1135,6 +1143,73 @@ const youtubeMinBtn =
 
 const miniPlayerProgress =
     document.getElementById("miniPlayerProgress");
+
+const miniCurrentTime = document.getElementById("miniCurrentTime");
+const miniDuration = document.getElementById("miniDuration");
+const miniSeek = document.getElementById("miniSeek");
+const miniPlayPause = document.getElementById("miniPlayPause");
+const miniBack15 = document.getElementById("miniBack15");
+const miniForward15 = document.getElementById("miniForward15");
+const miniVolume = document.getElementById("miniVolume");
+
+let ytPlayer = null;
+let ytReady = false;
+let pendingVideoId = null;
+let progressTimer = null;
+let seeking = false;
+
+function formatTime(seconds) {
+    seconds = Math.max(0, Math.floor(Number(seconds) || 0));
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const sec = String(seconds % 60).padStart(2, "0");
+    return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+}
+
+function setPlayIcon(playing) {
+    miniPlayPause.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+}
+
+function updatePlayerUI() {
+    if (!ytPlayer || !ytReady) return;
+    const duration = Number(ytPlayer.getDuration()) || 0;
+    const current = Number(ytPlayer.getCurrentTime()) || 0;
+    miniCurrentTime.textContent = formatTime(current);
+    miniDuration.textContent = formatTime(duration);
+    if (!seeking && duration > 0) miniSeek.value = Math.round((current / duration) * 1000);
+    miniPlayerProgress.style.width = `${duration > 0 ? Math.min(100, current / duration * 100) : 0}%`;
+}
+
+function startProgressTimer() { clearInterval(progressTimer); progressTimer = setInterval(updatePlayerUI, 250); }
+function stopProgressTimer() { clearInterval(progressTimer); progressTimer = null; }
+
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player("youtubeFrameHost", {
+        width: "1", height: "1", videoId: "",
+        playerVars: { autoplay:0, controls:0, rel:0, playsinline:1, modestbranding:1, enablejsapi:1 },
+        events: {
+            onReady: () => {
+                ytReady = true;
+                ytPlayer.setVolume(Number(miniVolume.value));
+                if (pendingVideoId) loadPendingVideo();
+            },
+            onStateChange: event => {
+                if (event.data === YT.PlayerState.PLAYING) { setPlayIcon(true); startProgressTimer(); updatePlayerUI(); }
+                else if (event.data === YT.PlayerState.PAUSED) { setPlayIcon(false); updatePlayerUI(); stopProgressTimer(); }
+                else if (event.data === YT.PlayerState.ENDED) { setPlayIcon(false); updatePlayerUI(); stopProgressTimer(); }
+            },
+            onError: event => console.error("YouTube player error:", event.data)
+        }
+    });
+}
+window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+function loadPendingVideo() {
+    if (!ytPlayer || !ytReady || !pendingVideoId) return;
+    ytPlayer.loadVideoById({ videoId: pendingVideoId, startSeconds: 0 });
+    pendingVideoId = null;
+}
+
 
 
 /* ============================================================
@@ -1556,67 +1631,82 @@ function getYouTubeId(url) {
 
 function playYouTube(song) {
     const videoId = getYouTubeId(song.audio_url);
-
     if (!videoId) {
-        alert(
-            "This is not a valid YouTube link.\\n\\n" +
-            "Use a normal YouTube URL such as:\\n" +
-            "https://www.youtube.com/watch?v=VIDEO_ID"
-        );
+        alert("This is not a valid YouTube link.\n\nUse: https://www.youtube.com/watch?v=VIDEO_ID");
         return;
     }
-
-    youtubePlayerTitle.textContent =
-        song.title || "Now Playing";
-
-    if (miniPlayerProgress) {
-        miniPlayerProgress.style.width = "0%";
-    }
-
-    /*
-      IMPORTANT:
-      The YouTube iframe is completely hidden off-screen.
-      The user only sees our custom mini-player.
-      autoplay=1 starts the YouTube audio after the Play button click.
-    */
-    youtubeFrame.src =
-        "https://www.youtube.com/embed/" +
-        encodeURIComponent(videoId) +
-        "?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1";
-
+    youtubePlayerTitle.textContent = song.title || "Now Playing";
     youtubePlayer.classList.add("active");
     youtubePlayer.classList.remove("mini");
+    miniCurrentTime.textContent = "0:00";
+    miniDuration.textContent = "0:00";
+    miniSeek.value = 0;
+    miniPlayerProgress.style.width = "0%";
+    setPlayIcon(false);
+    pendingVideoId = videoId;
+    if (ytReady && ytPlayer) {
+        ytPlayer.loadVideoById({ videoId, startSeconds: 0 });
+        pendingVideoId = null;
+    }
 }
 
 function stopYouTube() {
-    youtubeFrame.src = "";
-    youtubePlayer.classList.remove("active");
-    youtubePlayer.classList.remove("mini");
-
-    if (miniPlayerProgress) {
-        miniPlayerProgress.style.width = "0%";
-    }
-
-    youtubePlayerTitle.textContent = "Now Playing";
+    pendingVideoId = null;
+    stopProgressTimer();
+    if (ytPlayer && ytReady) ytPlayer.stopVideo();
+    youtubePlayer.classList.remove("active", "mini");
+    miniSeek.value = 0;
+    miniCurrentTime.textContent = "0:00";
+    miniDuration.textContent = "0:00";
+    miniPlayerProgress.style.width = "0%";
+    setPlayIcon(false);
 }
 
 function minimizeYouTube() {
-    /*
-      The player is already a mini-player.
-      This button only toggles a smaller compact version.
-      The hidden YouTube iframe remains loaded, so playback continues.
-    */
     youtubePlayer.classList.toggle("mini");
-
-    if (youtubePlayer.classList.contains("mini")) {
-        youtubePlayer.style.width = "230px";
-    } else {
-        youtubePlayer.style.width = "";
-    }
+    youtubeMinBtn.innerHTML = youtubePlayer.classList.contains("mini") ? '<i class="fas fa-expand"></i>' : '<i class="fas fa-minus"></i>';
 }
 
 youtubeCloseBtn.addEventListener("click", stopYouTube);
 youtubeMinBtn.addEventListener("click", minimizeYouTube);
+
+miniPlayPause.addEventListener("click", () => {
+    if (!ytPlayer || !ytReady) return;
+    const state = ytPlayer.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
+});
+
+function commitSeek() {
+    if (!ytPlayer || !ytReady) { seeking = false; return; }
+    const duration = Number(ytPlayer.getDuration()) || 0;
+    ytPlayer.seekTo(duration * Number(miniSeek.value) / 1000, true);
+    seeking = false;
+    updatePlayerUI();
+}
+miniSeek.addEventListener("pointerdown", () => { seeking = true; });
+miniSeek.addEventListener("input", () => {
+    const duration = ytPlayer && ytReady ? Number(ytPlayer.getDuration()) || 0 : 0;
+    const current = duration * Number(miniSeek.value) / 1000;
+    miniCurrentTime.textContent = formatTime(current);
+    miniPlayerProgress.style.width = `${Number(miniSeek.value) / 10}%`;
+});
+miniSeek.addEventListener("change", commitSeek);
+miniSeek.addEventListener("pointerup", commitSeek);
+
+miniBack15.addEventListener("click", () => {
+    if (!ytPlayer || !ytReady) return;
+    ytPlayer.seekTo(Math.max(0, ytPlayer.getCurrentTime() - 15), true);
+    updatePlayerUI();
+});
+miniForward15.addEventListener("click", () => {
+    if (!ytPlayer || !ytReady) return;
+    ytPlayer.seekTo(Math.min(ytPlayer.getDuration(), ytPlayer.getCurrentTime() + 15), true);
+    updatePlayerUI();
+});
+miniVolume.addEventListener("input", () => {
+    if (ytPlayer && ytReady) ytPlayer.setVolume(Number(miniVolume.value));
+});
 
 /* ============================================================
    LOGIN
