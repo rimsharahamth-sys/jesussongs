@@ -355,18 +355,19 @@
             font-size: 1rem;
         }
 
-        /* AUDIO-ONLY MINI PLAYER */
+        /* CUSTOM MINI PLAYER - YOUTUBE VIDEO IS NEVER VISIBLE */
         .youtube-player {
             position: fixed;
             right: 18px;
             bottom: 18px;
-            width: 340px;
+            width: 330px;
             max-width: calc(100vw - 36px);
-            background: #111;
-            color: #fff;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 14px 40px rgba(0,0,0,.4);
+            box-shadow: 0 14px 40px rgba(0,0,0,.25);
             z-index: 500;
             display: none;
         }
@@ -374,34 +375,33 @@
         .youtube-player.active { display: block; }
 
         .youtube-player-head {
-            min-height: 52px;
+            min-height: 58px;
             padding: .65rem .75rem;
-            background: #181818;
-            color: #fff;
+            background: var(--surface-2);
+            color: var(--text);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: .6rem;
-            font-size: .82rem;
         }
 
-        .youtube-player-title-wrap {
+        .youtube-player-info {
             min-width: 0;
             display: flex;
             align-items: center;
-            gap: .6rem;
+            gap: .65rem;
         }
 
-        .mini-player-icon {
-            width: 34px;
-            height: 34px;
+        .mini-music-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
+            flex: 0 0 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #f0c040;
             color: #1a1a2e;
-            flex: 0 0 auto;
         }
 
         .youtube-player-title {
@@ -409,53 +409,104 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             font-weight: 700;
+            font-size: .86rem;
+        }
+
+        .mini-playing {
+            display: block;
+            color: var(--muted);
+            font-size: .7rem;
+            margin-top: 2px;
+        }
+
+        .youtube-player-actions {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
         }
 
         .youtube-player-actions button {
+            width: 34px;
+            height: 34px;
             border: 0;
+            border-radius: 50%;
             background: transparent;
-            color: #fff;
+            color: var(--text);
             cursor: pointer;
-            font-size: 1rem;
-            margin-left: .35rem;
+            font-size: .95rem;
         }
 
         .youtube-player-actions button:hover {
-            color: #f0c040;
+            background: var(--border);
         }
 
-        /* Hidden YouTube iframe: audio continues, YouTube UI/video is never visible */
+        /* The actual YouTube iframe is audio-only and visually hidden. */
         .youtube-frame {
-            position: absolute;
+            position: fixed;
             width: 1px;
             height: 1px;
+            left: -10000px;
+            top: -10000px;
             border: 0;
             opacity: 0;
             pointer-events: none;
-            left: -9999px;
-            top: -9999px;
         }
 
-        .mini-player-status {
-            padding: .55rem .8rem .7rem;
-            background: #111;
-            color: #aaa;
-            font-size: .75rem;
-            display: flex;
-            align-items: center;
-            gap: .45rem;
+        .mini-player-progress {
+            height: 3px;
+            background: var(--border);
         }
 
-        .mini-player-status i {
-            color: #f0c040;
+        .mini-player-progress span {
+            display: block;
+            width: 0%;
+            height: 100%;
+            background: #f0c040;
+            transition: width .5s linear;
         }
 
         .youtube-player.mini {
-            width: 245px;
+            width: 230px !important;
         }
 
-        .youtube-player.mini .mini-player-status {
+        .youtube-player.mini .mini-playing {
             display: none;
+        }
+
+        .youtube-player.mini .mini-music-icon {
+            width: 34px;
+            height: 34px;
+            flex-basis: 34px;
+        }
+
+        .youtube-player.mini .youtube-player-head {
+            min-height: 50px;
+            padding: .5rem .6rem;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: .55rem;
+            flex-wrap: wrap;
+            padding: .2rem 1.5rem .9rem;
+        }
+        .song-action-btn {
+            padding: .45rem .8rem;
+            border: 0;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .82rem;
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+        .song-action-btn.secondary {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        body.dark .song-action-btn.secondary {
+            background: #252a36;
         }
 
         @media(max-width:650px) {
@@ -907,36 +958,40 @@
 </main>
 
 
-<!-- AUDIO-ONLY MINI PLAYER -->
+<!-- CUSTOM MINI PLAYER
+     The YouTube iframe below is hidden completely.
+     Only this custom mini-player UI is displayed. -->
 <div class="youtube-player" id="youtubePlayer">
     <div class="youtube-player-head">
-        <div class="youtube-player-title-wrap">
-            <span class="mini-player-icon">
+        <div class="youtube-player-info">
+            <div class="mini-music-icon">
                 <i class="fas fa-music"></i>
-            </span>
-            <span class="youtube-player-title" id="youtubePlayerTitle">Now Playing</span>
+            </div>
+            <div style="min-width:0;">
+                <div class="youtube-player-title" id="youtubePlayerTitle">Now Playing</div>
+                <span class="mini-playing">♪ Playing from YouTube</span>
+            </div>
         </div>
 
-        <span class="youtube-player-actions">
-            <button id="youtubeMinBtn" type="button" title="Minimize">
+        <div class="youtube-player-actions">
+            <button id="youtubeMinBtn" type="button" title="Mini Player">
                 <i class="fas fa-minus"></i>
             </button>
             <button id="youtubeCloseBtn" type="button" title="Stop">
                 <i class="fas fa-times"></i>
             </button>
-        </span>
+        </div>
     </div>
 
-    <div class="mini-player-status">
-        <i class="fas fa-volume-up"></i>
-        <span>Playing song audio</span>
+    <div class="mini-player-progress">
+        <span id="miniPlayerProgress"></span>
     </div>
 
-    <!-- Hidden YouTube player. Video/UI is not displayed. -->
+    <!-- Hidden YouTube audio source -->
     <iframe
         id="youtubeFrame"
         class="youtube-frame"
-        title="Audio player"
+        title="Audio source"
         allow="autoplay; encrypted-media"
     ></iframe>
 </div>
@@ -1077,6 +1132,9 @@ const youtubeCloseBtn =
 
 const youtubeMinBtn =
     document.getElementById("youtubeMinBtn");
+
+const miniPlayerProgress =
+    document.getElementById("miniPlayerProgress");
 
 
 /* ============================================================
@@ -1501,8 +1559,8 @@ function playYouTube(song) {
 
     if (!videoId) {
         alert(
-            "This is not a valid YouTube link.\n\n" +
-            "Use a normal YouTube URL such as:\n" +
+            "This is not a valid YouTube link.\\n\\n" +
+            "Use a normal YouTube URL such as:\\n" +
             "https://www.youtube.com/watch?v=VIDEO_ID"
         );
         return;
@@ -1511,31 +1569,49 @@ function playYouTube(song) {
     youtubePlayerTitle.textContent =
         song.title || "Now Playing";
 
-    // The click that calls this function is a user gesture,
-    // so the browser is allowed to start playback.
+    if (miniPlayerProgress) {
+        miniPlayerProgress.style.width = "0%";
+    }
+
+    /*
+      IMPORTANT:
+      The YouTube iframe is completely hidden off-screen.
+      The user only sees our custom mini-player.
+      autoplay=1 starts the YouTube audio after the Play button click.
+    */
     youtubeFrame.src =
         "https://www.youtube.com/embed/" +
         encodeURIComponent(videoId) +
-        "?autoplay=1&rel=0&modestbranding=1&playsinline=1";
+        "?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1";
 
     youtubePlayer.classList.add("active");
+    youtubePlayer.classList.remove("mini");
 }
 
 function stopYouTube() {
     youtubeFrame.src = "";
     youtubePlayer.classList.remove("active");
+    youtubePlayer.classList.remove("mini");
+
+    if (miniPlayerProgress) {
+        miniPlayerProgress.style.width = "0%";
+    }
+
     youtubePlayerTitle.textContent = "Now Playing";
 }
 
 function minimizeYouTube() {
+    /*
+      The player is already a mini-player.
+      This button only toggles a smaller compact version.
+      The hidden YouTube iframe remains loaded, so playback continues.
+    */
     youtubePlayer.classList.toggle("mini");
 
     if (youtubePlayer.classList.contains("mini")) {
-        youtubePlayer.style.width = "180px";
-        youtubePlayer.querySelector(".youtube-frame").style.display = "none";
+        youtubePlayer.style.width = "230px";
     } else {
         youtubePlayer.style.width = "";
-        youtubePlayer.querySelector(".youtube-frame").style.display = "block";
     }
 }
 
