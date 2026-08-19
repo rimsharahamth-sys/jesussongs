@@ -363,6 +363,7 @@
             color: var(--muted-text);
         }
 
+        /* SEARCH SCORE BADGE */
         .relevance-badge {
             display: inline-block;
             margin-top: .5rem;
@@ -374,6 +375,7 @@
             font-weight: 700;
         }
 
+        /* NO RESULTS */
         .no-results {
             text-align: center;
             padding: 5rem 2rem;
@@ -424,6 +426,7 @@
             margin-bottom: 1rem;
         }
 
+        /* FORM */
         .form-group {
             margin-bottom: 1rem;
         }
@@ -472,6 +475,7 @@
             min-height: 1.2rem;
         }
 
+        /* ADMIN SONG LIST */
         .admin-song-list {
             margin-top: 2rem;
             border-top: 2px dashed var(--input-border);
@@ -645,7 +649,7 @@
         }
 
         /* MOBILE */
-        @media(max-width:650px) {
+        @media (max-width: 650px) {
             .header {
                 flex-direction: column;
                 align-items: stretch;
@@ -703,31 +707,21 @@
 
             </div>
 
-            <span class="song-count" id="songCount">
-                Loading...
-            </span>
+            <span class="song-count" id="songCount">Loading...</span>
 
             <button id="themeToggleBtn" title="Change Theme">
-
                 <i class="fas fa-moon" id="themeIcon"></i>
-
-                <span id="themeText">
-                    Dark
-                </span>
-
+                <span id="themeText">Dark</span>
             </button>
 
             <button class="btn btn-outline" id="adminToggleBtn">
-
                 <i class="fas fa-user-shield"></i>
                 Admin
-
             </button>
 
         </div>
 
     </header>
-
 
     <!-- LOGIN -->
 
@@ -744,9 +738,7 @@
 
             <input type="password" id="loginPassword" placeholder="Password">
 
-            <button class="btn" id="loginBtn">
-                Login
-            </button>
+            <button class="btn" id="loginBtn">Login</button>
 
             <div class="login-error" id="loginError"></div>
 
@@ -754,20 +746,15 @@
 
     </div>
 
-
     <!-- SONG DETAIL -->
 
     <div class="song-detail-overlay" id="songDetailOverlay">
 
         <div class="song-detail-modal">
 
-            <button class="close-btn" id="detailCloseBtn">
-                &times;
-            </button>
+            <button class="close-btn" id="detailCloseBtn">&times;</button>
 
-            <div class="detail-title" id="detailTitle">
-                Song
-            </div>
+            <div class="detail-title" id="detailTitle">Song</div>
 
             <div class="detail-lyrics" id="detailLyrics"></div>
 
@@ -777,11 +764,9 @@
 
     </div>
 
-
     <main class="main">
 
         <div class="search-status" id="searchStatus"></div>
-
 
         <!-- ADMIN -->
 
@@ -795,35 +780,23 @@
             </h2>
 
             <div class="form-group">
-
                 <label>Song Title *</label>
-
                 <input type="text" id="songTitle" placeholder="e.g. Amazing Grace">
-
             </div>
 
             <div class="form-group">
-
                 <label>Lyrics *</label>
-
                 <textarea id="songLyrics" placeholder="Enter full lyrics..."></textarea>
-
             </div>
 
             <div class="form-group">
-
                 <label>Audio / YouTube Link</label>
-
                 <input type="url" id="songLink" placeholder="https://...">
-
             </div>
 
             <div class="form-group">
-
                 <label>Category</label>
-
                 <input type="text" id="songCategory" placeholder="Worship">
-
             </div>
 
             <div class="form-actions">
@@ -848,9 +821,7 @@
 
                 <h3>Existing Songs</h3>
 
-                <button class="btn btn-danger" id="logoutBtn">
-                    Logout
-                </button>
+                <button class="btn btn-danger" id="logoutBtn">Logout</button>
 
             </div>
 
@@ -858,13 +829,11 @@
 
         </div>
 
-
         <!-- SONGS -->
 
         <div class="songs-grid" id="songsGrid"></div>
 
     </main>
-
 
     <footer class="footer">
 
@@ -873,7 +842,6 @@
         </p>
 
     </footer>
-
 
     <script>
         /* ============================================================
@@ -892,17 +860,13 @@
                 SUPABASE_PUBLISHABLE_KEY
             );
 
-
         /* ============================================================
            STATE
         ============================================================ */
 
         let songs = [];
-
         let searchQuery = "";
-
         let currentUser = null;
-
 
         /* ============================================================
            DOM
@@ -1001,7 +965,6 @@
         const themeText =
             document.getElementById("themeText");
 
-
         /* ============================================================
            THEME
         ============================================================ */
@@ -1039,7 +1002,6 @@
             );
         }
 
-
         function initializeTheme() {
 
             const saved =
@@ -1065,7 +1027,6 @@
             );
         }
 
-
         themeToggleBtn.addEventListener(
             "click",
             () => {
@@ -1081,7 +1042,6 @@
 
             }
         );
-
 
         /* ============================================================
            TELUGU TRANSLITERATION
@@ -1104,7 +1064,6 @@
             "ఓ": "oo",
             "ఔ": "au"
         };
-
 
         const TELUGU_CONSONANTS = {
 
@@ -1152,7 +1111,6 @@
             "ఱ": "r"
         };
 
-
         const TELUGU_SIGNS = {
 
             "ా": "aa",
@@ -1169,14 +1127,12 @@
             "ౌ": "au"
         };
 
-
         const TELUGU_SPECIAL = {
 
             "ం": "m",
             "ః": "h",
             "ఁ": "m"
         };
-
 
         function transliterateTelugu(text) {
 
@@ -1210,7 +1166,6 @@
                     continue;
                 }
 
-
                 /* Special */
 
                 if (
@@ -1223,7 +1178,6 @@
                     continue;
                 }
 
-
                 /* Consonant */
 
                 if (
@@ -1235,7 +1189,6 @@
 
                     const next =
                         chars[i + 1];
-
 
                     /* Vowel sign */
 
@@ -1253,7 +1206,6 @@
                         continue;
                     }
 
-
                     /* Virama */
 
                     if (
@@ -1267,7 +1219,6 @@
                         continue;
                     }
 
-
                     /* Default inherent 'a' */
 
                     result +=
@@ -1276,23 +1227,17 @@
                     continue;
                 }
 
-
-                /*
-                   Ignore virama when it wasn't
-                   consumed above.
-                */
+                /* Ignore virama when it wasn't consumed above. */
 
                 if (ch === "్") {
                     continue;
                 }
-
 
                 result += ch;
             }
 
             return result;
         }
-
 
         /* ============================================================
            ROMAN TELUGU ALTERNATIVE FORMS
@@ -1349,7 +1294,6 @@
             return [...variants];
         }
 
-
         /* ============================================================
            BASIC NORMALIZATION
         ============================================================ */
@@ -1394,9 +1338,8 @@
                 .trim();
         }
 
-
         /* ============================================================
-           SEARCH TEXT CREATION
+           SEARCH TEXT CREATION — TITLE ONLY
         ============================================================ */
 
         function buildSearchData(song) {
@@ -1404,73 +1347,23 @@
             const title =
                 song.title || "";
 
-            const artist =
-                song.artist || "";
-
-            const lyrics =
-                song.lyrics || "";
-
-            const category =
-                song.category || "";
-
-
-            const original =
-                normalizeBasic(
-                    `${title} ${artist} ${lyrics} ${category}`
-                );
-
-
             const titleOriginal =
                 normalizeBasic(title);
-
 
             const titleRoman =
                 normalizeBasic(
                     transliterateTelugu(title)
                 );
 
-
-            const lyricsRoman =
-                normalizeBasic(
-                    transliterateTelugu(lyrics)
-                );
-
-
-            const artistRoman =
-                normalizeBasic(
-                    transliterateTelugu(artist)
-                );
-
-
-            const categoryRoman =
-                normalizeBasic(
-                    transliterateTelugu(category)
-                );
-
-
             return {
-
-                original,
-
                 titleOriginal,
-
                 titleRoman,
-
-                lyricsRoman,
-
-                artistRoman,
-
-                categoryRoman,
-
-                allRoman:
-                    normalizeBasic(
-                        transliterateTelugu(
-                            `${title} ${artist} ${lyrics} ${category}`
-                        )
-                    )
+                titleWords: [
+                    ...tokenize(titleOriginal),
+                    ...tokenize(titleRoman)
+                ]
             };
         }
-
 
         /* ============================================================
            TOKENIZE
@@ -1486,7 +1379,6 @@
                     word => word.length > 0
                 );
         }
-
 
         /* ============================================================
            LEVENSHTEIN DISTANCE
@@ -1510,10 +1402,7 @@
             }
 
             let previous =
-                Array.from({
-                    length: b.length + 1
-                }, (_, i) => i);
-
+                Array.from({ length: b.length + 1 }, (_, i) => i);
 
             for (
                 let i = 0;
@@ -1523,7 +1412,6 @@
 
                 const current =
                     [i + 1];
-
 
                 for (
                     let j = 0;
@@ -1541,7 +1429,6 @@
                         previous[j] +
                         (a[i] === b[j] ? 0 : 1);
 
-
                     current.push(
                         Math.min(
                             insert,
@@ -1557,7 +1444,6 @@
             return previous[b.length];
         }
 
-
         /* ============================================================
            FUZZY TOKEN MATCH
         ============================================================ */
@@ -1571,7 +1457,6 @@
                 return false;
             }
 
-
             for (
                 const target of targetWords
             ) {
@@ -1580,10 +1465,7 @@
                     continue;
                 }
 
-
-                /*
-                   Exact
-                */
+                /* Exact */
 
                 if (
                     target === queryWord
@@ -1591,10 +1473,7 @@
                     return true;
                 }
 
-
-                /*
-                   Prefix
-                */
+                /* Prefix */
 
                 if (
                     target.startsWith(queryWord) ||
@@ -1615,10 +1494,7 @@
                     }
                 }
 
-
-                /*
-                   Small spelling error
-                */
+                /* Small spelling error */
 
                 if (
                     queryWord.length >= 4 &&
@@ -1643,30 +1519,10 @@
                         return true;
                     }
                 }
-
-
-                /*
-                   Substring match (like Google)
-                */
-
-                if (
-                    queryWord.length >= 3 &&
-                    target.includes(queryWord)
-                ) {
-                    return true;
-                }
-
-                if (
-                    target.length >= 3 &&
-                    queryWord.includes(target)
-                ) {
-                    return true;
-                }
             }
 
             return false;
         }
-
 
         /* ============================================================
            GET QUERY VARIANTS
@@ -1682,10 +1538,8 @@
                     transliterateTelugu(query)
                 );
 
-
             const variants =
                 new Set();
-
 
             if (raw) {
                 variants.add(raw);
@@ -1694,7 +1548,6 @@
             if (teluguToRoman) {
                 variants.add(teluguToRoman);
             }
-
 
             /*
                Add alternative Roman spellings.
@@ -1705,7 +1558,6 @@
                     x => variants.add(x)
                 );
 
-
             createRomanVariants(
                     teluguToRoman
                 )
@@ -1713,14 +1565,12 @@
                     x => variants.add(x)
                 );
 
-
             return [...variants];
         }
 
-
         /* ============================================================
-           SCORE SONG
-           YouTube-style relevance ranking
+           SCORE SONG — TITLE ONLY
+           YouTube-style relevance ranking based on song name
         ============================================================ */
 
         function scoreSong(song, query) {
@@ -1729,25 +1579,24 @@
                 return 0;
             }
 
-
             const data =
                 buildSearchData(song);
-
 
             const queryVariants =
                 getQueryVariants(query);
 
-
             const queryWords =
                 tokenize(query);
 
-
             let bestScore = 0;
 
+            const titleOriginal = data.titleOriginal || "";
+            const titleRoman = data.titleRoman || "";
+            const titleWords = data.titleWords || [];
 
             /*
                ========================================================
-               EXACT TITLE
+               EXACT TITLE MATCH
                ========================================================
             */
 
@@ -1756,8 +1605,8 @@
             ) {
 
                 if (
-                    q === data.titleOriginal ||
-                    q === data.titleRoman
+                    q === titleOriginal ||
+                    q === titleRoman
                 ) {
 
                     bestScore =
@@ -1767,7 +1616,6 @@
                         );
                 }
             }
-
 
             /*
                ========================================================
@@ -1780,9 +1628,9 @@
             ) {
 
                 if (
-                    data.titleOriginal
+                    titleOriginal
                     .startsWith(q) ||
-                    data.titleRoman
+                    titleRoman
                     .startsWith(q)
                 ) {
 
@@ -1793,7 +1641,6 @@
                         );
                 }
             }
-
 
             /*
                ========================================================
@@ -1808,9 +1655,9 @@
                 if (
                     q.length >= 2 &&
                     (
-                        data.titleOriginal
+                        titleOriginal
                         .includes(q) ||
-                        data.titleRoman
+                        titleRoman
                         .includes(q)
                     )
                 ) {
@@ -1823,27 +1670,13 @@
                 }
             }
 
-
             /*
                ========================================================
                ALL QUERY WORDS IN TITLE
                ========================================================
             */
 
-            const titleWords =
-                [
-                    ...tokenize(
-                        data.titleOriginal
-                    ),
-
-                    ...tokenize(
-                        data.titleRoman
-                    )
-                ];
-
-
             let titleWordMatches = 0;
-
 
             for (
                 const queryWord of queryWords
@@ -1854,9 +1687,7 @@
                         queryWord
                     );
 
-
                 let matched = false;
-
 
                 for (
                     const variant of variants
@@ -1874,12 +1705,10 @@
                     }
                 }
 
-
                 if (matched) {
                     titleWordMatches++;
                 }
             }
-
 
             if (
                 queryWords.length > 0 &&
@@ -1905,92 +1734,8 @@
                     );
             }
 
-
-            /*
-               ========================================================
-               LYRICS MATCH
-               ========================================================
-            */
-
-            for (
-                const q of queryVariants
-            ) {
-
-                if (
-                    q.length >= 2 &&
-                    data.lyricsRoman.includes(q)
-                ) {
-
-                    bestScore =
-                        Math.max(
-                            bestScore,
-                            300
-                        );
-                }
-
-                if (
-                    q.length >= 2 &&
-                    data.original.includes(q)
-                ) {
-
-                    bestScore =
-                        Math.max(
-                            bestScore,
-                            250
-                        );
-                }
-            }
-
-
-            /*
-               ========================================================
-               ARTIST
-               ========================================================
-            */
-
-            for (
-                const q of queryVariants
-            ) {
-
-                if (
-                    data.artistRoman.includes(q)
-                ) {
-
-                    bestScore =
-                        Math.max(
-                            bestScore,
-                            200
-                        );
-                }
-            }
-
-
-            /*
-               ========================================================
-               CATEGORY
-               ========================================================
-            */
-
-            for (
-                const q of queryVariants
-            ) {
-
-                if (
-                    data.categoryRoman.includes(q)
-                ) {
-
-                    bestScore =
-                        Math.max(
-                            bestScore,
-                            100
-                        );
-                }
-            }
-
-
             return bestScore;
         }
-
 
         /* ============================================================
            SEARCH MATCH
@@ -2005,12 +1750,10 @@
                 return true;
             }
 
-
             return (
                 scoreSong(song, query) > 0
             );
         }
-
 
         /* ============================================================
            ESCAPE
@@ -2027,12 +1770,10 @@
                 .replace(/'/g, "&#039;");
         }
 
-
         function escapeAttribute(value) {
 
             return escapeHTML(value);
         }
-
 
         /* ============================================================
            LOAD SONGS
@@ -2043,7 +1784,6 @@
             songCount.textContent =
                 "Loading...";
 
-
             const {
                 data,
                 error
@@ -2052,11 +1792,8 @@
                 .from("songs")
                 .select("*")
                 .order(
-                    "id", {
-                        ascending: true
-                    }
+                    "id", { ascending: true }
                 );
-
 
             if (error) {
 
@@ -2064,7 +1801,6 @@
                     "Supabase Error:",
                     error
                 );
-
 
                 grid.innerHTML = `
 
@@ -2075,7 +1811,11 @@
                             </div>
 
                             <div class="no-results-title">
-                                No songs found
+                                Unable to load songs
+                            </div>
+
+                            <div class="no-results-text">
+                                ${escapeHTML(error.message)}
                             </div>
 
                         </div>
@@ -2088,18 +1828,15 @@
                 return;
             }
 
-
             songs =
                 Array.isArray(data) ?
                 data :
                 [];
 
-
             renderSongs();
 
             renderAdminList();
         }
-
 
         /* ============================================================
            RENDER SONGS
@@ -2110,12 +1847,10 @@
             const q =
                 searchQuery.trim();
 
-
             if (!songs.length) {
 
                 songCount.textContent =
                     "0 songs";
-
 
                 grid.innerHTML = `
 
@@ -2129,6 +1864,10 @@
                                 No songs found
                             </div>
 
+                            <div class="no-results-text">
+                                Admin hasn't added any songs yet.
+                            </div>
+
                         </div>
 
                     `;
@@ -2139,7 +1878,6 @@
 
                 return;
             }
-
 
             /*
                ========================================================
@@ -2157,16 +1895,13 @@
                         })
                     );
 
-
                 renderSongCards(
                     normalSongs,
                     false
                 );
 
-
                 songCount.textContent =
                     `${songs.length} song${songs.length !== 1 ? "s" : ""}`;
-
 
                 searchStatus.classList.remove(
                     "active"
@@ -2174,7 +1909,6 @@
 
                 return;
             }
-
 
             /*
                ========================================================
@@ -2188,10 +1922,11 @@
                 .map(
                     song => ({
                         song,
-                        score: scoreSong(
-                            song,
-                            q
-                        )
+                        score:
+                            scoreSong(
+                                song,
+                                q
+                            )
                     })
                 )
 
@@ -2205,15 +1940,12 @@
                     b.score - a.score
                 );
 
-
             songCount.textContent =
                 `${results.length} result${results.length !== 1 ? "s" : ""}`;
-
 
             searchStatus.classList.add(
                 "active"
             );
-
 
             searchStatus.innerHTML = `
 
@@ -2231,7 +1963,6 @@
 
                 `;
 
-
             if (!results.length) {
 
                 grid.innerHTML = `
@@ -2243,7 +1974,11 @@
                             </div>
 
                             <div class="no-results-title">
-                                No songs found
+                                No matching songs found
+                            </div>
+
+                            <div class="no-results-text">
+                                Try a different song name.
                             </div>
 
                         </div>
@@ -2253,13 +1988,11 @@
                 return;
             }
 
-
             renderSongCards(
                 results,
                 true
             );
         }
-
 
         /* ============================================================
            RENDER CARDS
@@ -2277,7 +2010,6 @@
                         const song =
                             item.song;
 
-
                         const preview =
                             (song.lyrics || "")
                             .split("\n")
@@ -2287,10 +2019,8 @@
                             )[0] ||
                             "...";
 
-
                         const link =
                             song.audio_url || "";
-
 
                         return `
 
@@ -2309,26 +2039,23 @@
 
                                         </span>
 
-                                        ${
-                                            showScore ?
-                                            `
-                                            <div>
+                                        ${ showScore ?
+                                        `
+                                        <div>
 
-                                                <span class="relevance-badge">
+                                            <span class="relevance-badge">
 
-                                                    <i class="fas fa-bolt"></i>
+                                                <i class="fas fa-bolt"></i>
 
-                                                    Best Match
+                                                Best Match
 
-                                                </span>
+                                            </span>
 
-                                            </div>
-                                            ` :
-                                            ""
-                                        }
+                                        </div>
+                                        ` :
+                                        "" }
 
                                     </div>
-
 
                                     <div class="song-card-body">
 
@@ -2340,31 +2067,27 @@
 
                                     </div>
 
+                                    ${ link ?
+                                    `
 
-                                    ${
-                                        link ?
-                                        `
+                                    <div class="song-link">
 
-                                        <div class="song-link">
+                                        <a
+                                            href="${escapeAttribute(link)}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
 
-                                            <a
-                                                href="${escapeAttribute(link)}"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
+                                            <i class="fas fa-play-circle"></i>
 
-                                                <i class="fas fa-play-circle"></i>
+                                            Play / Watch
 
-                                                Play / Watch
+                                        </a>
 
-                                            </a>
+                                    </div>
 
-                                        </div>
-
-                                        ` :
-                                        ""
-                                    }
-
+                                    ` :
+                                    "" }
 
                                     <div class="song-footer">
 
@@ -2391,7 +2114,6 @@
                 .join("");
         }
 
-
         /* ============================================================
            ADMIN LIST
         ============================================================ */
@@ -2405,7 +2127,6 @@
                 return;
             }
 
-
             if (!songs.length) {
 
                 adminSongList.innerHTML =
@@ -2415,7 +2136,6 @@
 
                 return;
             }
-
 
             adminSongList.innerHTML =
                 songs.map(
@@ -2427,7 +2147,6 @@
                             ) ===
                             Number(song.id);
 
-
                         return `
 
                                 <div class="admin-song-item">
@@ -2436,28 +2155,22 @@
 
                                         ${escapeHTML(song.title)}
 
-                                        ${
-                                            editing ?
-                                            `
-                                            <span class="edit-badge">
-                                                Editing
-                                            </span>
-                                            ` :
-                                            ""
-                                        }
+                                        ${ editing ?
+                                        `
+                                        <span class="edit-badge">
+                                            Editing
+                                        </span>
+                                        ` :
+                                        "" }
 
                                     </span>
-
 
                                     <div class="actions">
 
                                         <button
                                             class="btn btn-edit edit-song"
                                             data-id="${escapeAttribute(song.id)}"
-                                            style="
-                                            padding:.25rem .8rem;
-                                            font-size:.8rem;
-                                            "
+                                            style="padding:.25rem .8rem; font-size:.8rem;"
                                         >
 
                                             <i class="fas fa-pen"></i>
@@ -2465,14 +2178,10 @@
 
                                         </button>
 
-
                                         <button
                                             class="btn btn-danger delete-song"
                                             data-id="${escapeAttribute(song.id)}"
-                                            style="
-                                            padding:.25rem .8rem;
-                                            font-size:.8rem;
-                                            "
+                                            style="padding:.25rem .8rem; font-size:.8rem;"
                                         >
 
                                             <i class="fas fa-trash"></i>
@@ -2488,7 +2197,6 @@
                     }
                 )
                 .join("");
-
 
             document
                 .querySelectorAll(".edit-song")
@@ -2510,7 +2218,6 @@
 
                     }
                 );
-
 
             document
                 .querySelectorAll(".delete-song")
@@ -2534,7 +2241,6 @@
                 );
         }
 
-
         /* ============================================================
            SONG DETAIL
         ============================================================ */
@@ -2549,11 +2255,9 @@
 
                     `;
 
-
             detailLyrics.textContent =
                 song.lyrics ||
                 "No lyrics available.";
-
 
             if (song.audio_url) {
 
@@ -2578,7 +2282,6 @@
                 detailLink.innerHTML = "";
             }
 
-
             detailOverlay.classList.add(
                 "active"
             );
@@ -2586,7 +2289,6 @@
             document.body.style.overflow =
                 "hidden";
         }
-
 
         function closeDetail() {
 
@@ -2597,7 +2299,6 @@
             document.body.style.overflow =
                 "";
         }
-
 
         /* ============================================================
            LOGIN
@@ -2611,7 +2312,6 @@
             const password =
                 loginPassword.value;
 
-
             if (!email || !password) {
 
                 loginError.textContent =
@@ -2620,10 +2320,8 @@
                 return;
             }
 
-
             loginError.textContent =
                 "Logging in...";
-
 
             const {
                 data,
@@ -2637,7 +2335,6 @@
 
                 });
 
-
             if (error) {
 
                 console.error(error);
@@ -2649,10 +2346,8 @@
                 return;
             }
 
-
             currentUser =
                 data.user;
-
 
             loginOverlay.classList.remove(
                 "active"
@@ -2666,11 +2361,9 @@
 
             renderAdminList();
 
-
             loginEmail.value = "";
             loginPassword.value = "";
         }
-
 
         /* ============================================================
            ADMIN BUTTON
@@ -2688,7 +2381,6 @@
                 "#fff";
         }
 
-
         function resetAdminButton() {
 
             adminToggleBtn.innerHTML =
@@ -2700,7 +2392,6 @@
             adminToggleBtn.style.color =
                 "";
         }
-
 
         /* ============================================================
            LOGOUT
@@ -2723,7 +2414,6 @@
             renderAdminList();
         }
 
-
         /* ============================================================
            ADD SONG
         ============================================================ */
@@ -2739,12 +2429,10 @@
                 return;
             }
 
-
             const editId =
                 Number(
                     editingSongId.value
                 );
-
 
             if (editId) {
 
@@ -2752,7 +2440,6 @@
 
                 return;
             }
-
 
             const title =
                 songTitle.value.trim();
@@ -2766,7 +2453,6 @@
             const category =
                 songCategory.value.trim();
 
-
             if (!title || !lyrics) {
 
                 alert(
@@ -2776,36 +2462,29 @@
                 return;
             }
 
-
             addSongBtn.disabled = true;
 
             addSongBtn.innerHTML =
                 `<i class="fas fa-spinner fa-spin"></i> Saving...`;
-
 
             const {
                 error
             } =
             await supabaseClient
                 .from("songs")
-                .insert([
+                .insert([{
 
-                    {
-                        title,
-                        artist: "Jesus Songs",
-                        lyrics,
-                        audio_url: link || null,
-                        category: category || "Worship"
-                    }
-
-                ]);
-
+                    title,
+                    artist: "Jesus Songs",
+                    lyrics,
+                    audio_url: link || null,
+                    category: category || "Worship"
+                }]);
 
             addSongBtn.disabled = false;
 
             addSongBtn.innerHTML =
                 `<i class="fas fa-save"></i> Add Song`;
-
 
             if (error) {
 
@@ -2819,17 +2498,14 @@
                 return;
             }
 
-
             cancelEdit();
 
             await loadSongs();
-
 
             alert(
                 "✅ Song added successfully!"
             );
         }
-
 
         /* ============================================================
            EDIT
@@ -2844,11 +2520,9 @@
                     Number(id)
                 );
 
-
             if (!song) {
                 return;
             }
-
 
             editingSongId.value =
                 song.id;
@@ -2865,13 +2539,11 @@
             songCategory.value =
                 song.category || "";
 
-
             addSongBtn.innerHTML =
                 `<i class="fas fa-save"></i> Update Song`;
 
             cancelEditBtn.style.display =
                 "inline-block";
-
 
             formStatus.textContent =
                 `Editing: ${song.title}`;
@@ -2879,9 +2551,7 @@
             formStatus.style.color =
                 "#2471a3";
 
-
             renderAdminList();
-
 
             songTitle.scrollIntoView({
                 behavior: "smooth",
@@ -2890,7 +2560,6 @@
 
             songTitle.focus();
         }
-
 
         /* ============================================================
            CANCEL EDIT
@@ -2920,7 +2589,6 @@
             renderAdminList();
         }
 
-
         /* ============================================================
            UPDATE
         ============================================================ */
@@ -2939,7 +2607,6 @@
             const category =
                 songCategory.value.trim();
 
-
             if (!title || !lyrics) {
 
                 alert(
@@ -2949,15 +2616,12 @@
                 return;
             }
 
-
             addSongBtn.disabled = true;
 
             cancelEditBtn.disabled = true;
 
-
             addSongBtn.innerHTML =
                 `<i class="fas fa-spinner fa-spin"></i> Updating...`;
-
 
             const {
                 error
@@ -2979,11 +2643,9 @@
                     id
                 );
 
-
             addSongBtn.disabled = false;
 
             cancelEditBtn.disabled = false;
-
 
             if (error) {
 
@@ -3002,17 +2664,14 @@
                 return;
             }
 
-
             cancelEdit();
 
             await loadSongs();
-
 
             alert(
                 "✅ Song updated successfully!"
             );
         }
-
 
         /* ============================================================
            DELETE
@@ -3024,17 +2683,14 @@
                 return;
             }
 
-
             const confirmed =
                 confirm(
                     "Are you sure you want to delete this song?"
                 );
 
-
             if (!confirmed) {
                 return;
             }
-
 
             const {
                 error
@@ -3046,7 +2702,6 @@
                     "id",
                     id
                 );
-
 
             if (error) {
 
@@ -3060,7 +2715,6 @@
                 return;
             }
 
-
             if (
                 Number(
                     editingSongId.value
@@ -3070,15 +2724,12 @@
                 cancelEdit();
             }
 
-
             await loadSongs();
-
 
             alert(
                 "✅ Song deleted successfully."
             );
         }
-
 
         /* ============================================================
            SEARCH INPUT
@@ -3090,7 +2741,6 @@
 
                 searchQuery =
                     this.value;
-
 
                 if (
                     this.value.trim()
@@ -3107,12 +2757,10 @@
                     );
                 }
 
-
                 renderSongs();
 
             }
         );
-
 
         /* ============================================================
            CLEAR SEARCH
@@ -3137,7 +2785,6 @@
             }
         );
 
-
         /* ============================================================
            ADMIN BUTTON
         ============================================================ */
@@ -3153,7 +2800,6 @@
                     return;
                 }
 
-
                 loginOverlay.classList.add(
                     "active"
                 );
@@ -3166,7 +2812,6 @@
             }
         );
 
-
         /* ============================================================
            LOGIN
         ============================================================ */
@@ -3175,7 +2820,6 @@
             "click",
             login
         );
-
 
         loginPassword.addEventListener(
             "keydown",
@@ -3188,7 +2832,6 @@
             }
         );
 
-
         loginEmail.addEventListener(
             "keydown",
             function(e) {
@@ -3199,7 +2842,6 @@
 
             }
         );
-
 
         /* ============================================================
            CLOSE LOGIN
@@ -3220,7 +2862,6 @@
             }
         );
 
-
         /* ============================================================
            CLOSE DETAIL
         ============================================================ */
@@ -3229,7 +2870,6 @@
             "click",
             closeDetail
         );
-
 
         detailOverlay.addEventListener(
             "click",
@@ -3244,7 +2884,6 @@
             }
         );
 
-
         /* ============================================================
            ESC
         ============================================================ */
@@ -3257,7 +2896,6 @@
                     return;
                 }
 
-
                 closeDetail();
 
                 loginOverlay.classList.remove(
@@ -3266,7 +2904,6 @@
 
             }
         );
-
 
         /* ============================================================
            SONG CARD CLICK
@@ -3282,23 +2919,19 @@
                     return;
                 }
 
-
                 const card =
                     e.target.closest(
                         ".song-card"
                     );
 
-
                 if (!card) {
                     return;
                 }
-
 
                 const id =
                     Number(
                         card.dataset.id
                     );
-
 
                 const song =
                     songs.find(
@@ -3306,7 +2939,6 @@
                         Number(s.id) ===
                         id
                     );
-
 
                 if (song) {
 
@@ -3316,7 +2948,6 @@
 
             }
         );
-
 
         /* ============================================================
            ADMIN EVENTS
@@ -3337,7 +2968,6 @@
             logout
         );
 
-
         /* ============================================================
            CHECK LOGIN
         ============================================================ */
@@ -3349,7 +2979,6 @@
             } =
             await supabaseClient.auth
                 .getUser();
-
 
             if (
                 data &&
@@ -3368,7 +2997,6 @@
             }
         }
 
-
         /* ============================================================
            INIT
         ============================================================ */
@@ -3383,9 +3011,7 @@
 
         }
 
-
         init();
-
 
         /* ============================================================
            AUTH STATE
