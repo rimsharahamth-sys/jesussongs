@@ -1,833 +1,606 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>🙏 Jesus Songs – Admin & Public</title>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="https://www.youtube.com/iframe_api"></script>
-
-<style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-:root{
-    --bg:#f7f3ee;
-    --surface:#fff;
-    --surface-2:#fbf8f4;
-    --text:#222;
-    --muted:#666;
-    --border:#e8e0d7;
-    --gold:#b8860b;
-    --shadow:0 6px 20px rgba(0,0,0,.06);
-}
-
-body.dark{
-    --bg:#0f1117;
-    --surface:#181b24;
-    --surface-2:#20242f;
-    --text:#f2f4f8;
-    --muted:#aeb6c4;
-    --border:#303644;
-    --gold:#f0c040;
-    --shadow:0 8px 28px rgba(0,0,0,.35);
-}
-
-body{
-    font-family:'Segoe UI',Roboto,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    transition:.25s;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header{
-    background:linear-gradient(135deg,#1a1a2e,#16213e);
-    color:#f5e6d3;
-    padding:1.2rem 2rem;
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    box-shadow:0 4px 15px rgba(0,0,0,.3);
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.header h1{
-    font-size:1.9rem;
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-}
-
-.header h1 i{
-    color:#f0c040;
-}
-
-.header-controls{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    flex-wrap:wrap;
-}
-
-.search-wrap{
-    position:relative;
-}
-
-.search-wrap i{
-    position:absolute;
-    left:.8rem;
-    top:50%;
-    transform:translateY(-50%);
-    color:rgba(255,255,255,.5);
-}
-
-#searchInput{
-    padding:.5rem 1rem .5rem 2.2rem;
-    border:none;
-    border-radius:30px;
-    font-size:.95rem;
-    background:rgba(255,255,255,.15);
-    color:#fff;
-    outline:2px solid transparent;
-    min-width:200px;
-}
-
-#searchInput::placeholder{
-    color:rgba(255,255,255,.6);
-}
-
-#searchInput:focus{
-    outline-color:#f0c040;
-}
-
-.btn{
-    padding:.5rem 1.2rem;
-    border:none;
-    border-radius:30px;
-    font-weight:600;
-    font-size:.9rem;
-    cursor:pointer;
-    transition:.25s;
-    background:#f0c040;
-    color:#1a1a2e;
-}
-
-.btn:hover{
-    transform:scale(1.03);
-    opacity:.9;
-}
-
-.btn-outline{
-    background:transparent;
-    border:2px solid #f0c040;
-    color:#f0c040;
-}
-
-.btn-danger{
-    background:#c0392b;
-    color:#fff;
-}
-
-.btn-edit{
-    background:#3498db;
-    color:#fff;
-}
-
-.theme-btn{
-    width:44px;
-    height:44px;
-    padding:0;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-}
-
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main{
-    max-width:1200px;
-    margin:auto;
-    padding:2rem 1.5rem;
-}
-
-.songs-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:1.5rem;
-}
-
-.song-card{
-    background:var(--surface);
-    border-radius:16px;
-    box-shadow:var(--shadow);
-    transition:.3s;
-    border-left:5px solid var(--gold);
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    user-select:none;
-}
-
-.song-card:hover{
-    transform:translateY(-4px);
-}
-
-.song-card.playing{
-    box-shadow:
-        0 0 0 2px var(--gold),
-        0 10px 30px rgba(184,134,11,.20);
-}
-
-.song-card-header{
-    padding:1.2rem 1.5rem .5rem;
-}
-
-.song-title{
-    font-size:1.15rem;
-    font-weight:700;
-}
-
-.song-title i{
-    color:var(--gold);
-    margin-right:.4rem;
-}
-
-.song-card-body{
-    padding:0 1.5rem .8rem;
-    flex:1;
-}
-
-.song-preview{
-    color:var(--muted);
-    font-style:italic;
-    font-size:.9rem;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-}
-
-.song-actions{
-    display:flex;
-    gap:.55rem;
-    flex-wrap:wrap;
-    padding:.2rem 1.5rem .9rem;
-}
-
-.song-action-btn{
-    padding:.45rem .8rem;
-    border:0;
-    border-radius:22px;
-    cursor:pointer;
-    font-weight:700;
-    font-size:.82rem;
-    background:#f0c040;
-    color:#1a1a2e;
-}
-
-.song-action-btn.stop-btn{
-    background:#c0392b;
-    color:#fff;
-}
-
-.song-action-btn.secondary{
-    background:var(--surface-2);
-    color:var(--text);
-    border:1px solid var(--border);
-}
-
-.song-footer{
-    padding:.7rem 1.5rem 1rem;
-    border-top:1px solid var(--border);
-    display:flex;
-    justify-content:space-between;
-    font-size:.8rem;
-    color:var(--muted);
-}
-
-.no-results{
-    text-align:center;
-    padding:3rem;
-    grid-column:1/-1;
-    color:var(--muted);
-}
-
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.admin-panel{
-    display:none;
-    background:var(--surface);
-    border-radius:20px;
-    box-shadow:var(--shadow);
-    padding:2rem;
-    margin-bottom:2rem;
-}
-
-.admin-panel.active{
-    display:block;
-}
-
-.form-group{
-    margin-bottom:1rem;
-}
-
-.form-group label{
-    display:block;
-    font-weight:600;
-    margin-bottom:.3rem;
-}
-
-.form-group input,
-.form-group textarea{
-    width:100%;
-    padding:.7rem 1rem;
-    border:2px solid var(--border);
-    border-radius:8px;
-    font-size:.95rem;
-    font-family:inherit;
-    background:var(--surface);
-    color:var(--text);
-}
-
-.form-group textarea{
-    min-height:140px;
-    resize:vertical;
-}
-
-.form-actions{
-    display:flex;
-    gap:.7rem;
-    flex-wrap:wrap;
-}
-
-.btn-cancel{
-    background:#777;
-    color:#fff;
-}
-
-.status-message{
-    margin-top:.8rem;
-    min-height:1.2rem;
-}
-
-.admin-song-list{
-    margin-top:2rem;
-    border-top:2px dashed var(--border);
-    padding-top:1.5rem;
-}
-
-.admin-song-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:.7rem 0;
-    border-bottom:1px solid var(--border);
-}
-
-.admin-song-item .actions{
-    display:flex;
-    gap:.5rem;
-}
-
-.edit-badge{
-    display:inline-block;
-    margin-left:.5rem;
-    padding:.2rem .55rem;
-    border-radius:12px;
-    background:#eaf4ff;
-    color:#3498db;
-    font-size:.72rem;
-    font-weight:700;
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.login-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    backdrop-filter:blur(4px);
-    z-index:1000;
-    justify-content:center;
-    align-items:center;
-}
-
-.login-overlay.active{
-    display:flex;
-}
-
-.login-modal{
-    background:var(--surface);
-    padding:2.5rem 2rem;
-    border-radius:24px;
-    max-width:380px;
-    width:90%;
-    box-shadow:0 20px 50px rgba(0,0,0,.3);
-    text-align:center;
-}
-
-.login-modal h2{
-    margin-bottom:1.5rem;
-}
-
-.login-modal input{
-    width:100%;
-    padding:.7rem 1rem;
-    margin-bottom:1rem;
-    border:2px solid var(--border);
-    border-radius:8px;
-    font-size:1rem;
-    background:var(--surface);
-    color:var(--text);
-}
-
-.login-modal .btn{
-    width:100%;
-}
-
-.login-error{
-    color:#c0392b;
-    font-size:.9rem;
-    margin-top:.7rem;
-}
-
-
-/* =========================================================
-   LYRICS MODAL
-========================================================= */
-
-.song-detail-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(6px);
-    z-index:800;
-    justify-content:center;
-    align-items:center;
-    padding:2rem;
-}
-
-.song-detail-overlay.active{
-    display:flex;
-}
-
-.song-detail-modal{
-    background:var(--surface);
-    border-radius:28px;
-    max-width:720px;
-    width:100%;
-    padding:2.5rem;
-    max-height:90vh;
-    overflow-y:auto;
-    position:relative;
-}
-
-.close-btn{
-    position:absolute;
-    top:1rem;
-    right:1.5rem;
-    font-size:2rem;
-    color:#888;
-    cursor:pointer;
-    border:none;
-    background:none;
-}
-
-.detail-title{
-    font-size:2rem;
-    font-weight:700;
-    padding-right:2rem;
-}
-
-.detail-title i{
-    color:var(--gold);
-    margin-right:.5rem;
-}
-
-.detail-lyrics{
-    font-family:Georgia,serif;
-    font-size:1.1rem;
-    line-height:1.9;
-    white-space:pre-line;
-    color:var(--text);
-    margin:1.5rem 0;
-    padding:1rem 0;
-    border-top:2px solid var(--border);
-    border-bottom:2px solid var(--border);
-}
-
-
-/* =========================================================
-   YOUTUBE PLAYER
-========================================================= */
-
-.youtube-player{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    width:380px;
-    max-width:calc(100vw - 36px);
-    background:var(--surface);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 14px 40px rgba(0,0,0,.3);
-    z-index:700;
-    display:none;
-}
-
-.youtube-player.active{
-    display:block;
-}
-
-
-/*
-   IMPORTANT:
-   This is now a REAL visible YouTube player.
-   Minimum viewport is above 200x200.
-*/
-
-.youtube-video-wrap{
-    width:100%;
-    aspect-ratio:16/9;
-    background:#000;
-}
-
-#youtubeAudioFrame{
-    width:100%;
-    height:100%;
-    border:0;
-    display:block;
-}
-
-
-/* PLAYER HEADER */
-
-.player-head{
-    min-height:65px;
-    padding:.7rem .8rem;
-    background:var(--surface-2);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.7rem;
-}
-
-.player-info{
-    display:flex;
-    align-items:center;
-    min-width:0;
-    gap:.7rem;
-    cursor:pointer;
-    flex:1;
-    border-radius:12px;
-    padding:3px;
-    transition:.2s;
-}
-
-.player-info:hover{
-    background:var(--border);
-}
-
-.player-info:active{
-    transform:scale(.98);
-}
-
-.music-icon{
-    width:42px;
-    height:42px;
-    flex:0 0 42px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#f0c040;
-    color:#1a1a2e;
-}
-
-.player-text{
-    min-width:0;
-}
-
-.player-title{
-    font-weight:700;
-    font-size:.88rem;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.player-status{
-    color:var(--muted);
-    font-size:.7rem;
-    margin-top:2px;
-}
-
-.player-actions{
-    display:flex;
-    gap:.15rem;
-}
-
-.player-actions button{
-    width:34px;
-    height:34px;
-    border:0;
-    border-radius:50%;
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-}
-
-.player-actions button:hover{
-    background:var(--border);
-}
-
-
-/* LYRICS BUTTON */
-
-.player-lyrics-btn{
-    width:100%;
-    border:0;
-    border-top:1px solid var(--border);
-    border-bottom:1px solid var(--border);
-    padding:.55rem;
-    background:var(--surface-2);
-    color:var(--gold);
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.player-lyrics-btn:hover{
-    background:var(--border);
-}
-
-.player-lyrics-btn i{
-    margin-right:.3rem;
-}
-
-
-/* TIME */
-
-.player-time{
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-    padding:.55rem .8rem .15rem;
-    color:var(--muted);
-    font-size:.7rem;
-}
-
-.player-time span{
-    min-width:34px;
-}
-
-#playerDuration{
-    text-align:right;
-}
-
-
-/* SEEK */
-
-#seekBar{
-    width:100%;
-    height:5px;
-    accent-color:#f0c040;
-    cursor:pointer;
-}
-
-
-/* CONTROLS */
-
-.player-controls{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:.7rem;
-    padding:.45rem .7rem .75rem;
-}
-
-.control-btn{
-    width:36px;
-    height:36px;
-    border:0;
-    border-radius:50%;
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.control-btn:hover{
-    background:var(--border);
-}
-
-.control-btn.play-pause{
-    width:46px;
-    height:46px;
-    background:#f0c040;
-    color:#1a1a2e;
-    font-size:1rem;
-}
-
-.volume-wrap{
-    display:flex;
-    align-items:center;
-    gap:.3rem;
-    margin-left:.25rem;
-}
-
-#volumeBar{
-    width:65px;
-    accent-color:#f0c040;
-    cursor:pointer;
-}
-
-
-/* PROGRESS */
-
-.progress-bottom{
-    height:3px;
-    background:var(--border);
-}
-
-.progress-bottom span{
-    display:block;
-    height:100%;
-    width:0%;
-    background:#f0c040;
-}
-
-
-/* COMPACT */
-
-.youtube-player.compact{
-    width:300px;
-}
-
-.youtube-player.compact .youtube-video-wrap{
-    display:none;
-}
-
-.youtube-player.compact .player-status,
-.youtube-player.compact .player-lyrics-btn,
-.youtube-player.compact .player-time,
-.youtube-player.compact .player-controls,
-.youtube-player.compact .progress-bottom{
-    display:none;
-}
-
-.youtube-player.compact .player-head{
-    min-height:58px;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-    background:#1a1a2e;
-    color:rgba(255,255,255,.4);
-    text-align:center;
-    padding:1.2rem;
-    font-size:.8rem;
-    margin-top:2rem;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:650px){
-
-    .header{
-        flex-direction:column;
-        align-items:stretch;
-        gap:.8rem;
-    }
-
-    .header-controls{
-        justify-content:center;
-    }
-
-    #searchInput{
-        width:100%;
-    }
-
-    .songs-grid{
-        grid-template-columns:1fr;
-    }
-
-    .song-detail-modal{
-        padding:1.5rem;
-        max-height:88vh;
-    }
-
-    .youtube-player{
-        right:10px;
-        bottom:10px;
-        width:calc(100vw - 20px);
-        max-width:calc(100vw - 20px);
-    }
-
-    .admin-song-item{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:.7rem;
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>🙏 Jesus Songs – Admin & Public</title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f7f3ee;
+            --surface: #ffffff;
+            --surface-2: #fbf8f4;
+            --text: #222;
+            --muted: #666;
+            --border: #e8e0d7;
+            --gold: #b8860b;
+            --shadow: 0 6px 20px rgba(0,0,0,.06);
+        }
+
+        body.dark {
+            --bg: #0f1117;
+            --surface: #181b24;
+            --surface-2: #20242f;
+            --text: #f2f4f8;
+            --muted: #aeb6c4;
+            --border: #303644;
+            --gold: #f0c040;
+            --shadow: 0 8px 28px rgba(0,0,0,.35);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .25s ease, color .25s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #f5e6d3;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .header h1 i {
+            color: #f0c040;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        #searchInput {
+            padding: .5rem 1rem .5rem 2.2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: .95rem;
+            background: rgba(255,255,255,.15);
+            color: #fff;
+            outline: 2px solid transparent;
+            transition: .3s;
+            min-width: 200px;
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255,255,255,.6);
+        }
+
+        #searchInput:focus {
+            outline-color: #f0c040;
+            background: rgba(255,255,255,.25);
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-wrap i {
+            position: absolute;
+            left: .8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,.5);
+        }
+
+        .btn {
+            padding: .5rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: .25s;
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+
+        .btn:hover {
+            transform: scale(1.03);
+            opacity: .9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #f0c040;
+            color: #f0c040;
+        }
+
+        .btn-outline:hover {
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+
+        .song-count {
+            font-size: .9rem;
+            color: rgba(255,255,255,.7);
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+            gap: 1.5rem;
+        }
+
+        .song-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: .3s;
+            border-left: 5px solid #b8860b;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .song-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.1);
+        }
+
+        .song-card-header {
+            padding: 1.2rem 1.5rem .5rem;
+        }
+
+        .song-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .song-title i {
+            color: #b8860b;
+            margin-right: .4rem;
+        }
+
+        .song-card-body {
+            padding: 0 1.5rem .8rem;
+            flex: 1;
+        }
+
+        .song-preview {
+            color: var(--muted);
+            font-style: italic;
+            font-size: .9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .song-link {
+            padding: 0 1.5rem .7rem;
+        }
+
+        .song-link a {
+            color: #1a6fb5;
+            text-decoration: none;
+            font-size: .9rem;
+        }
+
+        .song-footer {
+            padding: .7rem 1.5rem 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: .8rem;
+            color: var(--muted);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+            color: #777;
+        }
+
+        .admin-panel {
+            display: none;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.12);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-panel h2 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: .3rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: .7rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: .95rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .admin-song-list {
+            margin-top: 2rem;
+            border-top: 2px dashed #ddd;
+            padding-top: 1.5rem;
+        }
+
+        .admin-song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .7rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-song-item .actions {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+
+        .edit-badge {
+            display: inline-block;
+            margin-left: .5rem;
+            padding: .2rem .55rem;
+            border-radius: 12px;
+            background: #eaf4ff;
+            color: #4da3ff;
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: .7rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-cancel {
+            background: #777;
+            color: #fff;
+        }
+
+        .status-message {
+            margin-top: .8rem;
+            font-size: .9rem;
+            min-height: 1.2rem;
+        }
+
+        /* THEME TOGGLE */
+        .theme-btn {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        /* BACKGROUND YOUTUBE PLAYER */
+        .youtube-player {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 360px;
+            max-width: calc(100vw - 36px);
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(0,0,0,.35);
+            z-index: 500;
+            display: none;
+        }
+        .youtube-player.active { display: block; }
+        .youtube-player-head {
+            height: 38px;
+            padding: 0 .65rem;
+            background: #111;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+            font-size: .78rem;
+        }
+        .youtube-player-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .youtube-player-actions button {
+            border: 0;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: .4rem;
+        }
+        .youtube-frame {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+            display: block;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: .55rem;
+            flex-wrap: wrap;
+            padding: .2rem 1.5rem .9rem;
+        }
+        .song-action-btn {
+            padding: .45rem .8rem;
+            border: 0;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .82rem;
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+        .song-action-btn.secondary {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        body.dark .song-action-btn.secondary {
+            background: #252a36;
+        }
+
+        @media(max-width:650px) {
+            .youtube-player {
+                right: 10px;
+                bottom: 10px;
+                width: calc(100vw - 20px);
+            }
+        }
+
+        @media(max-width:650px) {
+            .admin-song-item {
+                align-items: flex-start;
+                gap: .7rem;
+                flex-direction: column;
+            }
+
+            .admin-song-item .actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        .login-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-overlay.active {
+            display: flex;
+        }
+
+        .login-modal {
+            background: var(--surface);
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,.3);
+            text-align: center;
+        }
+
+        .login-modal h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .login-modal input {
+            width: 100%;
+            padding: .7rem 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .login-modal .btn {
+            width: 100%;
+            padding: .7rem;
+        }
+
+        .login-error {
+            color: #c0392b;
+            font-size: .9rem;
+            margin-top: .7rem;
+        }
+
+        .song-detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.7);
+            backdrop-filter: blur(6px);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .song-detail-overlay.active {
+            display: flex;
+        }
+
+        .song-detail-modal {
+            background: var(--surface);
+            border-radius: 28px;
+            max-width: 720px;
+            width: 100%;
+            padding: 2.5rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #888;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            padding-right: 2rem;
+        }
+
+        .detail-title i {
+            color: #b8860b;
+            margin-right: .5rem;
+        }
+
+        .detail-lyrics {
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            white-space: pre-line;
+            color: var(--text);
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 2px solid var(--border);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .detail-link a {
+            color: #1a6fb5;
+            text-decoration: none;
+        }
+
+        .footer {
+            background: #1a1a2e;
+            color: rgba(255,255,255,.4);
+            text-align: center;
+            padding: 1.2rem;
+            font-size: .8rem;
+            margin-top: 2rem;
+        }
+
+        @media(max-width:650px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: .8rem;
+            }
+
+            .header-controls {
+                justify-content: center;
+            }
+
+            #searchInput {
+                width: 100%;
+                min-width: 150px;
+            }
+
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .song-detail-modal {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-
-<!-- =========================================================
-     HEADER
-========================================================= -->
 
 <header class="header">
 
@@ -839,21 +612,15 @@ body{
     <div class="header-controls">
 
         <div class="search-wrap">
-
             <i class="fas fa-search"></i>
-
             <input
-                id="searchInput"
                 type="text"
+                id="searchInput"
                 placeholder="Search songs..."
-            >
-
+            />
         </div>
 
-        <span
-            class="song-count"
-            id="songCount"
-        >
+        <span class="song-count" id="songCount">
             Loading...
         </span>
 
@@ -861,6 +628,8 @@ body{
             class="btn btn-outline theme-btn"
             id="themeToggleBtn"
             type="button"
+            title="Toggle dark/light mode"
+            aria-label="Toggle dark/light mode"
         >
             <i class="fas fa-moon"></i>
         </button>
@@ -868,7 +637,6 @@ body{
         <button
             class="btn btn-outline"
             id="adminToggleBtn"
-            type="button"
         >
             <i class="fas fa-user-shield"></i>
             Admin
@@ -879,9 +647,7 @@ body{
 </header>
 
 
-<!-- =========================================================
-     LOGIN
-========================================================= -->
+<!-- LOGIN -->
 
 <div
     class="login-overlay"
@@ -899,13 +665,13 @@ body{
             type="email"
             id="loginEmail"
             placeholder="Admin Email"
-        >
+        />
 
         <input
             type="password"
             id="loginPassword"
             placeholder="Password"
-        >
+        />
 
         <button
             class="btn"
@@ -919,14 +685,16 @@ body{
             id="loginError"
         ></div>
 
+        <p style="margin-top:1rem;font-size:.8rem;color:#999;">
+            Login using your Supabase admin account
+        </p>
+
     </div>
 
 </div>
 
 
-<!-- =========================================================
-     LYRICS MODAL
-========================================================= -->
+<!-- SONG DETAIL -->
 
 <div
     class="song-detail-overlay"
@@ -938,7 +706,6 @@ body{
         <button
             class="close-btn"
             id="detailCloseBtn"
-            type="button"
         >
             &times;
         </button>
@@ -955,31 +722,26 @@ body{
             id="detailLyrics"
         ></div>
 
-        <div id="detailLink"></div>
+        <div
+            class="detail-link"
+            id="detailLink"
+        ></div>
 
     </div>
 
 </div>
 
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
 <main class="main">
 
-
-    <!-- ADMIN -->
+    <!-- ADMIN PANEL -->
 
     <div
         class="admin-panel"
         id="adminPanel"
     >
 
-        <input
-            type="hidden"
-            id="editingSongId"
-        >
+        <input type="hidden" id="editingSongId" value="">
 
         <h2>
             <i class="fas fa-plus-circle"></i>
@@ -988,19 +750,24 @@ body{
 
         <div class="form-group">
 
-            <label>Song Title *</label>
+            <label>
+                Song Title *
+            </label>
 
             <input
-                id="songTitle"
                 type="text"
-                placeholder="Amazing Grace"
-            >
+                id="songTitle"
+                placeholder="e.g. Amazing Grace"
+            />
 
         </div>
 
+
         <div class="form-group">
 
-            <label>Lyrics *</label>
+            <label>
+                Lyrics *
+            </label>
 
             <textarea
                 id="songLyrics"
@@ -1009,36 +776,42 @@ body{
 
         </div>
 
+
         <div class="form-group">
 
-            <label>Audio / YouTube Link</label>
+            <label>
+                Audio / YouTube Link
+            </label>
 
             <input
-                id="songLink"
                 type="url"
-                placeholder="https://www.youtube.com/watch?v=..."
-            >
+                id="songLink"
+                placeholder="https://..."
+            />
 
         </div>
+
 
         <div class="form-group">
 
-            <label>Category</label>
+            <label>
+                Category
+            </label>
 
             <input
-                id="songCategory"
                 type="text"
+                id="songCategory"
                 placeholder="Worship"
-            >
+            />
 
         </div>
+
 
         <div class="form-actions">
 
             <button
                 class="btn"
                 id="addSongBtn"
-                type="button"
             >
                 <i class="fas fa-save"></i>
                 Add Song
@@ -1048,37 +821,41 @@ body{
                 class="btn btn-cancel"
                 id="cancelEditBtn"
                 type="button"
-                style="display:none"
+                style="display:none;"
             >
-                Cancel
+                <i class="fas fa-times"></i>
+                Cancel Edit
             </button>
 
         </div>
 
+        <div class="status-message" id="formStatus"></div>
+
+
+        <hr style="margin:1.5rem 0;" />
+
+
         <div
-            class="status-message"
-            id="formStatus"
-        ></div>
-
-        <hr style="margin:1.5rem 0">
-
-        <div style="
+            style="
             display:flex;
             justify-content:space-between;
             align-items:center;
-        ">
+            "
+        >
 
-            <h3>Existing Songs</h3>
+            <h3>
+                Existing Songs
+            </h3>
 
             <button
                 class="btn btn-danger"
                 id="logoutBtn"
-                type="button"
             >
                 Logout
             </button>
 
         </div>
+
 
         <div
             class="admin-song-list"
@@ -1088,7 +865,7 @@ body{
     </div>
 
 
-    <!-- SONGS -->
+    <!-- PUBLIC SONGS -->
 
     <div
         class="songs-grid"
@@ -1098,195 +875,56 @@ body{
 </main>
 
 
-<!-- =========================================================
-     CUSTOM YOUTUBE PLAYER
-========================================================= -->
-
-<div
-    class="youtube-player"
-    id="youtubePlayer"
->
-
-
-    <!-- REAL VISIBLE YOUTUBE PLAYER -->
-
-    <div class="youtube-video-wrap">
-
-        <div id="youtubeAudioFrame"></div>
-
-    </div>
-
-
-    <div class="player-head">
-
-        <div
-            class="player-info"
-            id="playerInfo"
-            title="Click to view lyrics"
-        >
-
-            <div class="music-icon">
-                <i class="fas fa-music"></i>
-            </div>
-
-            <div class="player-text">
-
-                <div
-                    class="player-title"
-                    id="playerTitle"
-                >
-                    Now Playing
-                </div>
-
-                <div
-                    class="player-status"
-                    id="playerStatus"
-                >
-                    Ready
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="player-actions">
-
-            <button
-                id="compactBtn"
-                title="Mini Player"
-                type="button"
-            >
-                <i class="fas fa-minus"></i>
-            </button>
-
-            <button
-                id="closePlayerBtn"
-                title="Stop"
-                type="button"
-            >
-                <i class="fas fa-times"></i>
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <button
-        class="player-lyrics-btn"
-        id="playerLyricsBtn"
-        type="button"
-    >
-        <i class="fas fa-align-left"></i>
-        View Lyrics
-    </button>
-
-
-    <div class="player-time">
-
-        <span id="playerCurrentTime">
-            0:00
+<!-- BACKGROUND YOUTUBE PLAYER -->
+<div class="youtube-player" id="youtubePlayer">
+    <div class="youtube-player-head">
+        <span class="youtube-player-title" id="youtubePlayerTitle">Now Playing</span>
+        <span class="youtube-player-actions">
+            <button id="youtubeMinBtn" type="button" title="Minimize"><i class="fas fa-minus"></i></button>
+            <button id="youtubeCloseBtn" type="button" title="Stop"><i class="fas fa-times"></i></button>
         </span>
-
-        <input
-            id="seekBar"
-            type="range"
-            min="0"
-            max="100"
-            step="0.1"
-            value="0"
-        >
-
-        <span id="playerDuration">
-            0:00
-        </span>
-
     </div>
-
-
-    <div class="player-controls">
-
-        <button
-            class="control-btn"
-            id="back15Btn"
-            title="Back 15 seconds"
-            type="button"
-        >
-            <i class="fas fa-rotate-left"></i>
-        </button>
-
-        <button
-            class="control-btn play-pause"
-            id="playPauseBtn"
-            title="Play/Pause"
-            type="button"
-        >
-            <i class="fas fa-pause"></i>
-        </button>
-
-        <button
-            class="control-btn"
-            id="forward15Btn"
-            title="Forward 15 seconds"
-            type="button"
-        >
-            <i class="fas fa-rotate-right"></i>
-        </button>
-
-        <div class="volume-wrap">
-
-            <i class="fas fa-volume-up"></i>
-
-            <input
-                id="volumeBar"
-                type="range"
-                min="0"
-                max="100"
-                value="100"
-            >
-
-        </div>
-
-    </div>
-
-
-    <div class="progress-bottom">
-        <span id="progressFill"></span>
-    </div>
-
+    <iframe
+        id="youtubeFrame"
+        class="youtube-frame"
+        title="YouTube player"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+    ></iframe>
 </div>
-
 
 <footer class="footer">
 
-    ✝️ Jesus Songs · Powered by Branks3
+    <p>
+        ✝️ Jesus Songs · Powered by Branks3
+    </p>
 
 </footer>
 
 
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/* ============================================================
+   SUPABASE CONFIGURATION
+   ============================================================ */
 
 const SUPABASE_URL =
-"https://nlybxlbtqvueulacwwju.supabase.co";
+    "https://nlybxlbtqvueulacwwju.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_PzB8o8cCresQ496jXnimbA_UyJ0yJ-6";
+    "sb_publishable_PzB8o8cCresQ496jXnimbA_UyJ0yJ-6";
+
 
 const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-/* =========================================================
+/* ============================================================
    STATE
-========================================================= */
+   ============================================================ */
 
 let songs = [];
 
@@ -1294,1132 +932,133 @@ let searchQuery = "";
 
 let currentUser = null;
 
-let youtubePlayerAPI = null;
 
-let currentSong = null;
-
-let playerReady = false;
-
-let playerTimer = null;
-
-let userSeeking = false;
-
-
-/* =========================================================
+/* ============================================================
    DOM
-========================================================= */
+   ============================================================ */
 
 const grid =
-document.getElementById("songsGrid");
+    document.getElementById("songsGrid");
 
 const searchInput =
-document.getElementById("searchInput");
+    document.getElementById("searchInput");
 
 const songCount =
-document.getElementById("songCount");
+    document.getElementById("songCount");
 
 const adminPanel =
-document.getElementById("adminPanel");
+    document.getElementById("adminPanel");
 
 const adminToggleBtn =
-document.getElementById("adminToggleBtn");
+    document.getElementById("adminToggleBtn");
 
 const loginOverlay =
-document.getElementById("loginOverlay");
+    document.getElementById("loginOverlay");
 
 const loginEmail =
-document.getElementById("loginEmail");
+    document.getElementById("loginEmail");
 
 const loginPassword =
-document.getElementById("loginPassword");
+    document.getElementById("loginPassword");
 
 const loginBtn =
-document.getElementById("loginBtn");
+    document.getElementById("loginBtn");
 
 const loginError =
-document.getElementById("loginError");
+    document.getElementById("loginError");
 
 const logoutBtn =
-document.getElementById("logoutBtn");
+    document.getElementById("logoutBtn");
 
 const addSongBtn =
-document.getElementById("addSongBtn");
+    document.getElementById("addSongBtn");
 
 const cancelEditBtn =
-document.getElementById("cancelEditBtn");
+    document.getElementById("cancelEditBtn");
 
 const editingSongId =
-document.getElementById("editingSongId");
+    document.getElementById("editingSongId");
 
 const formStatus =
-document.getElementById("formStatus");
+    document.getElementById("formStatus");
 
 const songTitle =
-document.getElementById("songTitle");
+    document.getElementById("songTitle");
 
 const songLyrics =
-document.getElementById("songLyrics");
+    document.getElementById("songLyrics");
 
 const songLink =
-document.getElementById("songLink");
+    document.getElementById("songLink");
 
 const songCategory =
-document.getElementById("songCategory");
+    document.getElementById("songCategory");
 
 const adminSongList =
-document.getElementById("adminSongList");
+    document.getElementById("adminSongList");
 
 const detailOverlay =
-document.getElementById("songDetailOverlay");
+    document.getElementById("songDetailOverlay");
 
 const detailCloseBtn =
-document.getElementById("detailCloseBtn");
+    document.getElementById("detailCloseBtn");
 
 const detailTitle =
-document.getElementById("detailTitle");
+    document.getElementById("detailTitle");
 
 const detailLyrics =
-document.getElementById("detailLyrics");
+    document.getElementById("detailLyrics");
 
 const detailLink =
-document.getElementById("detailLink");
+    document.getElementById("detailLink");
 
 const themeToggleBtn =
-document.getElementById("themeToggleBtn");
+    document.getElementById("themeToggleBtn");
 
-const customPlayer =
-document.getElementById("youtubePlayer");
+const youtubePlayer =
+    document.getElementById("youtubePlayer");
 
-const playerInfo =
-document.getElementById("playerInfo");
+const youtubeFrame =
+    document.getElementById("youtubeFrame");
 
-const playerTitle =
-document.getElementById("playerTitle");
+const youtubePlayerTitle =
+    document.getElementById("youtubePlayerTitle");
 
-const playerStatus =
-document.getElementById("playerStatus");
+const youtubeCloseBtn =
+    document.getElementById("youtubeCloseBtn");
 
-const playerLyricsBtn =
-document.getElementById("playerLyricsBtn");
+const youtubeMinBtn =
+    document.getElementById("youtubeMinBtn");
 
-const seekBar =
-document.getElementById("seekBar");
 
-const playerCurrentTime =
-document.getElementById("playerCurrentTime");
+/* ============================================================
+   LOAD SONGS FROM SUPABASE
+   ============================================================ */
 
-const playerDuration =
-document.getElementById("playerDuration");
+async function loadSongs() {
 
-const progressFill =
-document.getElementById("progressFill");
-
-const playPauseBtn =
-document.getElementById("playPauseBtn");
-
-const back15Btn =
-document.getElementById("back15Btn");
-
-const forward15Btn =
-document.getElementById("forward15Btn");
-
-const volumeBar =
-document.getElementById("volumeBar");
-
-const closePlayerBtn =
-document.getElementById("closePlayerBtn");
-
-const compactBtn =
-document.getElementById("compactBtn");
-
-
-/* =========================================================
-   YOUTUBE API
-========================================================= */
-
-function onYouTubeIframeAPIReady(){
-
-    youtubePlayerAPI =
-    new YT.Player(
-        "youtubeAudioFrame",
-        {
-
-            width:"100%",
-            height:"100%",
-
-            playerVars:{
-                autoplay:0,
-                controls:1,
-                rel:0,
-                playsinline:1
-            },
-
-            events:{
-
-                onReady:function(){
-
-                    playerReady = true;
-
-                    youtubePlayerAPI.setVolume(
-                        Number(volumeBar.value)
-                    );
-
-                    playerStatus.textContent =
-                    "Ready to play";
-
-                },
-
-                onStateChange:function(event){
-
-                    handlePlayerState(event);
-
-                },
-
-                onError:function(event){
-
-                    console.error(
-                        "YouTube error:",
-                        event.data
-                    );
-
-                    playerStatus.textContent =
-                    "YouTube playback error";
-
-                }
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   YOUTUBE URL → VIDEO ID
-========================================================= */
-
-function getYouTubeId(url){
-
-    if(!url) return null;
-
-    const value =
-    String(url).trim();
-
-    const patterns = [
-
-        /youtu\.be\/([^?&#/]+)/i,
-
-        /youtube\.com\/watch\?[^#]*v=([^?&#/]+)/i,
-
-        /youtube\.com\/shorts\/([^?&#/]+)/i,
-
-        /youtube\.com\/embed\/([^?&#/]+)/i,
-
-        /youtube-nocookie\.com\/embed\/([^?&#/]+)/i
-
-    ];
-
-    for(const pattern of patterns){
-
-        const match =
-        value.match(pattern);
-
-        if(match && match[1]){
-
-            return match[1];
-
-        }
-
-    }
-
-    if(
-        /^[a-zA-Z0-9_-]{11}$/.test(value)
-    ){
-
-        return value;
-
-    }
-
-    return null;
-
-}
-
-
-/* =========================================================
-   CHECK CURRENT PLAYING
-========================================================= */
-
-function isSongPlaying(song){
-
-    if(!song || !currentSong){
-
-        return false;
-
-    }
-
-    return (
-        String(song.id) ===
-        String(currentSong.id)
-    );
-
-}
-
-
-/* =========================================================
-   PLAY / STOP SONG
-========================================================= */
-
-function playYouTube(song){
-
-    const videoId =
-    getYouTubeId(song.audio_url);
-
-    if(!videoId){
-
-        alert(
-            "Invalid YouTube link.\n\n" +
-            "Example:\n" +
-            "https://www.youtube.com/watch?v=VIDEO_ID"
-        );
-
-        return;
-
-    }
-
-
-    /*
-
-       SAME SONG CLICKED AGAIN
-       =======================
-
-       If the same song is already playing,
-       stop it instead of playing again.
-
-    */
-
-    if(
-        isSongPlaying(song) &&
-        youtubePlayerAPI &&
-        playerReady
-    ){
-
-        const state =
-        youtubePlayerAPI.getPlayerState();
-
-        if(
-            state === YT.PlayerState.PLAYING ||
-            state === YT.PlayerState.BUFFERING
-        ){
-
-            stopCurrentSong();
-
-            return;
-
-        }
-
-    }
-
-
-    currentSong = song;
-
-
-    playerTitle.textContent =
-    song.title || "Now Playing";
-
-    playerStatus.textContent =
-    "Playing from YouTube";
-
-    customPlayer.classList.add(
-        "active"
-    );
-
-    customPlayer.classList.remove(
-        "compact"
-    );
-
-
-    seekBar.value = 0;
-
-    playerCurrentTime.textContent =
-    "0:00";
-
-    playerDuration.textContent =
-    "0:00";
-
-    progressFill.style.width =
-    "0%";
-
-
-    playPauseBtn.innerHTML =
-    `<i class="fas fa-pause"></i>`;
-
-
-    if(!playerReady){
-
-        playerStatus.textContent =
-        "YouTube player is loading...";
-
-        renderSongs();
-
-        return;
-
-    }
-
-
-    youtubePlayerAPI.loadVideoById({
-        videoId:videoId,
-        startSeconds:0
-    });
-
-
-    youtubePlayerAPI.setVolume(
-        Number(volumeBar.value)
-    );
-
-
-    /*
-       User clicked the Play button,
-       so this is NOT page-load autoplay.
-    */
-
-    youtubePlayerAPI.playVideo();
-
-
-    startPlayerTimer();
-
-
-    renderSongs();
-
-}
-
-
-/* =========================================================
-   STOP CURRENT SONG
-========================================================= */
-
-function stopCurrentSong(){
-
-    if(youtubePlayerAPI && playerReady){
-
-        youtubePlayerAPI.stopVideo();
-
-    }
-
-
-    stopPlayerTimer();
-
-
-    currentSong = null;
-
-
-    playerStatus.textContent =
-    "Stopped";
-
-
-    playPauseBtn.innerHTML =
-    `<i class="fas fa-play"></i>`;
-
-
-    seekBar.value = 0;
-
-    playerCurrentTime.textContent =
-    "0:00";
-
-    playerDuration.textContent =
-    "0:00";
-
-    progressFill.style.width =
-    "0%";
-
-
-    customPlayer.classList.remove(
-        "active"
-    );
-
-
-    renderSongs();
-
-}
-
-
-/* =========================================================
-   PLAYER → LYRICS
-========================================================= */
-
-playerInfo.addEventListener(
-    "click",
-    function(){
-
-        if(!currentSong){
-
-            return;
-
-        }
-
-        openDetail(currentSong);
-
-    }
-);
-
-
-playerLyricsBtn.addEventListener(
-    "click",
-    function(){
-
-        if(!currentSong){
-
-            return;
-
-        }
-
-        openDetail(currentSong);
-
-    }
-);
-
-
-/* =========================================================
-   PLAYER STATE
-========================================================= */
-
-function handlePlayerState(event){
-
-    if(
-        event.data ===
-        YT.PlayerState.PLAYING
-    ){
-
-        playPauseBtn.innerHTML =
-        `<i class="fas fa-pause"></i>`;
-
-        playerStatus.textContent =
-        "Playing from YouTube";
-
-        startPlayerTimer();
-
-        renderSongs();
-
-    }
-
-
-    else if(
-        event.data ===
-        YT.PlayerState.PAUSED
-    ){
-
-        playPauseBtn.innerHTML =
-        `<i class="fas fa-play"></i>`;
-
-        playerStatus.textContent =
-        "Paused";
-
-        stopPlayerTimer();
-
-        renderSongs();
-
-    }
-
-
-    else if(
-        event.data ===
-        YT.PlayerState.BUFFERING
-    ){
-
-        playerStatus.textContent =
-        "Buffering...";
-
-    }
-
-
-    else if(
-        event.data ===
-        YT.PlayerState.ENDED
-    ){
-
-        playPauseBtn.innerHTML =
-        `<i class="fas fa-play"></i>`;
-
-        playerStatus.textContent =
-        "Finished";
-
-        stopPlayerTimer();
-
-        seekBar.value = 100;
-
-        progressFill.style.width =
-        "100%";
-
-        /*
-           Keep currentSong so card shows
-           Play again after finishing.
-        */
-
-        renderSongs();
-
-    }
-
-}
-
-
-/* =========================================================
-   PLAYER TIMER
-========================================================= */
-
-function startPlayerTimer(){
-
-    stopPlayerTimer();
-
-    playerTimer =
-    setInterval(
-        updatePlayerProgress,
-        500
-    );
-
-}
-
-
-function stopPlayerTimer(){
-
-    if(playerTimer){
-
-        clearInterval(playerTimer);
-
-        playerTimer = null;
-
-    }
-
-}
-
-
-function updatePlayerProgress(){
-
-    if(
-        !youtubePlayerAPI ||
-        !playerReady ||
-        userSeeking
-    ){
-
-        return;
-
-    }
-
-
-    const duration =
-    youtubePlayerAPI.getDuration();
-
-    const current =
-    youtubePlayerAPI.getCurrentTime();
-
-
-    if(
-        !duration ||
-        duration <= 0
-    ){
-
-        return;
-
-    }
-
-
-    playerCurrentTime.textContent =
-    formatTime(current);
-
-    playerDuration.textContent =
-    formatTime(duration);
-
-
-    const percent =
-    (current / duration) * 100;
-
-
-    seekBar.value =
-    Math.min(
-        100,
-        Math.max(
-            0,
-            percent
-        )
-    );
-
-
-    progressFill.style.width =
-    percent + "%";
-
-}
-
-
-/* =========================================================
-   FORMAT TIME
-========================================================= */
-
-function formatTime(seconds){
-
-    seconds =
-    Math.max(
-        0,
-        Math.floor(
-            Number(seconds) || 0
-        )
-    );
-
-
-    const hours =
-    Math.floor(
-        seconds / 3600
-    );
-
-
-    const minutes =
-    Math.floor(
-        (seconds % 3600) / 60
-    );
-
-
-    const secs =
-    String(
-        seconds % 60
-    ).padStart(2,"0");
-
-
-    if(hours > 0){
-
-        return (
-            hours +
-            ":" +
-            String(minutes).padStart(2,"0") +
-            ":" +
-            secs
-        );
-
-    }
-
-
-    return (
-        minutes +
-        ":" +
-        secs
-    );
-
-}
-
-
-/* =========================================================
-   SEEK BAR
-========================================================= */
-
-seekBar.addEventListener(
-    "mousedown",
-    function(){
-
-        userSeeking = true;
-
-    }
-);
-
-
-seekBar.addEventListener(
-    "touchstart",
-    function(){
-
-        userSeeking = true;
-
-    },
-    {passive:true}
-);
-
-
-seekBar.addEventListener(
-    "input",
-    function(){
-
-        const duration =
-        youtubePlayerAPI
-        ? youtubePlayerAPI.getDuration()
-        : 0;
-
-
-        if(!duration){
-
-            return;
-
-        }
-
-
-        const target =
-        (
-            Number(this.value) / 100
-        ) * duration;
-
-
-        playerCurrentTime.textContent =
-        formatTime(target);
-
-
-        progressFill.style.width =
-        this.value + "%";
-
-    }
-);
-
-
-function finishSeek(){
-
-    if(!youtubePlayerAPI){
-
-        userSeeking = false;
-
-        return;
-
-    }
-
-
-    const duration =
-    youtubePlayerAPI.getDuration();
-
-
-    if(duration){
-
-        const target =
-        (
-            Number(seekBar.value) / 100
-        ) * duration;
-
-
-        youtubePlayerAPI.seekTo(
-            target,
-            true
-        );
-
-    }
-
-
-    userSeeking = false;
-
-}
-
-
-seekBar.addEventListener(
-    "change",
-    finishSeek
-);
-
-seekBar.addEventListener(
-    "mouseup",
-    finishSeek
-);
-
-seekBar.addEventListener(
-    "touchend",
-    finishSeek
-);
-
-
-/* =========================================================
-   PLAY / PAUSE
-========================================================= */
-
-playPauseBtn.addEventListener(
-    "click",
-    function(){
-
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
-
-        const state =
-        youtubePlayerAPI.getPlayerState();
-
-
-        if(
-            state ===
-            YT.PlayerState.PLAYING
-        ){
-
-            youtubePlayerAPI.pauseVideo();
-
-        }
-
-        else{
-
-            youtubePlayerAPI.playVideo();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   BACK 15
-========================================================= */
-
-back15Btn.addEventListener(
-    "click",
-    function(){
-
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
-
-        const current =
-        youtubePlayerAPI.getCurrentTime();
-
-
-        youtubePlayerAPI.seekTo(
-            Math.max(
-                0,
-                current - 15
-            ),
-            true
-        );
-
-    }
-);
-
-
-/* =========================================================
-   FORWARD 15
-========================================================= */
-
-forward15Btn.addEventListener(
-    "click",
-    function(){
-
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
-
-        const current =
-        youtubePlayerAPI.getCurrentTime();
-
-
-        const duration =
-        youtubePlayerAPI.getDuration();
-
-
-        youtubePlayerAPI.seekTo(
-            Math.min(
-                duration,
-                current + 15
-            ),
-            true
-        );
-
-    }
-);
-
-
-/* =========================================================
-   VOLUME
-========================================================= */
-
-volumeBar.addEventListener(
-    "input",
-    function(){
-
-        if(!youtubePlayerAPI){
-
-            return;
-
-        }
-
-
-        youtubePlayerAPI.setVolume(
-            Number(this.value)
-        );
-
-    }
-);
-
-
-/* =========================================================
-   CLOSE / STOP
-========================================================= */
-
-closePlayerBtn.addEventListener(
-    "click",
-    function(){
-
-        stopCurrentSong();
-
-    }
-);
-
-
-/* =========================================================
-   COMPACT PLAYER
-========================================================= */
-
-compactBtn.addEventListener(
-    "click",
-    function(){
-
-        customPlayer.classList.toggle(
-            "compact"
-        );
-
-
-        const icon =
-        compactBtn.querySelector("i");
-
-
-        if(
-            customPlayer.classList.contains(
-                "compact"
-            )
-        ){
-
-            icon.className =
-            "fas fa-expand";
-
-            compactBtn.title =
-            "Expand player";
-
-        }
-
-        else{
-
-            icon.className =
-            "fas fa-minus";
-
-            compactBtn.title =
-            "Mini Player";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   DARK / LIGHT
-========================================================= */
-
-function applyTheme(theme){
-
-    const dark =
-    theme === "dark";
-
-
-    document.body.classList.toggle(
-        "dark",
-        dark
-    );
-
-
-    themeToggleBtn.innerHTML =
-    dark
-    ? `<i class="fas fa-sun"></i>`
-    : `<i class="fas fa-moon"></i>`;
-
-
-    localStorage.setItem(
-        "jesusSongsTheme",
-        theme
-    );
-
-}
-
-
-function initTheme(){
-
-    const saved =
-    localStorage.getItem(
-        "jesusSongsTheme"
-    );
-
-
-    if(
-        saved === "dark" ||
-        saved === "light"
-    ){
-
-        applyTheme(saved);
-
-        return;
-
-    }
-
-
-    const dark =
-    window.matchMedia &&
-    window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
-
-
-    applyTheme(
-        dark
-        ? "dark"
-        : "light"
-    );
-
-}
-
-
-themeToggleBtn.addEventListener(
-    "click",
-    function(){
-
-        applyTheme(
-            document.body.classList.contains(
-                "dark"
-            )
-            ? "light"
-            : "dark"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   LOAD SONGS
-========================================================= */
-
-async function loadSongs(){
-
-    songCount.textContent =
-    "Loading...";
-
+    songCount.textContent = "Loading...";
 
     const {
         data,
         error
-    } =
-    await supabaseClient
-    .from("songs")
-    .select("*")
-    .order(
-        "id",
-        {
-            ascending:true
-        }
-    );
+    } = await supabaseClient
+        .from("songs")
+        .select("*")
+        .order("id", {
+            ascending: true
+        });
 
 
-    if(error){
+    if (error) {
 
         console.error(error);
 
-
         grid.innerHTML = `
-
             <div class="no-results">
-
                 <i
                     class="fas fa-exclamation-triangle"
-                    style="font-size:2rem"
+                    style="font-size:2rem;"
                 ></i>
 
                 <p>
@@ -2427,97 +1066,75 @@ async function loadSongs(){
                 </p>
 
                 <small>
-                    ${escapeHTML(error.message)}
+                    ${error.message}
                 </small>
-
             </div>
-
         `;
 
-
-        songCount.textContent =
-        "0 songs";
-
+        songCount.textContent = "0 songs";
 
         return;
-
     }
 
 
-    songs =
-    data || [];
-
+    songs = data || [];
 
     renderSongs();
 
     renderAdminList();
-
 }
 
 
-/* =========================================================
-   RENDER SONGS
-========================================================= */
+/* ============================================================
+   RENDER PUBLIC SONGS
+   ============================================================ */
 
-function renderSongs(){
+function renderSongs() {
 
     const q =
-    searchQuery
-    .toLowerCase()
-    .trim();
+        searchQuery
+            .toLowerCase()
+            .trim();
 
 
     const filtered =
-    songs.filter(song => {
+        songs.filter(song => {
 
-        return (
+            return (
+                (song.title || "")
+                    .toLowerCase()
+                    .includes(q)
 
-            String(
-                song.title || ""
-            )
-            .toLowerCase()
-            .includes(q)
+                ||
 
-            ||
+                (song.lyrics || "")
+                    .toLowerCase()
+                    .includes(q)
 
-            String(
-                song.lyrics || ""
-            )
-            .toLowerCase()
-            .includes(q)
+                ||
 
-            ||
+                (song.category || "")
+                    .toLowerCase()
+                    .includes(q)
+            );
 
-            String(
-                song.category || ""
-            )
-            .toLowerCase()
-            .includes(q)
-
-        );
-
-    });
+        });
 
 
     songCount.textContent =
-    `${filtered.length} song${
-        filtered.length !== 1
-        ? "s"
-        : ""
-    }`;
+        `${filtered.length} song${filtered.length !== 1 ? "s" : ""}`;
 
 
-    if(filtered.length === 0){
+    if (filtered.length === 0) {
 
         grid.innerHTML = `
-
             <div class="no-results">
 
                 <i
                     class="fas fa-music"
                     style="
-                        font-size:2rem;
-                        opacity:.4
+                    font-size:2rem;
+                    opacity:.4;
                     "
                 ></i>
 
@@ -2526,477 +1143,767 @@ function renderSongs(){
                 </p>
 
             </div>
-
         `;
 
         return;
-
     }
 
 
     grid.innerHTML =
-    filtered.map(song => {
+        filtered.map(song => {
+
+            const preview =
+                (song.lyrics || "")
+                    .split("\n")
+                    .filter(x => x.trim() !== "")[0]
+                    || "...";
 
 
-        const preview =
-        String(
-            song.lyrics || ""
-        )
-        .split("\n")
-        .find(
-            x => x.trim()
-        )
-        || "...";
+            const link =
+                song.audio_url || "";
 
 
-        const link =
-        song.audio_url || "";
+            return `
 
-
-        const playing =
-        isSongPlaying(song);
-
-
-        /*
-           IMPORTANT BUTTON LOGIC
-
-           Same currently playing song:
-               STOP
-
-           Other song:
-               PLAY
-        */
-
-        let playButton = "";
-
-
-        if(link){
-
-            if(playing){
-
-                playButton = `
-
-                    <button
-                        type="button"
-                        class="
-                            song-action-btn
-                            stop-btn
-                            play-song
-                        "
-                        data-id="${escapeAttribute(song.id)}"
-                    >
-
-                        <i class="fas fa-stop"></i>
-
-                        Stop
-
-                    </button>
-
-                `;
-
-            }
-
-            else{
-
-                playButton = `
-
-                    <button
-                        type="button"
-                        class="
-                            song-action-btn
-                            play-song
-                        "
-                        data-id="${escapeAttribute(song.id)}"
-                    >
-
-                        <i class="fas fa-play"></i>
-
-                        Play
-
-                    </button>
-
-                `;
-
-            }
-
-        }
-
-
-        return `
-
-        <div
-            class="
-                song-card
-                ${playing ? "playing" : ""}
-            "
-            data-id="${escapeAttribute(song.id)}"
-        >
-
-
-            <div class="song-card-header">
-
-                <span class="song-title">
-
-                    <i class="fas fa-music"></i>
-
-                    ${escapeHTML(song.title)}
-
-                </span>
-
-            </div>
-
-
-            <div class="song-card-body">
-
-                <div class="song-preview">
-
-                    ${escapeHTML(preview)}
-
-                </div>
-
-            </div>
-
-
-            <div class="song-actions">
-
-                ${playButton}
-
-
-                <button
-                    type="button"
-                    class="
-                        song-action-btn
-                        secondary
-                        view-song
-                    "
-                    data-id="${escapeAttribute(song.id)}"
+                <div
+                    class="song-card"
+                    data-id="${song.id}"
                 >
 
-                    <i class="far fa-eye"></i>
+                    <div class="song-card-header">
 
-                    View
+                        <span class="song-title">
 
-                </button>
+                            <i class="fas fa-music"></i>
 
-            </div>
+                            ${escapeHTML(song.title)}
 
+                        </span>
 
-            <div class="song-footer">
-
-                <span>
-
-                    <i class="far fa-eye"></i>
-
-                    Tap to view full
-
-                </span>
+                    </div>
 
 
-                <i
-                    class="fas fa-arrow-right"
-                    style="color:var(--gold)"
-                ></i>
+                    <div class="song-card-body">
 
-            </div>
+                        <div class="song-preview">
+
+                            ${escapeHTML(preview)}
+
+                        </div>
+
+                    </div>
 
 
-        </div>
+                    <div class="song-actions">
+                        ${
+                            link
+                            ? `
+                            <button
+                                type="button"
+                                class="song-action-btn play-song"
+                                data-id="${song.id}"
+                            >
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            `
+                            : ""
+                        }
+                        <button
+                            type="button"
+                            class="song-action-btn secondary view-song"
+                            data-id="${song.id}"
+                        >
+                            <i class="far fa-eye"></i> View
+                        </button>
+                    </div>
 
-        `;
 
-    }).join("");
+                    <div class="song-footer">
 
+                        <span>
+
+                            <i class="far fa-eye"></i>
+
+                            Tap to view full
+
+                        </span>
+
+                        <i
+                            class="fas fa-arrow-right"
+                            style="color:#b8860b;"
+                        ></i>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
 }
 
 
-/* =========================================================
-   SONG CLICK
-========================================================= */
+/* ============================================================
+   ADMIN SONG LIST
+   ============================================================ */
 
-grid.addEventListener(
-    "click",
-    function(e){
+function renderAdminList() {
 
-        const playButton =
-        e.target.closest(
-            ".play-song"
-        );
-
-
-        const viewButton =
-        e.target.closest(
-            ".view-song"
-        );
-
-
-        if(
-            playButton ||
-            viewButton
-        ){
-
-            e.stopPropagation();
-
-
-            const id =
-            Number(
-                (
-                    playButton ||
-                    viewButton
-                )
-                .dataset.id
-            );
-
-
-            const song =
-            songs.find(
-                s =>
-                Number(s.id) === id
-            );
-
-
-            if(!song){
-
-                return;
-
-            }
-
-
-            if(playButton){
-
-                /*
-                   PLAY OR STOP
-                   is handled inside
-                   playYouTube().
-                */
-
-                playYouTube(song);
-
-            }
-
-            else{
-
-                openDetail(song);
-
-            }
-
-
-            return;
-
-        }
-
-
-        const card =
-        e.target.closest(
-            ".song-card"
-        );
-
-
-        if(!card){
-
-            return;
-
-        }
-
-
-        const id =
-        Number(
-            card.dataset.id
-        );
-
-
-        const song =
-        songs.find(
-            s =>
-            Number(s.id) === id
-        );
-
-
-        if(song){
-
-            openDetail(song);
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   OPEN LYRICS
-========================================================= */
-
-function openDetail(song){
-
-    if(!song){
-
+    if (!currentUser) {
+        adminSongList.innerHTML = "";
         return;
-
     }
 
+    if (songs.length === 0) {
+        adminSongList.innerHTML =
+            "<p style='color:#999;'>No songs yet.</p>";
+        return;
+    }
 
+    adminSongList.innerHTML =
+        songs.map(song => {
+
+            return `
+                <div class="admin-song-item">
+
+                    <span>
+                        ${escapeHTML(song.title)}
+                        ${
+                            Number(editingSongId.value) === Number(song.id)
+                            ? `<span class="edit-badge">Editing</span>`
+                            : ""
+                        }
+                    </span>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn btn-edit edit-song"
+                            data-id="${song.id}"
+                            style="
+                            padding:.25rem .8rem;
+                            font-size:.8rem;
+                            "
+                        >
+                            <i class="fas fa-pen"></i>
+                            Edit
+                        </button>
+
+                        <button
+                            class="btn btn-danger delete-song"
+                            data-id="${song.id}"
+                            style="
+                            padding:.25rem .8rem;
+                            font-size:.8rem;
+                            "
+                        >
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+    document
+        .querySelectorAll(".edit-song")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+                startEditSong(Number(button.dataset.id));
+            });
+
+        });
+
+    document
+        .querySelectorAll(".delete-song")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+                deleteSong(Number(button.dataset.id));
+            });
+
+        });
+}
+
+/* ============================================================
+   OPEN SONG DETAIL
+   ============================================================ */
+
+function openDetail(song) {
     detailTitle.innerHTML = `
-
         <i class="fas fa-music"></i>
-
         ${escapeHTML(song.title)}
-
     `;
 
-
     detailLyrics.textContent =
-    song.lyrics ||
-    "No lyrics available.";
+        song.lyrics || "No lyrics available.";
 
-
-    if(song.audio_url){
-
-        const currentlyPlaying =
-        isSongPlaying(song);
-
-
+    if (song.audio_url) {
         detailLink.innerHTML = `
-
             <button
                 type="button"
-                class="
-                    song-action-btn
-                    ${
-                        currentlyPlaying
-                        ? "stop-btn"
-                        : ""
-                    }
-                "
+                class="song-action-btn"
                 id="detailPlayBtn"
             >
-
-                <i class="
-                    fas
-                    ${
-                        currentlyPlaying
-                        ? "fa-stop"
-                        : "fa-play"
-                    }
-                "></i>
-
-                ${
-                    currentlyPlaying
-                    ? "Stop"
-                    : "Play Song"
-                }
-
+                <i class="fas fa-play"></i> Play Song
             </button>
-
         `;
 
-
-        document
-        .getElementById(
-            "detailPlayBtn"
-        )
-        .addEventListener(
-            "click",
-            function(){
-
-                playYouTube(song);
-
-                /*
-                   Refresh modal button
-                   after Play/Stop.
-                */
-
-                setTimeout(
-                    function(){
-
-                        openDetail(song);
-
-                    },
-                    100
-                );
-
-            }
-        );
-
-    }
-
-    else{
-
+        document.getElementById("detailPlayBtn").addEventListener("click", () => {
+            playYouTube(song);
+        });
+    } else {
         detailLink.innerHTML = `
-
-            <span
-                style="color:var(--muted)"
-            >
-
-                <i
-                    class="fas fa-info-circle"
-                ></i>
-
-                No YouTube link added.
-
+            <span style="color:var(--muted);">
+                <i class="fas fa-info-circle"></i> No YouTube link added.
             </span>
-
         `;
-
     }
 
-
-    detailOverlay.classList.add(
-        "active"
-    );
-
-
-    document.body.style.overflow =
-    "hidden";
-
+    detailOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
 }
 
 
-/* =========================================================
-   CLOSE LYRICS
-========================================================= */
+function closeDetail() {
 
-function closeDetail(){
+    detailOverlay.classList.remove("active");
 
-    detailOverlay.classList.remove(
-        "active"
-    );
-
-
-    document.body.style.overflow =
-    "";
-
+    document.body.style.overflow = "";
 }
 
 
-detailCloseBtn.addEventListener(
-    "click",
-    closeDetail
-);
+/* ============================================================
+   DARK / LIGHT MODE
+   ============================================================ */
+
+function applyTheme(theme) {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark", isDark);
+
+    themeToggleBtn.innerHTML = isDark
+        ? `<i class="fas fa-sun"></i>`
+        : `<i class="fas fa-moon"></i>`;
+
+    themeToggleBtn.title = isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode";
+
+    localStorage.setItem("jesusSongsTheme", theme);
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem("jesusSongsTheme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+        applyTheme(savedTheme);
+        return;
+    }
+
+    const prefersDark =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    applyTheme(prefersDark ? "dark" : "light");
+}
+
+themeToggleBtn.addEventListener("click", () => {
+    applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
+});
 
 
-detailOverlay.addEventListener(
-    "click",
-    function(e){
+/* ============================================================
+   YOUTUBE BACKGROUND PLAYER
+   ============================================================ */
 
-        if(e.target === this){
+function getYouTubeId(url) {
+    if (!url) return null;
 
-            closeDetail();
+    try {
+        const value = String(url).trim();
 
+        const patterns = [
+            /youtu\.be\/([^?&#/]+)/i,
+            /youtube\.com\/watch\?[^#]*v=([^?&#/]+)/i,
+            /youtube\.com\/shorts\/([^?&#/]+)/i,
+            /youtube\.com\/embed\/([^?&#/]+)/i,
+            /youtube-nocookie\.com\/embed\/([^?&#/]+)/i
+        ];
+
+        for (const pattern of patterns) {
+            const match = value.match(pattern);
+            if (match && match[1]) return match[1];
         }
 
+        // If the admin pasted only the 11-character video ID
+        if (/^[a-zA-Z0-9_-]{11}$/.test(value)) {
+            return value;
+        }
+    } catch (error) {
+        console.error("YouTube URL parse error:", error);
     }
-);
+
+    return null;
+}
+
+function playYouTube(song) {
+    const videoId = getYouTubeId(song.audio_url);
+
+    if (!videoId) {
+        alert(
+            "This is not a valid YouTube link.\n\n" +
+            "Use a normal YouTube URL such as:\n" +
+            "https://www.youtube.com/watch?v=VIDEO_ID"
+        );
+        return;
+    }
+
+    youtubePlayerTitle.textContent =
+        song.title || "Now Playing";
+
+    // The click that calls this function is a user gesture,
+    // so the browser is allowed to start playback.
+    youtubeFrame.src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(videoId) +
+        "?autoplay=1&rel=0&modestbranding=1&playsinline=1";
+
+    youtubePlayer.classList.add("active");
+}
+
+function stopYouTube() {
+    youtubeFrame.src = "";
+    youtubePlayer.classList.remove("active");
+    youtubePlayerTitle.textContent = "Now Playing";
+}
+
+function minimizeYouTube() {
+    youtubePlayer.classList.toggle("mini");
+
+    if (youtubePlayer.classList.contains("mini")) {
+        youtubePlayer.style.width = "180px";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "none";
+    } else {
+        youtubePlayer.style.width = "";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "block";
+    }
+}
+
+youtubeCloseBtn.addEventListener("click", stopYouTube);
+youtubeMinBtn.addEventListener("click", minimizeYouTube);
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+
+async function login() {
+
+    const email =
+        loginEmail.value.trim();
+
+    const password =
+        loginPassword.value;
 
 
-/* =========================================================
+    if (!email || !password) {
+
+        loginError.textContent =
+            "Please enter email and password.";
+
+        return;
+    }
+
+
+    loginError.textContent =
+        "Logging in...";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        loginError.textContent =
+            "❌ " + error.message;
+
+        return;
+    }
+
+
+    currentUser =
+        data.user;
+
+
+    loginOverlay.classList.remove("active");
+
+    adminPanel.classList.add("active");
+
+
+    adminToggleBtn.innerHTML =
+        `<i class="fas fa-user"></i> Logout`;
+
+
+    adminToggleBtn.style.background =
+        "#2ecc71";
+
+    adminToggleBtn.style.color =
+        "#fff";
+
+
+    renderAdminList();
+
+    alert("✅ Admin login successful!");
+}
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+
+    adminPanel.classList.remove("active");
+
+
+    adminToggleBtn.innerHTML =
+        `<i class="fas fa-user-shield"></i> Admin`;
+
+
+    adminToggleBtn.style.background = "";
+
+    adminToggleBtn.style.color = "";
+
+
+    renderAdminList();
+}
+
+
+/* ============================================================
+   ADD SONG TO SUPABASE
+   ============================================================ */
+
+async function addSong() {
+
+    if (!currentUser) {
+
+        alert("Please login as admin first.");
+
+        return;
+    }
+
+    // If an existing song is selected for editing,
+    // update that song instead of inserting a new row.
+    const editId = Number(editingSongId.value);
+
+    if (editId) {
+        await updateSong(editId);
+        return;
+    }
+
+
+    const title =
+        songTitle.value.trim();
+
+    const lyrics =
+        songLyrics.value.trim();
+
+    const link =
+        songLink.value.trim();
+
+    const category =
+        songCategory.value.trim();
+
+
+    if (!title || !lyrics) {
+
+        alert(
+            "Song title and lyrics are required."
+        );
+
+        return;
+    }
+
+
+    addSongBtn.disabled = true;
+
+    addSongBtn.textContent =
+        "Saving...";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("songs")
+            .insert([
+                {
+                    title: title,
+                    artist: "Jesus Songs",
+                    lyrics: lyrics,
+                    audio_url: link || null,
+                    category: category || "Worship"
+                }
+            ])
+            .select();
+
+
+    addSongBtn.disabled = false;
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-save"></i> Add Song`;
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Failed to add song:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    songTitle.value = "";
+
+    songLyrics.value = "";
+
+    songLink.value = "";
+
+    songCategory.value = "";
+
+
+    await loadSongs();
+
+
+    alert("✅ Song added to Supabase!");
+}
+
+
+/* ============================================================
+   EDIT / UPDATE SONG
+   ============================================================ */
+
+function startEditSong(id) {
+
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const song = songs.find(
+        s => Number(s.id) === Number(id)
+    );
+
+    if (!song) {
+        alert("Song not found.");
+        return;
+    }
+
+    editingSongId.value = song.id;
+
+    songTitle.value = song.title || "";
+    songLyrics.value = song.lyrics || "";
+    songLink.value = song.audio_url || "";
+    songCategory.value = song.category || "";
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-save"></i> Update Song`;
+
+    cancelEditBtn.style.display = "inline-block";
+
+    formStatus.textContent =
+        `Editing: ${song.title || "Untitled song"}`;
+
+    formStatus.style.color = "#2471a3";
+
+    renderAdminList();
+
+    document
+        .getElementById("songTitle")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    songTitle.focus();
+}
+
+
+function cancelEdit() {
+
+    editingSongId.value = "";
+
+    songTitle.value = "";
+    songLyrics.value = "";
+    songLink.value = "";
+    songCategory.value = "";
+
+    addSongBtn.disabled = false;
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-save"></i> Add Song`;
+
+    cancelEditBtn.style.display = "none";
+
+    formStatus.textContent = "";
+
+    renderAdminList();
+}
+
+
+async function updateSong(id) {
+
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const title =
+        songTitle.value.trim();
+
+    const lyrics =
+        songLyrics.value.trim();
+
+    const link =
+        songLink.value.trim();
+
+    const category =
+        songCategory.value.trim();
+
+    if (!title || !lyrics) {
+        alert("Song title and lyrics are required.");
+        return;
+    }
+
+    addSongBtn.disabled = true;
+    cancelEditBtn.disabled = true;
+
+    addSongBtn.innerHTML =
+        `<i class="fas fa-spinner fa-spin"></i> Updating...`;
+
+    formStatus.textContent = "Updating song...";
+    formStatus.style.color = "#2471a3";
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("songs")
+            .update({
+                title: title,
+                lyrics: lyrics,
+                audio_url: link || null,
+                category: category || "Worship"
+            })
+            .eq("id", id);
+
+    addSongBtn.disabled = false;
+    cancelEditBtn.disabled = false;
+
+    if (error) {
+
+        console.error(error);
+
+        formStatus.textContent =
+            "❌ Update failed: " + error.message;
+
+        formStatus.style.color = "#c0392b";
+
+        addSongBtn.innerHTML =
+            `<i class="fas fa-save"></i> Update Song`;
+
+        return;
+    }
+
+    cancelEdit();
+
+    await loadSongs();
+
+    alert("✅ Song updated successfully!");
+}
+
+
+/* ============================================================
+   DELETE SONG
+   ============================================================ */
+
+async function deleteSong(id) {
+
+    if (!currentUser) {
+
+        alert("Please login first.");
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this song?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("songs")
+            .delete()
+            .eq("id", id);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Delete failed:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    await loadSongs();
+
+
+    alert("✅ Song deleted.");
+}
+
+
+/* ============================================================
    SEARCH
-========================================================= */
+   ============================================================ */
 
 searchInput.addEventListener(
     "input",
-    function(){
+    function () {
 
         searchQuery =
-        this.value;
+            this.value;
 
         renderSongs();
 
@@ -3004,298 +1911,23 @@ searchInput.addEventListener(
 );
 
 
-/* =========================================================
-   ADMIN LIST
-========================================================= */
-
-function renderAdminList(){
-
-    if(!currentUser){
-
-        adminSongList.innerHTML =
-        "";
-
-        return;
-
-    }
-
-
-    if(!songs.length){
-
-        adminSongList.innerHTML =
-        "<p style='color:#999'>No songs yet.</p>";
-
-        return;
-
-    }
-
-
-    adminSongList.innerHTML =
-    songs.map(song => `
-
-        <div class="admin-song-item">
-
-            <span>
-
-                ${escapeHTML(song.title)}
-
-                ${
-                    Number(
-                        editingSongId.value
-                    )
-                    ===
-                    Number(song.id)
-
-                    ?
-
-                    `
-
-                    <span
-                        class="edit-badge"
-                    >
-                        Editing
-                    </span>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-            </span>
-
-
-            <div class="actions">
-
-                <button
-                    class="btn btn-edit edit-song"
-                    data-id="${song.id}"
-                    type="button"
-                >
-
-                    <i class="fas fa-pen"></i>
-
-                    Edit
-
-                </button>
-
-
-                <button
-                    class="btn btn-danger delete-song"
-                    data-id="${song.id}"
-                    type="button"
-                >
-
-                    <i class="fas fa-trash"></i>
-
-                    Delete
-
-                </button>
-
-            </div>
-
-        </div>
-
-    `).join("");
-
-
-    document
-    .querySelectorAll(
-        ".edit-song"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            function(){
-
-                startEditSong(
-                    Number(
-                        this.dataset.id
-                    )
-                );
-
-            }
-        );
-
-    });
-
-
-    document
-    .querySelectorAll(
-        ".delete-song"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            function(){
-
-                deleteSong(
-                    Number(
-                        this.dataset.id
-                    )
-                );
-
-            }
-        );
-
-    });
-
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login(){
-
-    const email =
-    loginEmail.value.trim();
-
-
-    const password =
-    loginPassword.value;
-
-
-    if(!email || !password){
-
-        loginError.textContent =
-        "Please enter email and password.";
-
-        return;
-
-    }
-
-
-    loginError.textContent =
-    "Logging in...";
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient.auth
-    .signInWithPassword({
-
-        email,
-        password
-
-    });
-
-
-    if(error){
-
-        loginError.textContent =
-        "❌ " + error.message;
-
-        return;
-
-    }
-
-
-    currentUser =
-    data.user;
-
-
-    loginOverlay.classList.remove(
-        "active"
-    );
-
-
-    adminPanel.classList.add(
-        "active"
-    );
-
-
-    setAdminLoggedIn();
-
-    renderAdminList();
-
-}
-
-
-/* =========================================================
-   ADMIN LOGGED IN
-========================================================= */
-
-function setAdminLoggedIn(){
-
-    adminToggleBtn.innerHTML =
-    `<i class="fas fa-user"></i> Logout`;
-
-
-    adminToggleBtn.style.background =
-    "#2ecc71";
-
-
-    adminToggleBtn.style.color =
-    "#fff";
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logout(){
-
-    await supabaseClient.auth.signOut();
-
-
-    currentUser = null;
-
-
-    adminPanel.classList.remove(
-        "active"
-    );
-
-
-    adminToggleBtn.innerHTML =
-    `<i class="fas fa-user-shield"></i> Admin`;
-
-
-    adminToggleBtn.style.background =
-    "";
-
-
-    adminToggleBtn.style.color =
-    "";
-
-
-    renderAdminList();
-
-}
-
-
-/* =========================================================
+/* ============================================================
    ADMIN BUTTON
-========================================================= */
+   ============================================================ */
 
 adminToggleBtn.addEventListener(
     "click",
-    async function(){
+    async function () {
 
-        if(currentUser){
+        if (currentUser) {
 
             await logout();
 
-        }
+        } else {
 
-        else{
+            loginOverlay.classList.add("active");
 
-            loginOverlay.classList.add(
-                "active"
-            );
-
-
-            loginError.textContent =
-            "";
-
+            loginError.textContent = "";
 
             loginEmail.focus();
 
@@ -3305,391 +1937,9 @@ adminToggleBtn.addEventListener(
 );
 
 
-/* =========================================================
-   ADD SONG
-========================================================= */
-
-async function addSong(){
-
-    if(!currentUser){
-
-        alert(
-            "Please login as admin first."
-        );
-
-        return;
-
-    }
-
-
-    const editId =
-    Number(
-        editingSongId.value
-    );
-
-
-    if(editId){
-
-        await updateSong(
-            editId
-        );
-
-        return;
-
-    }
-
-
-    const title =
-    songTitle.value.trim();
-
-
-    const lyrics =
-    songLyrics.value.trim();
-
-
-    const link =
-    songLink.value.trim();
-
-
-    const category =
-    songCategory.value.trim();
-
-
-    if(!title || !lyrics){
-
-        alert(
-            "Song title and lyrics are required."
-        );
-
-        return;
-
-    }
-
-
-    addSongBtn.disabled =
-    true;
-
-
-    addSongBtn.textContent =
-    "Saving...";
-
-
-    const {
-        error
-    } =
-    await supabaseClient
-    .from("songs")
-    .insert([{
-
-        title:title,
-
-        artist:"Jesus Songs",
-
-        lyrics:lyrics,
-
-        audio_url:
-        link || null,
-
-        category:
-        category || "Worship"
-
-    }]);
-
-
-    addSongBtn.disabled =
-    false;
-
-
-    addSongBtn.innerHTML =
-    `<i class="fas fa-save"></i> Add Song`;
-
-
-    if(error){
-
-        alert(
-            "❌ Failed:\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    clearForm();
-
-
-    await loadSongs();
-
-
-    alert(
-        "✅ Song added successfully!"
-    );
-
-}
-
-
-/* =========================================================
-   EDIT SONG
-========================================================= */
-
-function startEditSong(id){
-
-    const song =
-    songs.find(
-        s =>
-        Number(s.id) ===
-        Number(id)
-    );
-
-
-    if(!song){
-
-        return;
-
-    }
-
-
-    editingSongId.value =
-    song.id;
-
-
-    songTitle.value =
-    song.title || "";
-
-
-    songLyrics.value =
-    song.lyrics || "";
-
-
-    songLink.value =
-    song.audio_url || "";
-
-
-    songCategory.value =
-    song.category || "";
-
-
-    addSongBtn.innerHTML =
-    `<i class="fas fa-save"></i> Update Song`;
-
-
-    cancelEditBtn.style.display =
-    "inline-block";
-
-
-    formStatus.textContent =
-    "Editing: " +
-    (
-        song.title ||
-        "Song"
-    );
-
-
-    renderAdminList();
-
-
-    songTitle.focus();
-
-}
-
-
-/* =========================================================
-   CLEAR FORM
-========================================================= */
-
-function clearForm(){
-
-    editingSongId.value =
-    "";
-
-
-    songTitle.value =
-    "";
-
-
-    songLyrics.value =
-    "";
-
-
-    songLink.value =
-    "";
-
-
-    songCategory.value =
-    "";
-
-
-    addSongBtn.innerHTML =
-    `<i class="fas fa-save"></i> Add Song`;
-
-
-    cancelEditBtn.style.display =
-    "none";
-
-
-    formStatus.textContent =
-    "";
-
-}
-
-
-cancelEditBtn.addEventListener(
-    "click",
-    clearForm
-);
-
-
-/* =========================================================
-   UPDATE SONG
-========================================================= */
-
-async function updateSong(id){
-
-    const title =
-    songTitle.value.trim();
-
-
-    const lyrics =
-    songLyrics.value.trim();
-
-
-    const link =
-    songLink.value.trim();
-
-
-    const category =
-    songCategory.value.trim();
-
-
-    if(!title || !lyrics){
-
-        alert(
-            "Song title and lyrics are required."
-        );
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-    await supabaseClient
-    .from("songs")
-    .update({
-
-        title:title,
-
-        lyrics:lyrics,
-
-        audio_url:
-        link || null,
-
-        category:
-        category || "Worship"
-
-    })
-    .eq(
-        "id",
-        id
-    );
-
-
-    if(error){
-
-        alert(
-            "❌ Update failed:\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    clearForm();
-
-
-    await loadSongs();
-
-
-    alert(
-        "✅ Song updated!"
-    );
-
-}
-
-
-/* =========================================================
-   DELETE SONG
-========================================================= */
-
-async function deleteSong(id){
-
-    if(!confirm(
-        "Are you sure you want to delete this song?"
-    )){
-
-        return;
-
-    }
-
-
-    /*
-       If deleted song is currently playing,
-       stop it first.
-    */
-
-    if(
-        currentSong &&
-        Number(currentSong.id) ===
-        Number(id)
-    ){
-
-        stopCurrentSong();
-
-    }
-
-
-    const {
-        error
-    } =
-    await supabaseClient
-    .from("songs")
-    .delete()
-    .eq(
-        "id",
-        id
-    );
-
-
-    if(error){
-
-        alert(
-            "❌ Delete failed:\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    await loadSongs();
-
-
-    alert(
-        "✅ Song deleted."
-    );
-
-}
-
-
-/* =========================================================
+/* ============================================================
    LOGIN EVENTS
-========================================================= */
+   ============================================================ */
 
 loginBtn.addEventListener(
     "click",
@@ -3699,9 +1949,9 @@ loginBtn.addEventListener(
 
 loginPassword.addEventListener(
     "keydown",
-    e => {
+    function(e) {
 
-        if(e.key === "Enter"){
+        if (e.key === "Enter") {
 
             login();
 
@@ -3713,9 +1963,9 @@ loginPassword.addEventListener(
 
 loginEmail.addEventListener(
     "keydown",
-    e => {
+    function(e) {
 
-        if(e.key === "Enter"){
+        if (e.key === "Enter") {
 
             login();
 
@@ -3725,15 +1975,17 @@ loginEmail.addEventListener(
 );
 
 
+/* ============================================================
+   CLOSE LOGIN
+   ============================================================ */
+
 loginOverlay.addEventListener(
     "click",
-    function(e){
+    function(e) {
 
-        if(e.target === this){
+        if (e.target === this) {
 
-            loginOverlay.classList.remove(
-                "active"
-            );
+            loginOverlay.classList.remove("active");
 
         }
 
@@ -3741,9 +1993,135 @@ loginOverlay.addEventListener(
 );
 
 
-/* =========================================================
-   LOGOUT BUTTON
-========================================================= */
+/* ============================================================
+   CLOSE SONG DETAIL
+   ============================================================ */
+
+detailCloseBtn.addEventListener(
+    "click",
+    closeDetail
+);
+
+
+detailOverlay.addEventListener(
+    "click",
+    function(e) {
+
+        if (e.target === this) {
+
+            closeDetail();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (
+            e.key === "Escape" &&
+            detailOverlay.classList.contains("active")
+        ) {
+
+            closeDetail();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   PLAY / VIEW BUTTONS
+   ============================================================ */
+
+grid.addEventListener("click", function(e) {
+    const playButton = e.target.closest(".play-song");
+    const viewButton = e.target.closest(".view-song");
+
+    if (!playButton && !viewButton) return;
+
+    e.stopPropagation();
+
+    const id = Number(
+        (playButton || viewButton).dataset.id
+    );
+
+    const song = songs.find(
+        s => Number(s.id) === id
+    );
+
+    if (!song) return;
+
+    if (playButton) {
+        playYouTube(song);
+    } else {
+        openDetail(song);
+    }
+});
+
+
+/* ============================================================
+   SONG CARD CLICK
+   ============================================================ */
+
+grid.addEventListener(
+    "click",
+    function(e) {
+
+        if (e.target.closest("a, button")) {
+            return;
+        }
+
+
+        const card =
+            e.target.closest(".song-card");
+
+
+        if (!card) return;
+
+
+        const id =
+            Number(card.dataset.id);
+
+
+        const song =
+            songs.find(
+                s => Number(s.id) === id
+            );
+
+
+        if (song) {
+
+            openDetail(song);
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   ADD SONG
+   ============================================================ */
+
+addSongBtn.addEventListener(
+    "click",
+    addSong
+);
+
+cancelEditBtn.addEventListener(
+    "click",
+    cancelEdit
+);
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
 
 logoutBtn.addEventListener(
     "click",
@@ -3751,101 +2129,65 @@ logoutBtn.addEventListener(
 );
 
 
-/* =========================================================
-   SECURITY
-========================================================= */
+/* ============================================================
+   SECURITY HELPERS
+   ============================================================ */
 
-function escapeHTML(value){
+function escapeHTML(value) {
 
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
-function escapeAttribute(value){
+function escapeAttribute(value) {
 
-    return escapeHTML(
-        value
-    );
-
+    return escapeHTML(value);
 }
 
 
-/* =========================================================
-   CHECK USER
-========================================================= */
+/* ============================================================
+   CHECK EXISTING LOGIN SESSION
+   ============================================================ */
 
-async function checkUser(){
+async function checkUser() {
 
     const {
         data
     } =
-    await supabaseClient.auth
-    .getUser();
+        await supabaseClient.auth.getUser();
 
 
-    if(
-        data &&
-        data.user
-    ){
+    if (data && data.user) {
 
         currentUser =
-        data.user;
+            data.user;
 
+        adminPanel.classList.add("active");
 
-        adminPanel.classList.add(
-            "active"
-        );
+        adminToggleBtn.innerHTML =
+            `<i class="fas fa-user"></i> Logout`;
 
+        adminToggleBtn.style.background =
+            "#2ecc71";
 
-        setAdminLoggedIn();
+        adminToggleBtn.style.color =
+            "#fff";
 
     }
 
 }
 
 
-/* =========================================================
-   AUTH LISTENER
-========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-    (event,session) => {
-
-        currentUser =
-        session?.user || null;
-
-    }
-);
-
-
-/* =========================================================
+/* ============================================================
    START
-========================================================= */
+   ============================================================ */
 
-async function init(){
+async function init() {
 
     initTheme();
 
@@ -3857,6 +2199,28 @@ async function init(){
 
 
 init();
+
+
+/* ============================================================
+   AUTH STATE LISTENER
+   ============================================================ */
+
+supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+        if (session && session.user) {
+
+            currentUser =
+                session.user;
+
+        } else {
+
+            currentUser = null;
+
+        }
+
+    }
+);
 
 </script>
 
