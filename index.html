@@ -370,6 +370,32 @@
             display: none;
         }
         .youtube-player.active { display: block; }
+
+.youtube-player.mini {
+    width: 210px !important;
+}
+
+.youtube-player.mini .youtube-frame {
+    width: 100%;
+    height: 118px;
+    aspect-ratio: auto;
+}
+
+.youtube-player.mini .youtube-player-head {
+    height: 36px;
+}
+
+@media(max-width:650px) {
+    .youtube-player.mini {
+        width: 190px !important;
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .youtube-player.mini .youtube-frame {
+        height: 107px;
+    }
+}
         .youtube-player-head {
             height: 38px;
             padding: 0 .65rem;
@@ -1484,10 +1510,12 @@ function minimizeYouTube() {
 
     if (youtubePlayer.classList.contains("mini")) {
         youtubePlayer.style.width = "180px";
-        youtubePlayer.querySelector(".youtube-frame").style.display = "none";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "block";
+        youtubePlayer.querySelector(".youtube-frame").style.height = "100px";
     } else {
         youtubePlayer.style.width = "";
         youtubePlayer.querySelector(".youtube-frame").style.display = "block";
+        youtubePlayer.querySelector(".youtube-frame").style.height = "";
     }
 }
 
