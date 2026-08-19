@@ -23,11 +23,34 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #f7f3ee;
+            --surface: #ffffff;
+            --surface-2: #fbf8f4;
+            --text: #222;
+            --muted: #666;
+            --border: #e8e0d7;
+            --gold: #b8860b;
+            --shadow: 0 6px 20px rgba(0,0,0,.06);
+        }
+
+        body.dark {
+            --bg: #0f1117;
+            --surface: #181b24;
+            --surface-2: #20242f;
+            --text: #f2f4f8;
+            --muted: #aeb6c4;
+            --border: #303644;
+            --gold: #f0c040;
+            --shadow: 0 8px 28px rgba(0,0,0,.35);
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #f7f3ee;
-            color: #222;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            transition: background .25s ease, color .25s ease;
         }
 
         .header {
@@ -146,9 +169,9 @@
         }
 
         .song-card {
-            background: #fff;
+            background: var(--surface);
             border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,.06);
+            box-shadow: var(--shadow);
             transition: .3s;
             border-left: 5px solid #b8860b;
             cursor: pointer;
@@ -170,7 +193,7 @@
         .song-title {
             font-size: 1.15rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: var(--text);
         }
 
         .song-title i {
@@ -184,7 +207,7 @@
         }
 
         .song-preview {
-            color: #555;
+            color: var(--muted);
             font-style: italic;
             font-size: .9rem;
             display: -webkit-box;
@@ -205,11 +228,11 @@
 
         .song-footer {
             padding: .7rem 1.5rem 1rem;
-            border-top: 1px solid #f0ebe5;
+            border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             font-size: .8rem;
-            color: #999;
+            color: var(--muted);
         }
 
         .no-results {
@@ -221,7 +244,7 @@
 
         .admin-panel {
             display: none;
-            background: #fff;
+            background: var(--surface);
             border-radius: 20px;
             box-shadow: 0 8px 30px rgba(0,0,0,.12);
             padding: 2rem;
@@ -234,7 +257,7 @@
 
         .admin-panel h2 {
             margin-bottom: 1rem;
-            color: #1a1a2e;
+            color: var(--text);
         }
 
         .form-group {
@@ -251,7 +274,7 @@
         .form-group textarea {
             width: 100%;
             padding: .7rem 1rem;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border);
             border-radius: 8px;
             font-size: .95rem;
             font-family: inherit;
@@ -298,7 +321,7 @@
             padding: .2rem .55rem;
             border-radius: 12px;
             background: #eaf4ff;
-            color: #2471a3;
+            color: #4da3ff;
             font-size: .72rem;
             font-weight: 700;
         }
@@ -318,6 +341,97 @@
             margin-top: .8rem;
             font-size: .9rem;
             min-height: 1.2rem;
+        }
+
+        /* THEME TOGGLE */
+        .theme-btn {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        /* BACKGROUND YOUTUBE PLAYER */
+        .youtube-player {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 360px;
+            max-width: calc(100vw - 36px);
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(0,0,0,.35);
+            z-index: 500;
+            display: none;
+        }
+        .youtube-player.active { display: block; }
+        .youtube-player-head {
+            height: 38px;
+            padding: 0 .65rem;
+            background: #111;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+            font-size: .78rem;
+        }
+        .youtube-player-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .youtube-player-actions button {
+            border: 0;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: .4rem;
+        }
+        .youtube-frame {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+            display: block;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: .55rem;
+            flex-wrap: wrap;
+            padding: .2rem 1.5rem .9rem;
+        }
+        .song-action-btn {
+            padding: .45rem .8rem;
+            border: 0;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .82rem;
+            background: #f0c040;
+            color: #1a1a2e;
+        }
+        .song-action-btn.secondary {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        body.dark .song-action-btn.secondary {
+            background: #252a36;
+        }
+
+        @media(max-width:650px) {
+            .youtube-player {
+                right: 10px;
+                bottom: 10px;
+                width: calc(100vw - 20px);
+            }
         }
 
         @media(max-width:650px) {
@@ -349,7 +463,7 @@
         }
 
         .login-modal {
-            background: #fff;
+            background: var(--surface);
             padding: 2.5rem 2rem;
             border-radius: 24px;
             max-width: 380px;
@@ -360,14 +474,14 @@
 
         .login-modal h2 {
             margin-bottom: 1.5rem;
-            color: #1a1a2e;
+            color: var(--text);
         }
 
         .login-modal input {
             width: 100%;
             padding: .7rem 1rem;
             margin-bottom: 1rem;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -400,7 +514,7 @@
         }
 
         .song-detail-modal {
-            background: #fff;
+            background: var(--surface);
             border-radius: 28px;
             max-width: 720px;
             width: 100%;
@@ -424,7 +538,7 @@
         .detail-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: var(--text);
             padding-right: 2rem;
         }
 
@@ -438,11 +552,11 @@
             font-size: 1.1rem;
             line-height: 1.9;
             white-space: pre-line;
-            color: #2c2c2c;
+            color: var(--text);
             margin: 1.5rem 0;
             padding: 1rem 0;
-            border-top: 2px solid #f0ebe5;
-            border-bottom: 2px solid #f0ebe5;
+            border-top: 2px solid var(--border);
+            border-bottom: 2px solid var(--border);
         }
 
         .detail-link a {
@@ -509,6 +623,16 @@
         <span class="song-count" id="songCount">
             Loading...
         </span>
+
+        <button
+            class="btn btn-outline theme-btn"
+            id="themeToggleBtn"
+            type="button"
+            title="Toggle dark/light mode"
+            aria-label="Toggle dark/light mode"
+        >
+            <i class="fas fa-moon"></i>
+        </button>
 
         <button
             class="btn btn-outline"
@@ -751,6 +875,24 @@
 </main>
 
 
+<!-- BACKGROUND YOUTUBE PLAYER -->
+<div class="youtube-player" id="youtubePlayer">
+    <div class="youtube-player-head">
+        <span class="youtube-player-title" id="youtubePlayerTitle">Now Playing</span>
+        <span class="youtube-player-actions">
+            <button id="youtubeMinBtn" type="button" title="Minimize"><i class="fas fa-minus"></i></button>
+            <button id="youtubeCloseBtn" type="button" title="Stop"><i class="fas fa-times"></i></button>
+        </span>
+    </div>
+    <iframe
+        id="youtubeFrame"
+        class="youtube-frame"
+        title="YouTube player"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+    ></iframe>
+</div>
+
 <footer class="footer">
 
     <p>
@@ -869,6 +1011,24 @@ const detailLyrics =
 
 const detailLink =
     document.getElementById("detailLink");
+
+const themeToggleBtn =
+    document.getElementById("themeToggleBtn");
+
+const youtubePlayer =
+    document.getElementById("youtubePlayer");
+
+const youtubeFrame =
+    document.getElementById("youtubeFrame");
+
+const youtubePlayerTitle =
+    document.getElementById("youtubePlayerTitle");
+
+const youtubeCloseBtn =
+    document.getElementById("youtubeCloseBtn");
+
+const youtubeMinBtn =
+    document.getElementById("youtubeMinBtn");
 
 
 /* ============================================================
@@ -1034,31 +1194,28 @@ function renderSongs() {
                     </div>
 
 
-                    ${
-                        link
-                        ?
-                        `
-                        <div class="song-link">
-
-                            <a
-                                href="${escapeAttribute(link)}"
-                                target="_blank"
-                                rel="noopener"
+                    <div class="song-actions">
+                        ${
+                            link
+                            ? `
+                            <button
+                                type="button"
+                                class="song-action-btn play-song"
+                                data-id="${song.id}"
                             >
-
-                                <i
-                                    class="fas fa-play-circle"
-                                ></i>
-
-                                Play / Watch
-
-                            </a>
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            `
+                            : ""
+                        }
+                        <button
+                            type="button"
+                            class="song-action-btn secondary view-song"
+                            data-id="${song.id}"
+                        >
+                            <i class="far fa-eye"></i> View
+                        </button>
+                    </div>
 
 
                     <div class="song-footer">
@@ -1176,43 +1333,37 @@ function renderAdminList() {
    ============================================================ */
 
 function openDetail(song) {
-
     detailTitle.innerHTML = `
         <i class="fas fa-music"></i>
         ${escapeHTML(song.title)}
     `;
 
-
     detailLyrics.textContent =
         song.lyrics || "No lyrics available.";
 
-
     if (song.audio_url) {
-
         detailLink.innerHTML = `
-
-            <a
-                href="${escapeAttribute(song.audio_url)}"
-                target="_blank"
-                rel="noopener"
+            <button
+                type="button"
+                class="song-action-btn"
+                id="detailPlayBtn"
             >
-
-                <i class="fas fa-play-circle"></i>
-
-                Play / Watch
-
-            </a>
+                <i class="fas fa-play"></i> Play Song
+            </button>
         `;
 
+        document.getElementById("detailPlayBtn").addEventListener("click", () => {
+            playYouTube(song);
+        });
     } else {
-
-        detailLink.innerHTML = "";
-
+        detailLink.innerHTML = `
+            <span style="color:var(--muted);">
+                <i class="fas fa-info-circle"></i> No YouTube link added.
+            </span>
+        `;
     }
 
-
     detailOverlay.classList.add("active");
-
     document.body.style.overflow = "hidden";
 }
 
@@ -1224,6 +1375,124 @@ function closeDetail() {
     document.body.style.overflow = "";
 }
 
+
+/* ============================================================
+   DARK / LIGHT MODE
+   ============================================================ */
+
+function applyTheme(theme) {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark", isDark);
+
+    themeToggleBtn.innerHTML = isDark
+        ? `<i class="fas fa-sun"></i>`
+        : `<i class="fas fa-moon"></i>`;
+
+    themeToggleBtn.title = isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode";
+
+    localStorage.setItem("jesusSongsTheme", theme);
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem("jesusSongsTheme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+        applyTheme(savedTheme);
+        return;
+    }
+
+    const prefersDark =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    applyTheme(prefersDark ? "dark" : "light");
+}
+
+themeToggleBtn.addEventListener("click", () => {
+    applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
+});
+
+
+/* ============================================================
+   YOUTUBE BACKGROUND PLAYER
+   ============================================================ */
+
+function getYouTubeId(url) {
+    if (!url) return null;
+
+    try {
+        const value = String(url).trim();
+
+        const patterns = [
+            /youtu\.be\/([^?&#/]+)/i,
+            /youtube\.com\/watch\?[^#]*v=([^?&#/]+)/i,
+            /youtube\.com\/shorts\/([^?&#/]+)/i,
+            /youtube\.com\/embed\/([^?&#/]+)/i,
+            /youtube-nocookie\.com\/embed\/([^?&#/]+)/i
+        ];
+
+        for (const pattern of patterns) {
+            const match = value.match(pattern);
+            if (match && match[1]) return match[1];
+        }
+
+        // If the admin pasted only the 11-character video ID
+        if (/^[a-zA-Z0-9_-]{11}$/.test(value)) {
+            return value;
+        }
+    } catch (error) {
+        console.error("YouTube URL parse error:", error);
+    }
+
+    return null;
+}
+
+function playYouTube(song) {
+    const videoId = getYouTubeId(song.audio_url);
+
+    if (!videoId) {
+        alert(
+            "This is not a valid YouTube link.\n\n" +
+            "Use a normal YouTube URL such as:\n" +
+            "https://www.youtube.com/watch?v=VIDEO_ID"
+        );
+        return;
+    }
+
+    youtubePlayerTitle.textContent =
+        song.title || "Now Playing";
+
+    // The click that calls this function is a user gesture,
+    // so the browser is allowed to start playback.
+    youtubeFrame.src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(videoId) +
+        "?autoplay=1&rel=0&modestbranding=1&playsinline=1";
+
+    youtubePlayer.classList.add("active");
+}
+
+function stopYouTube() {
+    youtubeFrame.src = "";
+    youtubePlayer.classList.remove("active");
+    youtubePlayerTitle.textContent = "Now Playing";
+}
+
+function minimizeYouTube() {
+    youtubePlayer.classList.toggle("mini");
+
+    if (youtubePlayer.classList.contains("mini")) {
+        youtubePlayer.style.width = "180px";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "none";
+    } else {
+        youtubePlayer.style.width = "";
+        youtubePlayer.querySelector(".youtube-frame").style.display = "block";
+    }
+}
+
+youtubeCloseBtn.addEventListener("click", stopYouTube);
+youtubeMinBtn.addEventListener("click", minimizeYouTube);
 
 /* ============================================================
    LOGIN
@@ -1766,6 +2035,36 @@ document.addEventListener(
 
 
 /* ============================================================
+   PLAY / VIEW BUTTONS
+   ============================================================ */
+
+grid.addEventListener("click", function(e) {
+    const playButton = e.target.closest(".play-song");
+    const viewButton = e.target.closest(".view-song");
+
+    if (!playButton && !viewButton) return;
+
+    e.stopPropagation();
+
+    const id = Number(
+        (playButton || viewButton).dataset.id
+    );
+
+    const song = songs.find(
+        s => Number(s.id) === id
+    );
+
+    if (!song) return;
+
+    if (playButton) {
+        playYouTube(song);
+    } else {
+        openDetail(song);
+    }
+});
+
+
+/* ============================================================
    SONG CARD CLICK
    ============================================================ */
 
@@ -1773,10 +2072,8 @@ grid.addEventListener(
     "click",
     function(e) {
 
-        if (e.target.closest("a")) {
-
+        if (e.target.closest("a, button")) {
             return;
-
         }
 
 
@@ -1891,6 +2188,8 @@ async function checkUser() {
    ============================================================ */
 
 async function init() {
+
+    initTheme();
 
     await checkUser();
 
