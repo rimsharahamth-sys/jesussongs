@@ -638,6 +638,16 @@
             text-decoration: none;
         }
 
+        .detail-player { margin:1rem 0 1.25rem; background:#000; border-radius:16px; overflow:hidden; box-shadow:0 8px 25px var(--shadow); }
+        .detail-player iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
+        .detail-player audio { width:100%; display:block; }
+        .detail-actions { display:flex; gap:.7rem; flex-wrap:wrap; margin:1rem 0; }
+        .detail-actions .btn { display:inline-flex; align-items:center; gap:.45rem; }
+        .admin-search-wrap { margin-top:1rem; margin-bottom:.8rem; }
+        #adminSearchInput { width:100%; padding:.7rem 1rem; border:2px solid var(--input-border); border-radius:10px; background:var(--input-bg); color:var(--input-text); outline:none; font-size:.95rem; }
+        .admin-search-result { margin:.35rem 0 .8rem; font-size:.85rem; color:var(--muted-text); min-height:1.2rem; }
+        .admin-song-item.match-first { border-left:4px solid var(--primary); padding-left:.7rem; background:rgba(240,192,64,.07); border-radius:8px; }
+
         /* FOOTER */
         .footer {
             background: var(--footer-bg);
@@ -756,6 +766,13 @@
 
             <div class="detail-title" id="detailTitle">Song</div>
 
+            <div class="detail-player" id="detailPlayer"></div>
+
+            <div class="detail-actions">
+                <button class="btn" id="detailPlayBtn" type="button"><i class="fas fa-play"></i> Play / Watch</button>
+                <button class="btn btn-outline" id="detailShareBtn" type="button"><i class="fas fa-share-alt"></i> Share Song</button>
+            </div>
+
             <div class="detail-lyrics" id="detailLyrics"></div>
 
             <div class="detail-link" id="detailLink"></div>
@@ -817,12 +834,14 @@
 
             <hr style="margin:1.5rem 0; border:none; border-top:1px solid var(--border-color);">
 
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
-
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
                 <h3>Existing Songs</h3>
-
                 <button class="btn btn-danger" id="logoutBtn">Logout</button>
+            </div>
 
+            <div class="admin-search-wrap">
+                <input type="text" id="adminSearchInput" placeholder="Search songs in admin panel..." autocomplete="off">
+                <div class="admin-search-result" id="adminSearchResult"></div>
             </div>
 
             <div class="admin-song-list" id="adminSongList"></div>
@@ -940,6 +959,13 @@
 
         const adminSongList =
             document.getElementById("adminSongList");
+
+        const adminSearchInput = document.getElementById("adminSearchInput");
+        const adminSearchResult = document.getElementById("adminSearchResult");
+        const detailPlayer = document.getElementById("detailPlayer");
+        const detailPlayBtn = document.getElementById("detailPlayBtn");
+        const detailShareBtn = document.getElementById("detailShareBtn");
+        let currentDetailSong = null;
 
         const detailOverlay =
             document.getElementById("songDetailOverlay");
@@ -2035,17 +2061,7 @@
 
                                     <div class="song-link">
 
-                                        <a
-                                            href="${escapeAttribute(link)}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-
-                                            <i class="fas fa-play-circle"></i>
-
-                                            Play / Watch
-
-                                        </a>
+                                        <a href="#" class="inline-play-link" data-id="${escapeAttribute(song.id)}"><i class="fas fa-play-circle"></i> Play / Watch</a>
 
                                     </div>
 
@@ -2082,186 +2098,28 @@
         ============================================================ */
 
         function renderAdminList() {
-
-            if (!currentUser) {
-
-                adminSongList.innerHTML = "";
-
-                return;
-            }
-
-            if (!songs.length) {
-
-                adminSongList.innerHTML =
-                    `<p style="color:var(--muted-text);">
-                                No songs added yet.
-                            </p>`;
-
-                return;
-            }
-
-            adminSongList.innerHTML =
-                songs.map(
-                    song => {
-
-                        const editing =
-                            Number(
-                                editingSongId.value
-                            ) ===
-                            Number(song.id);
-
-                        return `
-
-                                <div class="admin-song-item">
-
-                                    <span>
-
-                                        ${escapeHTML(song.title)}
-
-                                        ${ editing ?
-                                        `
-                                        <span class="edit-badge">
-                                            Editing
-                                        </span>
-                                        ` :
-                                        "" }
-
-                                    </span>
-
-                                    <div class="actions">
-
-                                        <button
-                                            class="btn btn-edit edit-song"
-                                            data-id="${escapeAttribute(song.id)}"
-                                            style="padding:.25rem .8rem; font-size:.8rem;"
-                                        >
-
-                                            <i class="fas fa-pen"></i>
-                                            Edit
-
-                                        </button>
-
-                                        <button
-                                            class="btn btn-danger delete-song"
-                                            data-id="${escapeAttribute(song.id)}"
-                                            style="padding:.25rem .8rem; font-size:.8rem;"
-                                        >
-
-                                            <i class="fas fa-trash"></i>
-                                            Delete
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            `;
-                    }
-                )
-                .join("");
-
-            document
-                .querySelectorAll(".edit-song")
-                .forEach(
-                    button => {
-
-                        button.addEventListener(
-                            "click",
-                            () => {
-
-                                startEditSong(
-                                    Number(
-                                        button.dataset.id
-                                    )
-                                );
-
-                            }
-                        );
-
-                    }
-                );
-
-            document
-                .querySelectorAll(".delete-song")
-                .forEach(
-                    button => {
-
-                        button.addEventListener(
-                            "click",
-                            () => {
-
-                                deleteSong(
-                                    Number(
-                                        button.dataset.id
-                                    )
-                                );
-
-                            }
-                        );
-
-                    }
-                );
+            if (!currentUser) { adminSongList.innerHTML=""; adminSearchResult.textContent=""; return; }
+            if (!songs.length) { adminSongList.innerHTML=`<p style="color:var(--muted-text);">No songs added yet.</p>`; adminSearchResult.textContent=""; return; }
+            const q=normalizeBasic(adminSearchInput.value||"");
+            const variants=q?getQueryVariants(q).map(normalizeBasic).filter(Boolean):[];
+            const list=songs.map((song,index)=>{const t=normalizeBasic(song.title||"");const r=normalizeBasic(transliterateTelugu(song.title||""));const match=!q||variants.some(v=>t.includes(v)||r.includes(v));const starts=q&&variants.some(v=>t.startsWith(v)||r.startsWith(v));return {song,index,match,starts};}).filter(x=>x.match).sort((a,b)=>q?(a.starts!==b.starts?(a.starts?-1:1):a.index-b.index):a.index-b.index);
+            adminSearchResult.innerHTML=q?(list.length?`<i class="fas fa-search"></i> ${list.length} result${list.length!==1?"s":""} found for <strong>"${escapeHTML(adminSearchInput.value.trim())}"</strong>`:`<i class="fas fa-search"></i> No songs found for <strong>"${escapeHTML(adminSearchInput.value.trim())}"</strong>`):`${songs.length} song${songs.length!==1?"s":""}`;
+            if(!list.length){adminSongList.innerHTML=`<p style="color:var(--muted-text);padding:.5rem 0;">No matching songs.</p>`;return;}
+            adminSongList.innerHTML=list.map(x=>{const song=x.song;const editing=Number(editingSongId.value)===Number(song.id);return `<div class="admin-song-item ${x.starts?"match-first":""}"><span>${escapeHTML(song.title)} ${editing?`<span class="edit-badge">Editing</span>`:""}</span><div class="actions"><button class="btn btn-edit edit-song" data-id="${escapeAttribute(song.id)}" style="padding:.25rem .8rem;font-size:.8rem;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-danger delete-song" data-id="${escapeAttribute(song.id)}" style="padding:.25rem .8rem;font-size:.8rem;"><i class="fas fa-trash"></i> Delete</button></div></div>`;}).join("");
+            document.querySelectorAll(".edit-song").forEach(b=>b.addEventListener("click",()=>startEditSong(Number(b.dataset.id))));
+            document.querySelectorAll(".delete-song").forEach(b=>b.addEventListener("click",()=>deleteSong(Number(b.dataset.id))));
         }
 
         /* ============================================================
            SONG DETAIL
         ============================================================ */
 
-        function openDetail(song) {
-
-            detailTitle.innerHTML = `
-
-                        <i class="fas fa-music"></i>
-
-                        ${escapeHTML(song.title)}
-
-                    `;
-
-            detailLyrics.textContent =
-                song.lyrics ||
-                "No lyrics available.";
-
-            if (song.audio_url) {
-
-                detailLink.innerHTML = `
-
-                            <a
-                                href="${escapeAttribute(song.audio_url)}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-
-                                <i class="fas fa-play-circle"></i>
-
-                                Play / Watch
-
-                            </a>
-
-                        `;
-
-            } else {
-
-                detailLink.innerHTML = "";
-            }
-
-            detailOverlay.classList.add(
-                "active"
-            );
-
-            document.body.style.overflow =
-                "hidden";
-        }
-
-        function closeDetail() {
-
-            detailOverlay.classList.remove(
-                "active"
-            );
-
-            document.body.style.overflow =
-                "";
-        }
+        function getYouTubeId(url){if(!url)return null;try{const u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.replace("/","").split("?")[0];if(u.hostname.includes("youtube.com")){if(u.pathname==="/watch")return u.searchParams.get("v");if(u.pathname.startsWith("/shorts/"))return u.pathname.split("/")[2];if(u.pathname.startsWith("/embed/"))return u.pathname.split("/")[2];}}catch(e){}return null;}
+        function buildShareUrl(song){const u=new URL(window.location.href);u.search="";u.hash=`song=${encodeURIComponent(song.id)}`;return u.toString();}
+        function openDetail(song,updateUrl=true){currentDetailSong=song;detailTitle.innerHTML=`<i class="fas fa-music"></i> ${escapeHTML(song.title)}`;detailLyrics.textContent=song.lyrics||"No lyrics available.";detailPlayer.innerHTML="";const yt=getYouTubeId(song.audio_url||"");if(yt){const f=document.createElement("iframe");f.src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&rel=0&playsinline=1`;f.title=song.title||"Jesus Song";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;detailPlayer.appendChild(f);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing / Watching`;}else if(song.audio_url){const a=document.createElement("audio");a.controls=true;a.autoplay=true;a.src=song.audio_url;a.preload="metadata";detailPlayer.appendChild(a);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing`;}else{detailPlayer.innerHTML=`<div style="color:#fff;padding:1.2rem;text-align:center;"><i class="fas fa-music"></i> No audio / YouTube link available.</div>`;detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Play / Watch`;}detailLink.innerHTML=song.audio_url?`<a href="${escapeAttribute(song.audio_url)}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Open original link</a>`:"";detailOverlay.classList.add("active");document.body.style.overflow="hidden";if(updateUrl)history.pushState({songId:song.id},"",buildShareUrl(song));}
+        function closeDetail(clearUrl=true){detailOverlay.classList.remove("active");detailPlayer.innerHTML="";currentDetailSong=null;document.body.style.overflow="";if(clearUrl&&window.location.hash.startsWith("#song="))history.pushState({},"",window.location.pathname+window.location.search);}
+        function shareCurrentSong(){if(!currentDetailSong)return;const url=buildShareUrl(currentDetailSong);const data={title:currentDetailSong.title||"Jesus Song",text:`Listen to ${currentDetailSong.title||"this Jesus song"}`,url};if(navigator.share){navigator.share(data).catch(()=>{});return;}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(url).then(()=>alert("✅ Song share link copied! Send it to anyone.")).catch(()=>window.prompt("Copy this song link:",url));}else window.prompt("Copy this song link:",url);}
+        function openSongFromUrl(){const h=window.location.hash;if(!h.startsWith("#song="))return;const id=decodeURIComponent(h.substring(6));const song=songs.find(s=>String(s.id)===String(id));if(song)openDetail(song,false);}
 
         /* ============================================================
            LOGIN
@@ -2327,6 +2185,12 @@
             loginEmail.value = "";
             loginPassword.value = "";
         }
+
+        adminSearchInput.addEventListener("input",renderAdminList);
+        detailPlayBtn.addEventListener("click",()=>{if(currentDetailSong)openDetail(currentDetailSong,false);});
+        detailShareBtn.addEventListener("click",shareCurrentSong);
+        window.addEventListener("popstate",()=>window.location.hash.startsWith("#song=")?openSongFromUrl():closeDetail(false));
+        window.addEventListener("hashchange",()=>window.location.hash.startsWith("#song=")?openSongFromUrl():closeDetail(false));
 
         /* ============================================================
            ADMIN BUTTON
@@ -2876,11 +2740,9 @@
             "click",
             function(e) {
 
-                if (
-                    e.target.closest("a")
-                ) {
-                    return;
-                }
+                const playLink=e.target.closest(".inline-play-link");
+                if(playLink){e.preventDefault();const playSong=songs.find(s=>Number(s.id)===Number(playLink.dataset.id));if(playSong)openDetail(playSong);return;}
+                if(e.target.closest("a")) return;
 
                 const card =
                     e.target.closest(
@@ -2971,6 +2833,7 @@
             await checkUser();
 
             await loadSongs();
+            openSongFromUrl();
 
         }
 
