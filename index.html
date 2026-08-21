@@ -678,6 +678,35 @@
         .comments-loading { color:var(--muted-text); font-size:.78rem; }
         @media (max-width:650px){ .song-comments{margin-left:1rem;margin-right:1rem;} }
 
+
+        /* GOOGLE COMMENTS */
+        .song-comments{padding:0 1.5rem 1.2rem;border-top:1px solid var(--soft-border);margin-top:.2rem;}
+        .comments-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.8rem 0 .6rem;font-weight:700;color:var(--title-color);}
+        .comment-count{font-size:.78rem;color:var(--muted-text);font-weight:500;}
+        .google-comment-login{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:.3rem 0 .8rem;}
+        .google-comment-login .btn{padding:.45rem .8rem;font-size:.82rem;}
+        .comment-form{display:none;gap:.55rem;margin-bottom:.8rem;}
+        .comment-form.active{display:flex;}
+        .comment-form textarea{flex:1;min-height:48px;max-height:120px;resize:vertical;padding:.65rem .8rem;border:1px solid var(--input-border);border-radius:10px;background:var(--input-bg);color:var(--input-text);font-family:inherit;outline:none;}
+        .comment-form textarea:focus{border-color:var(--primary);}
+        .comment-form button{align-self:flex-end;}
+        .comments-list{display:flex;flex-direction:column;gap:.65rem;}
+        .comment-item{display:flex;gap:.65rem;padding:.65rem .7rem;background:rgba(127,127,127,.06);border-radius:12px;}
+        .comment-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:0 0 34px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#1a1a2e;font-weight:700;overflow:hidden;}
+        .comment-avatar img{width:100%;height:100%;object-fit:cover;}
+        .comment-content{min-width:0;flex:1;}
+        .comment-meta{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-bottom:.18rem;}
+        .comment-name{font-weight:700;color:var(--title-color);font-size:.86rem;}
+        .comment-date{font-size:.7rem;color:var(--muted-text);}
+        .comment-text{font-size:.86rem;color:var(--text-color);white-space:pre-wrap;word-break:break-word;line-height:1.45;}
+        .comments-empty{font-size:.8rem;color:var(--muted-text);padding:.2rem 0 .4rem;}
+        .comments-note{font-size:.75rem;color:var(--muted-text);margin-bottom:.5rem;}
+        .google-user{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--muted-text);}
+        .google-user img{width:24px;height:24px;border-radius:50%;object-fit:cover;}
+        .detail-comments{margin-top:1.5rem;border-top:2px solid var(--soft-border);padding-top:1rem;}
+        .detail-comments .song-comments{padding:0;border-top:0;}
+        @media(max-width:650px){.comment-form.active{flex-direction:column}.comment-form button{align-self:stretch}.song-comments{padding-left:1rem;padding-right:1rem;}}
+
         /* FOOTER */
         .footer {
             background: var(--footer-bg);
@@ -806,6 +835,7 @@
             <div class="detail-lyrics" id="detailLyrics"></div>
 
             <div class="detail-link" id="detailLink"></div>
+            <div class="detail-comments" id="detailComments"></div>
 
         </div>
 
@@ -997,6 +1027,8 @@
         const detailPlayBtn = document.getElementById("detailPlayBtn");
         const detailShareBtn = document.getElementById("detailShareBtn");
         let currentDetailSong = null;
+        let comments = [];
+        let googleUser = null;
 
         const detailOverlay =
             document.getElementById("songDetailOverlay");
@@ -1012,6 +1044,8 @@
 
         const detailLink =
             document.getElementById("detailLink");
+
+        const detailComments = document.getElementById("detailComments");
 
         const themeToggleBtn =
             document.getElementById("themeToggleBtn");
@@ -2019,219 +2053,83 @@
            RENDER CARDS
         ============================================================ */
 
-        function renderSongCards(
-            results,
-            showScore
-        ) {
-
-            grid.innerHTML =
-                results.map(
-                    item => {
-
-                        const song =
-                            item.song;
-
-                        const preview =
-                            (song.lyrics || "")
-                            .split("\n")
-                            .filter(
-                                x =>
-                                x.trim()
-                            )[0] ||
-                            "...";
-
-                        const link =
-                            song.audio_url || "";
-
-                        return `
-
-                                <div
-                                    class="song-card"
-                                    data-id="${escapeAttribute(song.id)}"
-                                >
-
-                                    <div class="song-card-header">
-
-                                        <span class="song-title">
-
-                                            <i class="fas fa-music"></i>
-
-                                            ${escapeHTML(song.title)}
-
-                                        </span>
-
-                                        ${ showScore ?
-                                        `
-                                        <div>
-
-                                            <span class="relevance-badge">
-
-                                                <i class="fas fa-play"></i>
-
-                                                Starts With
-
-                                            </span>
-
-                                        </div>
-                                        ` :
-                                        "" }
-
-                                    </div>
-
-                                    <div class="song-card-body">
-
-                                        <div class="song-preview">
-
-                                            ${escapeHTML(preview)}
-
-                                        </div>
-
-                                    </div>
-
-                                    ${ link ?
-                                    `
-
-                                    <div class="song-link">
-
-                                        <a href="#" class="inline-play-link" data-id="${escapeAttribute(song.id)}"><i class="fas fa-play-circle"></i> Play / Watch</a>
-
-                                    </div>
-
-                                    ` :
-                                    "" }
-
-                                    <div class="song-comments" data-comments-for="${escapeAttribute(song.id)}">
-                                        <div class="comments-title"><i class="far fa-comments"></i> Comments <span class="comment-count" data-comment-count="${escapeAttribute(song.id)}"></span></div>
-                                        <form class="comment-form" data-comment-form="${escapeAttribute(song.id)}">
-                                            <input type="text" name="name" maxlength="60" placeholder="Your name" required>
-                                            <textarea name="comment" maxlength="1000" placeholder="Write a comment..." required></textarea>
-                                            <button class="btn comment-submit" type="submit"><i class="fas fa-paper-plane"></i> Comment</button>
-                                            <div class="comment-status"></div>
-                                        </form>
-                                        <div class="comment-list" data-comment-list="${escapeAttribute(song.id)}"><div class="comments-loading">Loading comments...</div></div>
-                                    </div>
-
-                                    <div class="song-footer">
-
-                                        <span>
-
-                                            <i class="far fa-eye"></i>
-
-                                            Tap to view full
-
-                                        </span>
-
-                                        <i
-                                            class="fas fa-arrow-right"
-                                            style="color:var(--primary-dark);"
-                                        ></i>
-
-                                    </div>
-
-                                </div>
-
-                            `;
-                    }
-                )
-                .join("");
-            bindCommentForms();
+        function renderSongCards(results, showScore) {
+            grid.innerHTML = results.map(item => {
+                const song = item.song;
+                const preview = (song.lyrics || "").split("\n").filter(x => x.trim())[0] || "...";
+                const link = song.audio_url || "";
+                const songComments = comments.filter(c => Number(c.song_id) === Number(song.id));
+                return `
+                    <div class="song-card" data-id="${escapeAttribute(song.id)}">
+                        <div class="song-card-header">
+                            <span class="song-title"><i class="fas fa-music"></i>${escapeHTML(song.title)}</span>
+                            ${showScore ? `<div><span class="relevance-badge"><i class="fas fa-play"></i> Starts With</span></div>` : ""}
+                        </div>
+                        <div class="song-card-body"><div class="song-preview">${escapeHTML(preview)}</div></div>
+                        ${link ? `<div class="song-link"><a href="#" class="inline-play-link" data-id="${escapeAttribute(song.id)}"><i class="fas fa-play-circle"></i> Play / Watch</a></div>` : ""}
+                        <div class="song-footer"><span><i class="far fa-eye"></i> Tap to view full</span><i class="fas fa-arrow-right" style="color:var(--primary-dark);"></i></div>
+                        ${buildCommentsHTML(song, songComments)}
+                    </div>`;
+            }).join("");
+            bindCommentEvents();
         }
 
-        /* ============================================================
-           COMMENTS
-        ============================================================ */
-        function formatCommentTime(value) {
-            if (!value) return "";
-            const d = new Date(value);
-            if (Number.isNaN(d.getTime())) return "";
-            return d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+        function getGoogleUserName(user){
+            if(!user) return "";
+            const m=user.user_metadata||{};
+            return m.full_name || m.name || m.user_name || user.email?.split("@")[0] || "Google User";
         }
-
-        async function loadComments() {
-            commentsBySong = {};
-            const { data, error } = await supabaseClient
-                .from("song_comments")
-                .select("id,song_id,name,comment,created_at")
-                .order("created_at", { ascending: false });
-
-            if (error) {
-                console.warn("Comments table/load error:", error.message);
-                return;
-            }
-            (data || []).forEach(c => {
-                const key = String(c.song_id);
-                if (!commentsBySong[key]) commentsBySong[key] = [];
-                commentsBySong[key].push(c);
-            });
+        function getGoogleAvatar(user){
+            if(!user) return "";
+            const m=user.user_metadata||{};
+            return m.avatar_url || m.picture || "";
         }
-
-        function renderCommentsForVisibleCards() {
-            document.querySelectorAll("[data-comments-for]").forEach(box => {
-                const id = String(box.dataset.commentsFor);
-                const list = box.querySelector("[data-comment-list]");
-                const count = box.querySelector("[data-comment-count]");
-                const comments = commentsBySong[id] || [];
-                if (count) count.textContent = comments.length ? `(${comments.length})` : "";
-                if (!list) return;
-                if (!comments.length) {
-                    list.innerHTML = `<div class="comments-loading">No comments yet. Be the first to comment.</div>`;
-                    return;
-                }
-                list.innerHTML = comments.slice(0, 5).map(c => `
-                    <div class="comment-item">
-                        <div class="comment-name">${escapeHTML(c.name || "Anonymous")}</div>
-                        <div class="comment-text">${escapeHTML(c.comment || "")}</div>
-                        <div class="comment-time">${escapeHTML(formatCommentTime(c.created_at))}</div>
-                    </div>
-                `).join("");
-                if (comments.length > 5) {
-                    list.insertAdjacentHTML("beforeend", `<div class="comments-loading">Showing latest 5 of ${comments.length} comments.</div>`);
-                }
-            });
+        function buildCommentsHTML(song, list){
+            const avatar=getGoogleAvatar(googleUser);
+            const count=list.length;
+            return `<div class="song-comments" data-comment-song="${escapeAttribute(song.id)}">
+                <div class="comments-head"><span><i class="far fa-comments"></i> Comments</span><span class="comment-count">${count} comment${count!==1?"s":""}</span></div>
+                <div class="google-comment-login">
+                    ${googleUser ? `<span class="google-user">${avatar?`<img src="${escapeAttribute(avatar)}" alt="">`:`<span class="comment-avatar" style="width:24px;height:24px;flex-basis:24px;font-size:.7rem;">${escapeHTML(getGoogleUserName(googleUser).charAt(0).toUpperCase())}</span>`}<span>${escapeHTML(getGoogleUserName(googleUser))}</span></span><button class="btn btn-outline comment-signout" type="button">Sign out</button>` : `<button class="btn comment-google-login" type="button"><i class="fab fa-google"></i> Sign in with Google to comment</button>`}
+                </div>
+                ${googleUser ? `<div class="comments-note">Your comment will be posted with your Google account name.</div><div class="comment-form active"><textarea class="comment-input" maxlength="1000" placeholder="Write a comment..."></textarea><button class="btn post-comment" type="button"><i class="fas fa-paper-plane"></i> Post</button></div>` : `<div class="comments-note">Sign in with Google to write a comment.</div>`}
+                <div class="comments-list">${list.length ? list.map(c=>commentHTML(c)).join("") : `<div class="comments-empty">No comments yet. Be the first to comment.</div>`}</div>
+            </div>`;
         }
-
-        async function submitComment(form) {
-            const songId = Number(form.dataset.commentForm);
-            const nameInput = form.querySelector('[name="name"]');
-            const commentInput = form.querySelector('[name="comment"]');
-            const status = form.querySelector(".comment-status");
-            const button = form.querySelector("button[type=submit]");
-            const name = nameInput.value.trim();
-            const comment = commentInput.value.trim();
-            if (!songId || !name || !comment) return;
-
-            button.disabled = true;
-            status.textContent = "Posting...";
-            const { data, error } = await supabaseClient
-                .from("song_comments")
-                .insert([{ song_id: songId, name, comment }])
-                .select("id,song_id,name,comment,created_at")
-                .single();
-            button.disabled = false;
-
-            if (error) {
-                console.error("Comment error:", error);
-                status.textContent = "❌ Comment failed: " + error.message;
-                return;
-            }
-            if (!commentsBySong[String(songId)]) commentsBySong[String(songId)] = [];
-            commentsBySong[String(songId)].unshift(data);
-            nameInput.value = "";
-            commentInput.value = "";
-            status.textContent = "✅ Comment posted";
-            renderCommentsForVisibleCards();
-            setTimeout(() => { status.textContent = ""; }, 1800);
+        function commentHTML(c){
+            const avatar=c.avatar_url||"";
+            const initial=(c.user_name||"G").charAt(0).toUpperCase();
+            const date=c.created_at?new Date(c.created_at).toLocaleString():"";
+            return `<div class="comment-item"><div class="comment-avatar">${avatar?`<img src="${escapeAttribute(avatar)}" alt="">`:escapeHTML(initial)}</div><div class="comment-content"><div class="comment-meta"><span class="comment-name">${escapeHTML(c.user_name||"Google User")}</span><span class="comment-date">${escapeHTML(date)}</span></div><div class="comment-text">${escapeHTML(c.comment||"")}</div></div></div>`;
         }
-
-        function bindCommentForms() {
-            document.querySelectorAll(".comment-form").forEach(form => {
-                form.addEventListener("submit", e => {
-                    e.preventDefault();
-                    submitComment(form);
-                });
-            });
-            renderCommentsForVisibleCards();
+        function bindCommentEvents(){
+            document.querySelectorAll(".comment-google-login").forEach(btn=>btn.addEventListener("click", signInWithGoogle));
+            document.querySelectorAll(".comment-signout").forEach(btn=>btn.addEventListener("click", signOutGoogle));
+            document.querySelectorAll(".post-comment").forEach(btn=>btn.addEventListener("click", async function(){
+                const box=this.closest(".song-comments"); const id=Number(box.dataset.commentSong); const input=box.querySelector(".comment-input"); await postComment(id,input,this);
+            }));
         }
+        async function signInWithGoogle(){
+            const redirectTo=window.location.origin+window.location.pathname;
+            const {error}=await supabaseClient.auth.signInWithOAuth({provider:"google",options:{redirectTo}});
+            if(error) alert("❌ Google login failed:\n\n"+error.message);
+        }
+        async function signOutGoogle(){ await supabaseClient.auth.signOut(); }
+        async function loadComments(){
+            const {data,error}=await supabaseClient.from("song_comments").select("id,song_id,user_id,user_name,avatar_url,comment,created_at").order("created_at",{ascending:true});
+            if(error){ console.warn("Comments table unavailable:",error.message); comments=[]; return; }
+            comments=Array.isArray(data)?data:[];
+        }
+        async function postComment(songId,input,button){
+            if(!googleUser){await signInWithGoogle();return;}
+            const text=input.value.trim(); if(!text){alert("Please write a comment.");return;}
+            button.disabled=true; button.innerHTML='<i class="fas fa-spinner fa-spin"></i> Posting...';
+            const {error}=await supabaseClient.from("song_comments").insert([{song_id:songId,user_id:googleUser.id,user_name:getGoogleUserName(googleUser),avatar_url:getGoogleAvatar(googleUser)||null,comment:text}]);
+            button.disabled=false; button.innerHTML='<i class="fas fa-paper-plane"></i> Post';
+            if(error){alert("❌ Comment failed:\n\n"+error.message);return;}
+            input.value=""; await loadComments(); renderSongs(); if(currentDetailSong && Number(currentDetailSong.id)===songId) renderDetailComments(currentDetailSong);
+        }
+        function renderDetailComments(song){ if(!song){detailComments.innerHTML="";return;} detailComments.innerHTML=buildCommentsHTML(song,comments.filter(c=>Number(c.song_id)===Number(song.id))); bindCommentEvents(); }
 
         /* ============================================================
            ADMIN LIST
@@ -2256,7 +2154,7 @@
 
         function getYouTubeId(url){if(!url)return null;try{const u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.replace("/","").split("?")[0];if(u.hostname.includes("youtube.com")){if(u.pathname==="/watch")return u.searchParams.get("v");if(u.pathname.startsWith("/shorts/"))return u.pathname.split("/")[2];if(u.pathname.startsWith("/embed/"))return u.pathname.split("/")[2];}}catch(e){}return null;}
         function buildShareUrl(song){const u=new URL(window.location.href);u.search="";u.hash=`song=${encodeURIComponent(song.id)}`;return u.toString();}
-        function openDetail(song,updateUrl=true){currentDetailSong=song;detailTitle.innerHTML=`<i class="fas fa-music"></i> ${escapeHTML(song.title)}`;detailLyrics.textContent=song.lyrics||"No lyrics available.";detailPlayer.innerHTML="";const yt=getYouTubeId(song.audio_url||"");if(yt){const f=document.createElement("iframe");f.src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&rel=0&playsinline=1`;f.title=song.title||"Jesus Song";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;detailPlayer.appendChild(f);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing / Watching`;}else if(song.audio_url){const a=document.createElement("audio");a.controls=true;a.autoplay=true;a.src=song.audio_url;a.preload="metadata";detailPlayer.appendChild(a);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing`;}else{detailPlayer.innerHTML=`<div style="color:#fff;padding:1.2rem;text-align:center;"><i class="fas fa-music"></i> No audio / YouTube link available.</div>`;detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Play / Watch`;}detailLink.innerHTML=song.audio_url?`<a href="${escapeAttribute(song.audio_url)}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Open original link</a>`:"";detailOverlay.classList.add("active");document.body.style.overflow="hidden";if(updateUrl)history.pushState({songId:song.id},"",buildShareUrl(song));}
+        function openDetail(song,updateUrl=true){currentDetailSong=song;detailTitle.innerHTML=`<i class="fas fa-music"></i> ${escapeHTML(song.title)}`;detailLyrics.textContent=song.lyrics||"No lyrics available.";detailPlayer.innerHTML="";const yt=getYouTubeId(song.audio_url||"");if(yt){const f=document.createElement("iframe");f.src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&rel=0&playsinline=1`;f.title=song.title||"Jesus Song";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;detailPlayer.appendChild(f);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing / Watching`;}else if(song.audio_url){const a=document.createElement("audio");a.controls=true;a.autoplay=true;a.src=song.audio_url;a.preload="metadata";detailPlayer.appendChild(a);detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Playing`;}else{detailPlayer.innerHTML=`<div style="color:#fff;padding:1.2rem;text-align:center;"><i class="fas fa-music"></i> No audio / YouTube link available.</div>`;detailPlayBtn.innerHTML=`<i class="fas fa-play"></i> Play / Watch`;}detailLink.innerHTML=song.audio_url?`<a href="${escapeAttribute(song.audio_url)}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Open original link</a>`:"";detailOverlay.classList.add("active");document.body.style.overflow="hidden";renderDetailComments(song);if(updateUrl)history.pushState({songId:song.id},"",buildShareUrl(song));}
         function closeDetail(clearUrl=true){detailOverlay.classList.remove("active");detailPlayer.innerHTML="";currentDetailSong=null;document.body.style.overflow="";if(clearUrl&&window.location.hash.startsWith("#song="))history.pushState({},"",window.location.pathname+window.location.search);}
         function shareCurrentSong(){if(!currentDetailSong)return;const url=buildShareUrl(currentDetailSong);const data={title:currentDetailSong.title||"Jesus Song",text:`Listen to ${currentDetailSong.title||"this Jesus song"}`,url};if(navigator.share){navigator.share(data).catch(()=>{});return;}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(url).then(()=>alert("✅ Song share link copied! Send it to anyone.")).catch(()=>window.prompt("Copy this song link:",url));}else window.prompt("Copy this song link:",url);}
         function openSongFromUrl(){const h=window.location.hash;if(!h.startsWith("#song="))return;const id=decodeURIComponent(h.substring(6));const song=songs.find(s=>String(s.id)===String(id));if(song)openDetail(song,false);}
@@ -2952,6 +2850,7 @@
 
                 currentUser =
                     data.user;
+                googleUser = data.user;
 
                 adminPanel.classList.add(
                     "active"
@@ -2972,6 +2871,7 @@
 
             await checkUser();
 
+            await loadComments();
             await loadSongs();
             openSongFromUrl();
 
@@ -2996,6 +2896,9 @@
 
                     currentUser =
                         session.user;
+                    googleUser = session.user;
+                    renderSongs();
+                    if(currentDetailSong) renderDetailComments(currentDetailSong);
 
                     adminPanel.classList.add(
                         "active"
