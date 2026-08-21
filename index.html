@@ -648,6 +648,36 @@
         .admin-search-result { margin:.35rem 0 .8rem; font-size:.85rem; color:var(--muted-text); min-height:1.2rem; }
         .admin-song-item.match-first { border-left:4px solid var(--primary); padding-left:.7rem; background:rgba(240,192,64,.07); border-radius:8px; }
 
+        /* COMMENTS */
+        .song-comments {
+            margin: .9rem 1.5rem 1rem;
+            padding-top: .9rem;
+            border-top: 1px solid var(--soft-border);
+        }
+        .comments-title {
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: .6rem;
+            font-size: .95rem;
+        }
+        .comment-form { display:flex; flex-direction:column; gap:.45rem; }
+        .comment-form input, .comment-form textarea {
+            width:100%; padding:.6rem .75rem; border:1px solid var(--input-border);
+            border-radius:8px; background:var(--input-bg); color:var(--input-text); outline:none;
+            font-family:inherit; font-size:.9rem;
+        }
+        .comment-form textarea { min-height:70px; resize:vertical; }
+        .comment-form .comment-submit { align-self:flex-start; padding:.42rem .9rem; }
+        .comment-list { margin-top:.7rem; display:flex; flex-direction:column; gap:.55rem; }
+        .comment-item { background:rgba(127,127,127,.08); border-radius:9px; padding:.6rem .7rem; }
+        .comment-name { font-weight:700; color:var(--title-color); font-size:.82rem; }
+        .comment-text { color:var(--text-color); font-size:.86rem; margin-top:.18rem; white-space:pre-line; word-break:break-word; }
+        .comment-time { color:var(--muted-text); font-size:.7rem; margin-top:.25rem; }
+        .comment-status { font-size:.78rem; color:var(--muted-text); min-height:1rem; }
+        .comment-count { color:var(--muted-text); font-size:.78rem; font-weight:600; }
+        .comments-loading { color:var(--muted-text); font-size:.78rem; }
+        @media (max-width:650px){ .song-comments{margin-left:1rem;margin-right:1rem;} }
+
         /* FOOTER */
         .footer {
             background: var(--footer-bg);
@@ -886,6 +916,7 @@
         let songs = [];
         let searchQuery = "";
         let currentUser = null;
+        let commentsBySong = {};
 
         /* ============================================================
            DOM
@@ -1859,6 +1890,7 @@
                 data :
                 [];
 
+            await loadComments();
             renderSongs();
 
             renderAdminList();
@@ -2068,6 +2100,17 @@
                                     ` :
                                     "" }
 
+                                    <div class="song-comments" data-comments-for="${escapeAttribute(song.id)}">
+                                        <div class="comments-title"><i class="far fa-comments"></i> Comments <span class="comment-count" data-comment-count="${escapeAttribute(song.id)}"></span></div>
+                                        <form class="comment-form" data-comment-form="${escapeAttribute(song.id)}">
+                                            <input type="text" name="name" maxlength="60" placeholder="Your name" required>
+                                            <textarea name="comment" maxlength="1000" placeholder="Write a comment..." required></textarea>
+                                            <button class="btn comment-submit" type="submit"><i class="fas fa-paper-plane"></i> Comment</button>
+                                            <div class="comment-status"></div>
+                                        </form>
+                                        <div class="comment-list" data-comment-list="${escapeAttribute(song.id)}"><div class="comments-loading">Loading comments...</div></div>
+                                    </div>
+
                                     <div class="song-footer">
 
                                         <span>
@@ -2091,6 +2134,103 @@
                     }
                 )
                 .join("");
+            bindCommentForms();
+        }
+
+        /* ============================================================
+           COMMENTS
+        ============================================================ */
+        function formatCommentTime(value) {
+            if (!value) return "";
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return "";
+            return d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+        }
+
+        async function loadComments() {
+            commentsBySong = {};
+            const { data, error } = await supabaseClient
+                .from("song_comments")
+                .select("id,song_id,name,comment,created_at")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                console.warn("Comments table/load error:", error.message);
+                return;
+            }
+            (data || []).forEach(c => {
+                const key = String(c.song_id);
+                if (!commentsBySong[key]) commentsBySong[key] = [];
+                commentsBySong[key].push(c);
+            });
+        }
+
+        function renderCommentsForVisibleCards() {
+            document.querySelectorAll("[data-comments-for]").forEach(box => {
+                const id = String(box.dataset.commentsFor);
+                const list = box.querySelector("[data-comment-list]");
+                const count = box.querySelector("[data-comment-count]");
+                const comments = commentsBySong[id] || [];
+                if (count) count.textContent = comments.length ? `(${comments.length})` : "";
+                if (!list) return;
+                if (!comments.length) {
+                    list.innerHTML = `<div class="comments-loading">No comments yet. Be the first to comment.</div>`;
+                    return;
+                }
+                list.innerHTML = comments.slice(0, 5).map(c => `
+                    <div class="comment-item">
+                        <div class="comment-name">${escapeHTML(c.name || "Anonymous")}</div>
+                        <div class="comment-text">${escapeHTML(c.comment || "")}</div>
+                        <div class="comment-time">${escapeHTML(formatCommentTime(c.created_at))}</div>
+                    </div>
+                `).join("");
+                if (comments.length > 5) {
+                    list.insertAdjacentHTML("beforeend", `<div class="comments-loading">Showing latest 5 of ${comments.length} comments.</div>`);
+                }
+            });
+        }
+
+        async function submitComment(form) {
+            const songId = Number(form.dataset.commentForm);
+            const nameInput = form.querySelector('[name="name"]');
+            const commentInput = form.querySelector('[name="comment"]');
+            const status = form.querySelector(".comment-status");
+            const button = form.querySelector("button[type=submit]");
+            const name = nameInput.value.trim();
+            const comment = commentInput.value.trim();
+            if (!songId || !name || !comment) return;
+
+            button.disabled = true;
+            status.textContent = "Posting...";
+            const { data, error } = await supabaseClient
+                .from("song_comments")
+                .insert([{ song_id: songId, name, comment }])
+                .select("id,song_id,name,comment,created_at")
+                .single();
+            button.disabled = false;
+
+            if (error) {
+                console.error("Comment error:", error);
+                status.textContent = "❌ Comment failed: " + error.message;
+                return;
+            }
+            if (!commentsBySong[String(songId)]) commentsBySong[String(songId)] = [];
+            commentsBySong[String(songId)].unshift(data);
+            nameInput.value = "";
+            commentInput.value = "";
+            status.textContent = "✅ Comment posted";
+            renderCommentsForVisibleCards();
+            setTimeout(() => { status.textContent = ""; }, 1800);
+        }
+
+        function bindCommentForms() {
+            document.querySelectorAll(".comment-form").forEach(form => {
+                form.addEventListener("submit", e => {
+                    e.preventDefault();
+                    submitComment(form);
+                });
+            });
+            renderCommentsForVisibleCards();
         }
 
         /* ============================================================
