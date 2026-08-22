@@ -1035,6 +1035,16 @@ LOGIN
     padding:.7rem;
 }
 
+/* =========================================================
+SHARED GOOGLE + ADMIN LOGIN
+========================================================= */
+.google-auth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.55rem;padding:.72rem 1rem;border:1px solid #d9d9d9;border-radius:10px;background:#fff;color:#222;font-weight:700;cursor:pointer;transition:.2s;}
+.google-auth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
+body.dark-mode .google-auth-btn{background:#25272d;color:#fff;border-color:#444;}
+.login-divider{display:flex;align-items:center;gap:.7rem;margin:1rem 0;color:var(--muted-text);font-size:.75rem;font-weight:700;}
+.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--soft-border);}
+.admin-login-label{font-size:.8rem;font-weight:700;color:var(--muted-text);margin-bottom:.55rem;}
+
 .login-error{
     color:#e74c3c;
 
@@ -1570,33 +1580,29 @@ ADMIN LOGIN
     <div class="login-modal">
 
         <h2>
-            <i class="fas fa-lock"></i>
-            Admin Login
+            <i class="fas fa-user-circle"></i>
+            Sign In
         </h2>
 
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Admin Email"
-        >
-
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Password"
-        >
-
-        <button
-            class="btn"
-            id="loginBtn"
-        >
-            Login
+        <button class="google-auth-btn" id="googleAuthBtn" type="button">
+            <i class="fab fa-google"></i>
+            Continue with Google
         </button>
 
-        <div
-            class="login-error"
-            id="loginError"
-        ></div>
+        <div class="login-divider"><span>OR</span></div>
+
+        <div class="admin-login-label">
+            <i class="fas fa-user-shield"></i> Admin Login
+        </div>
+
+        <input type="email" id="loginEmail" placeholder="Admin Email" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Admin Password" autocomplete="current-password">
+
+        <button class="btn" id="loginBtn" type="button">
+            Admin Login
+        </button>
+
+        <div class="login-error" id="loginError"></div>
 
     </div>
 
@@ -1957,6 +1963,9 @@ document.getElementById("loginPassword");
 
 const loginBtn =
 document.getElementById("loginBtn");
+
+const googleAuthBtn =
+document.getElementById("googleAuthBtn");
 
 const loginError =
 document.getElementById("loginError");
@@ -3368,9 +3377,7 @@ function renderSongCards(
 
             </div>
 
-            <!-- COMMENTS -->
-
-            ${renderComments(song.id)}
+            <!-- Comments are shown only after opening the song. -->
 
         </div>
 
@@ -4642,75 +4649,52 @@ ADMIN LOGIN
 ========================================================= */
 
 async function login(){
-
-    const email=
-    loginEmail.value.trim();
-
-    const password=
-    loginPassword.value;
-
+    const email=loginEmail.value.trim();
+    const password=loginPassword.value;
 
     if(!email || !password){
-
-        loginError.textContent=
-        "Please enter email and password.";
-
+        loginError.textContent="Please enter Admin email and password.";
         return;
     }
 
+    loginError.textContent="Checking Admin account...";
 
-    loginError.textContent=
-    "Logging in...";
-
-
-    const {
-        data,
-        error
-    }=
-    await supabaseClient.auth
-    .signInWithPassword({
-
-        email,
-        password
-
-    });
-
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
 
     if(error){
-
-        loginError.textContent=
-        "❌ "+error.message;
-
+        loginError.textContent="❌ "+error.message;
         return;
     }
 
-
-    /* Password login is ONLY for the configured admin account. */
     if(!isAdminUser(data.user)){
         await supabaseClient.auth.signOut();
-        loginError.textContent = "❌ This account is not an Admin account.";
+        currentUser=null;
+        loginError.textContent="❌ This account is not an Admin account. Use Continue with Google for normal users.";
         return;
     }
 
-    currentUser=
-    data.user;
-
-    loginOverlay.classList.remove(
-        "active"
-    );
-
-    adminPanel.classList.add(
-        "active"
-    );
-
+    currentUser=data.user;
+    loginOverlay.classList.remove("active");
+    adminPanel.classList.add("active");
     setAdminButton();
-
     renderAdminList();
-
     renderSongs();
-
+    await loadNotifications();
     loginEmail.value="";
     loginPassword.value="";
+}
+
+async function loginWithGoogle(){
+    loginError.textContent="";
+    const redirectTo=window.location.origin+window.location.pathname;
+    const {error}=await supabaseClient.auth.signInWithOAuth({
+        provider:"google",
+        options:{redirectTo}
+    });
+    if(error){
+        console.error(error);
+        loginError.textContent="❌ Google login failed: "+error.message;
+    }
 }
 
 
@@ -4766,29 +4750,23 @@ ADMIN BUTTON
 ========================================================= */
 
 function setAdminButton(){
-
-    adminToggleBtn.innerHTML=
-    `
-    <i class="fas fa-user"></i>
-    Logout
-    `;
-
-    adminToggleBtn.style.background=
-    "#2ecc71";
-
-    adminToggleBtn.style.color=
-    "#fff";
+    if(isAdminUser(currentUser)){
+        adminToggleBtn.innerHTML=`<i class="fas fa-user-shield"></i> Admin · Logout`;
+        adminToggleBtn.style.background="#2ecc71";
+        adminToggleBtn.style.color="#fff";
+        return;
+    }
+    if(currentUser){
+        adminToggleBtn.innerHTML=`<i class="fas fa-user"></i> User · Logout`;
+        adminToggleBtn.style.background="#3498db";
+        adminToggleBtn.style.color="#fff";
+        return;
+    }
+    resetAdminButton();
 }
 
-
 function resetAdminButton(){
-
-    adminToggleBtn.innerHTML=
-    `
-    <i class="fas fa-user-shield"></i>
-    Admin
-    `;
-
+    adminToggleBtn.innerHTML=`<i class="fas fa-user-shield"></i> Admin / Login`;
     adminToggleBtn.style.background="";
     adminToggleBtn.style.color="";
 }
@@ -5333,6 +5311,11 @@ loginBtn.addEventListener(
     login
 );
 
+googleAuthBtn.addEventListener(
+    "click",
+    loginWithGoogle
+);
+
 loginPassword.addEventListener(
     "keydown",
     e=>{
@@ -5809,6 +5792,10 @@ async function checkUser(){
         adminPanel.classList.add("active");
         setAdminButton();
         renderAdminList();
+    }else if(currentUser){
+        adminPanel.classList.remove("active");
+        setAdminButton();
+        renderAdminList();
     }else{
         adminPanel.classList.remove("active");
         resetAdminButton();
@@ -5830,9 +5817,14 @@ supabaseClient.auth.onAuthStateChange(
                 adminPanel.classList.add("active");
                 setAdminButton();
                 renderAdminList();
+            }else if(currentUser){
+                adminPanel.classList.remove("active");
+                setAdminButton();
+                renderAdminList();
             }else{
                 adminPanel.classList.remove("active");
                 resetAdminButton();
+                renderAdminList();
             }
 
             /* Comments use currentUser, including Google users. */
@@ -5867,7 +5859,13 @@ setInterval(()=>{
     if(currentUser){
         loadNotifications();
     }
-},30000);
+},5000);
+
+document.addEventListener("visibilitychange",()=>{
+    if(!document.hidden && currentUser){
+        loadNotifications();
+    }
+});
 
 </script>
 
