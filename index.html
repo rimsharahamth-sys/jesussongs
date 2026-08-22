@@ -1035,16 +1035,6 @@ LOGIN
     padding:.7rem;
 }
 
-/* =========================================================
-SHARED GOOGLE + ADMIN LOGIN
-========================================================= */
-.google-auth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.55rem;padding:.72rem 1rem;border:1px solid #d9d9d9;border-radius:10px;background:#fff;color:#222;font-weight:700;cursor:pointer;transition:.2s;}
-.google-auth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
-body.dark-mode .google-auth-btn{background:#25272d;color:#fff;border-color:#444;}
-.login-divider{display:flex;align-items:center;gap:.7rem;margin:1rem 0;color:var(--muted-text);font-size:.75rem;font-weight:700;}
-.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--soft-border);}
-.admin-login-label{font-size:.8rem;font-weight:700;color:var(--muted-text);margin-bottom:.55rem;}
-
 .login-error{
     color:#e74c3c;
 
@@ -1405,6 +1395,23 @@ FULL SCREEN SONG DETAIL + REPLIES + NOTIFICATIONS
     color:var(--muted-text);
 }
 
+/* Instagram/Facebook-style nested replies */
+.comment-replies{
+    margin-top:.65rem;
+    margin-left:1.5rem;
+    padding-left:.8rem;
+    border-left:2px solid var(--soft-border);
+}
+.comment-reply{
+    display:flex;
+    gap:.65rem;
+    margin-top:.65rem;
+}
+.comment-reply .comment-actions{margin-top:.25rem;}
+.comment-reply .comment-content{min-width:0;}
+.comment-reply .comment-replies{margin-left:1rem;}
+
+
 .detail-lyrics-heading{
     margin-top:1.5rem;
     font-size:1rem;
@@ -1579,30 +1586,48 @@ ADMIN LOGIN
 
     <div class="login-modal">
 
-        <h2>
+        <h2 id="loginModalTitle">
             <i class="fas fa-user-circle"></i>
             Sign In
         </h2>
 
-        <button class="google-auth-btn" id="googleAuthBtn" type="button">
-            <i class="fab fa-google"></i>
-            Continue with Google
+        <p id="loginModalSubtitle" style="text-align:center;color:var(--muted-text);font-size:.85rem;margin:-.35rem 0 1rem;">
+            Login with Google or Admin email & password
+        </p>
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Admin Email"
+        >
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+        >
+
+        <button
+            class="btn"
+            id="loginBtn"
+        >
+            <i class="fas fa-sign-in-alt"></i> Login
         </button>
 
-        <div class="login-divider"><span>OR</span></div>
-
-        <div class="admin-login-label">
-            <i class="fas fa-user-shield"></i> Admin Login
+        <div style="display:flex;align-items:center;gap:.6rem;margin:1rem 0;color:var(--muted-text);font-size:.75rem;">
+            <span style="flex:1;height:1px;background:var(--soft-border);"></span>
+            OR
+            <span style="flex:1;height:1px;background:var(--soft-border);"></span>
         </div>
 
-        <input type="email" id="loginEmail" placeholder="Admin Email" autocomplete="username">
-        <input type="password" id="loginPassword" placeholder="Admin Password" autocomplete="current-password">
-
-        <button class="btn" id="loginBtn" type="button">
-            Admin Login
+        <button class="btn btn-outline" id="googleLoginBtn" type="button" style="width:100%;">
+            <i class="fab fa-google"></i> Continue with Google
         </button>
 
-        <div class="login-error" id="loginError"></div>
+        <div
+            class="login-error"
+            id="loginError"
+        ></div>
 
     </div>
 
@@ -1963,9 +1988,6 @@ document.getElementById("loginPassword");
 
 const loginBtn =
 document.getElementById("loginBtn");
-
-const googleAuthBtn =
-document.getElementById("googleAuthBtn");
 
 const loginError =
 document.getElementById("loginError");
@@ -2862,29 +2884,51 @@ function getRepliesForComment(commentId){
     );
 }
 
-function renderSingleReply(reply){
-    const avatar = reply.user_avatar || defaultAvatar();
-    const own = currentUser && currentUser.id === reply.user_id;
+function renderCommentNode(comment, songId, depth=0){
+    const avatar = comment.user_avatar || defaultAvatar();
+    const own = currentUser && currentUser.id === comment.user_id;
+    const replies = getRepliesForComment(comment.id);
+    const safeDepth = Math.min(depth, 8);
 
     return `
-        <div class="comment-reply" data-comment-id="${escapeHTML(reply.id)}">
+        <div class="comment-item ${safeDepth ? "comment-nested" : ""}" data-comment-id="${escapeHTML(comment.id)}">
             <img class="comment-avatar"
                  src="${escapeHTML(avatar)}"
                  onerror="this.src='${defaultAvatar()}'">
             <div class="comment-content">
                 <div class="comment-author">
-                    ${escapeHTML(reply.user_name || "User")}
-                    <span class="comment-date">
-                        ${formatCommentDate(reply.created_at)}
-                    </span>
+                    ${escapeHTML(comment.user_name || "User")}
+                    <span class="comment-date">${formatCommentDate(comment.created_at)}</span>
                 </div>
-                <div class="comment-text">${escapeHTML(reply.comment || "")}</div>
-                ${own ? `
-                    <div class="comment-actions">
-                        <button class="comment-delete"
-                                data-comment-id="${escapeHTML(reply.id)}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
+                <div class="comment-text">${escapeHTML(comment.comment || "")}</div>
+
+                <div class="comment-actions">
+                    <button class="comment-reply-btn"
+                            data-reply-comment-id="${escapeHTML(comment.id)}"
+                            data-reply-song-id="${escapeHTML(songId)}">
+                        <i class="fas fa-reply"></i> Reply
+                    </button>
+                    ${own ? `
+                    <button class="comment-delete" data-comment-id="${escapeHTML(comment.id)}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>` : ""}
+                </div>
+
+                <div class="reply-form" data-reply-form="${escapeHTML(comment.id)}">
+                    <input type="text" maxlength="1000"
+                           data-reply-input="${escapeHTML(comment.id)}"
+                           placeholder="Reply to ${escapeHTML(comment.user_name || "User")}...">
+                    <button class="reply-send-btn"
+                            data-reply-submit="${escapeHTML(comment.id)}"
+                            data-reply-song="${escapeHTML(songId)}">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="reply-cancel-btn" data-reply-cancel="${escapeHTML(comment.id)}">Cancel</button>
+                </div>
+
+                ${replies.length ? `
+                    <div class="comment-replies">
+                        ${replies.map(r => renderCommentNode(r, songId, safeDepth + 1)).join("")}
                     </div>` : ""}
             </div>
         </div>
@@ -2895,367 +2939,44 @@ function renderComments(songId){
     const all = commentsBySong[String(songId)] || [];
     const roots = all.filter(c => !c.parent_comment_id);
 
-    let html = "";
-
     if(!roots.length){
-        html = `
-            <div class="no-comments">
-                No comments yet. Be the first to comment ❤️
-            </div>`;
-    }else{
-        html = roots.map(comment=>{
-            const avatar = comment.user_avatar || defaultAvatar();
-            const own = currentUser && currentUser.id === comment.user_id;
-            const replies = getRepliesForComment(comment.id);
-
-            return `
-                <div class="comment-item" data-comment-id="${escapeHTML(comment.id)}">
-                    <img class="comment-avatar"
-                         src="${escapeHTML(avatar)}"
-                         onerror="this.src='${defaultAvatar()}'">
-
-                    <div class="comment-content">
-                        <div class="comment-author">
-                            ${escapeHTML(comment.user_name || "User")}
-                            <span class="comment-date">
-                                ${formatCommentDate(comment.created_at)}
-                            </span>
-                        </div>
-
-                        <div class="comment-text">
-                            ${escapeHTML(comment.comment || "")}
-                        </div>
-
-                        <div class="comment-actions">
-                            <button class="comment-reply-btn"
-                                    data-reply-comment-id="${escapeHTML(comment.id)}"
-                                    data-reply-song-id="${escapeHTML(songId)}">
-                                <i class="fas fa-reply"></i> Reply
-                            </button>
-
-                            ${own ? `
-                            <button class="comment-delete"
-                                    data-comment-id="${escapeHTML(comment.id)}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>` : ""}
-                        </div>
-
-                        <div class="reply-form"
-                             data-reply-form="${escapeHTML(comment.id)}">
-                            <input type="text"
-                                   maxlength="1000"
-                                   data-reply-input="${escapeHTML(comment.id)}"
-                                   placeholder="Write a reply...">
-                            <button class="reply-send-btn"
-                                    data-reply-submit="${escapeHTML(comment.id)}"
-                                    data-reply-song="${escapeHTML(songId)}">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                            <button class="reply-cancel-btn"
-                                    data-reply-cancel="${escapeHTML(comment.id)}">
-                                Cancel
-                            </button>
-                        </div>
-
-                        ${replies.length ? `
-                            <div class="comment-replies">
-                                ${replies.map(renderSingleReply).join("")}
-                            </div>` : ""}
-                    </div>
+        return `
+            <section class="comments-section">
+                <div class="comments-heading">
+                    <i class="far fa-comments"></i> Comments
                 </div>
-            `;
-        }).join("");
-    }
-
-    let loginBox = "";
-
-    if(!currentUser){
-        loginBox = `
-            <div class="comment-login-box">
-                <button class="google-login-btn" data-google-login="true">
-                    <i class="fab fa-google"></i>
-                    Sign in with Google to comment or reply
-                </button>
-            </div>`;
-    }else{
-        const metadata = currentUser.user_metadata || {};
-        const name = metadata.full_name || metadata.name || currentUser.email || "User";
-        const avatar = metadata.avatar_url || metadata.picture || defaultAvatar();
-
-        loginBox = `
-            <div class="comment-user-box active">
-                <div class="comment-user-info">
-                    <img src="${escapeHTML(avatar)}"
-                         onerror="this.src='${defaultAvatar()}'">
-                    <span class="comment-user-name">${escapeHTML(name)}</span>
-                </div>
-
-                <div class="comment-input-wrap">
-                    <input class="comment-input"
-                           data-comment-input="${escapeHTML(songId)}"
-                           type="text"
-                           maxlength="1000"
-                           placeholder="Write a comment...">
-                    <button class="comment-submit"
-                            data-comment-submit="${escapeHTML(songId)}"
-                            title="Post comment">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>`;
+                <div class="no-comments">No comments yet. Be the first to comment ❤️</div>
+                ${renderCommentInput(songId)}
+            </section>`;
     }
 
     return `
-        <div class="comments-section" data-song-comments="${escapeHTML(songId)}">
-            <div class="comments-title">
-                <i class="far fa-comments"></i>
-                Comments (${all.length})
+        <section class="comments-section">
+            <div class="comments-heading">
+                <i class="far fa-comments"></i> Comments
+                <span style="font-weight:400;color:var(--muted-text);font-size:.78rem;">${all.length}</span>
             </div>
-            ${loginBox}
-            <div class="comments-list">${html}</div>
-        </div>
-    `;
+            ${roots.map(c => renderCommentNode(c, songId)).join("")}
+            ${renderCommentInput(songId)}
+        </section>`;
 }
 
-
-/* =========================================================
-RENDER SONGS
-========================================================= */
-
-function renderSongs(){
-
-    const q =
-    searchQuery.trim();
-
-    if(!songs.length){
-
-        songCount.textContent=
-        "0 songs";
-
-        grid.innerHTML=`
-
-        <div class="no-results">
-
-            <div class="no-results-icon">
-                <i class="fas fa-music"></i>
-            </div>
-
-            <div class="no-results-title">
-                No songs found
-            </div>
-
-            <div class="no-results-text">
-                Admin hasn't added any songs yet.
-            </div>
-
-        </div>
-
-        `;
-
-        return;
+function renderCommentInput(songId){
+    if(currentUser){
+        return `
+            <div class="comment-input-wrap">
+                <img class="comment-avatar" src="${escapeHTML(currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || defaultAvatar())}" onerror="this.src='${defaultAvatar()}'">
+                <input type="text" maxlength="1000" data-comment-input="${escapeHTML(songId)}" placeholder="Write a comment...">
+                <button class="comment-send-btn" data-comment-submit="${escapeHTML(songId)}">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>`;
     }
-
-    if(!q){
-
-        renderSongCards(
-            songs.map(
-                song=>({
-                    song,
-                    score:0
-                })
-            ),
-            false
-        );
-
-        songCount.textContent=
-        `${songs.length} song${songs.length!==1?"s":""}`;
-
-        searchStatus.classList.remove(
-            "active"
-        );
-
-        renderMainSearchResults("");
-
-        return;
-    }
-
-    const variants=[
-        ...new Set(
-            getQueryVariants(q)
-            .map(normalizeBasic)
-            .filter(Boolean)
-        )
-    ];
-
-    function startsWithSearch(song){
-
-        const data =
-        buildSearchData(song);
-
-        return variants.some(
-            v=>
-            data.titleOriginal.startsWith(v) ||
-            data.titleRoman.startsWith(v)
-        );
-    }
-
-    const matches =
-    songs
-    .map(
-        (song,index)=>({
-
-            song,
-
-            index,
-
-            score:
-            scoreSong(
-                song,
-                q
-            )
-
-        })
-    )
-    .filter(
-        x=>startsWithSearch(
-            x.song
-        )
-    )
-    .sort(
-        (a,b)=>{
-
-            const aTitle=
-            normalizeBasic(
-                a.song.title||""
-            );
-
-            const bTitle=
-            normalizeBasic(
-                b.song.title||""
-            );
-
-            const aExact=
-            variants.some(
-                v=>
-                aTitle===v ||
-                normalizeBasic(
-                    transliterateTelugu(
-                        a.song.title||""
-                    )
-                )===v
-            );
-
-            const bExact=
-            variants.some(
-                v=>
-                bTitle===v ||
-                normalizeBasic(
-                    transliterateTelugu(
-                        b.song.title||""
-                    )
-                )===v
-            );
-
-            if(aExact!==bExact)
-                return aExact?-1:1;
-
-            if(
-                aTitle.length!==
-                bTitle.length
-            )
-                return aTitle.length-
-                       bTitle.length;
-
-            return a.index-b.index;
-        }
-    );
-
-
-    if(!matches.length){
-
-        songCount.textContent=
-        "0 results";
-
-        searchStatus.classList.add(
-            "active"
-        );
-
-        searchStatus.innerHTML=`
-
-        <i class="fas fa-search"></i>
-
-        No song title starts with
-
-        <strong>
-            "${escapeHTML(q)}"
-        </strong>
-
-        `;
-
-        grid.innerHTML=`
-
-        <div class="no-results">
-
-            <div class="no-results-icon">
-                <i class="fas fa-search"></i>
-            </div>
-
-            <div class="no-results-title">
-                No starting-name matches
-            </div>
-
-            <div class="no-results-text">
-                Try the beginning of the song name.
-            </div>
-
-        </div>
-
-        `;
-
-        renderMainSearchResults(
-            q
-        );
-
-        return;
-    }
-
-    songCount.textContent=
-    `${matches.length} result${matches.length!==1?"s":""}`;
-
-    searchStatus.classList.add(
-        "active"
-    );
-
-    searchStatus.innerHTML=`
-
-    <i class="fas fa-search"></i>
-
-    Songs starting with
-
-    <strong>
-        "${escapeHTML(q)}"
-    </strong>
-
-    <span style="opacity:.75;">
-        · ${matches.length} found
-    </span>
-
-    `;
-
-    renderSongCards(
-        matches,
-        true
-    );
-
-    /*
-       NEW:
-       MAIN SEARCH RESULTS ARE SHOWN
-       DIRECTLY UNDER SEARCH BAR
-    */
-
-    renderMainSearchResults(q);
+    return `
+        <button class="btn btn-outline comment-login-btn" data-google-login="true" type="button">
+            <i class="fab fa-google"></i> Sign in with Google to comment
+        </button>`;
 }
-
 
 /* =========================================================
 RENDER CARDS
@@ -3377,7 +3098,9 @@ function renderSongCards(
 
             </div>
 
-            <!-- Comments are shown only after opening the song. -->
+            <!-- COMMENTS -->
+
+            ${renderComments(song.id)}
 
         </div>
 
@@ -4156,6 +3879,22 @@ function openSongFromUrl(){
 GOOGLE LOGIN
 ========================================================= */
 
+function openLoginModal(mode="user"){
+    loginOverlay.classList.add("active");
+    loginError.textContent="";
+    loginEmail.value="";
+    loginPassword.value="";
+    const title=document.getElementById("loginModalTitle");
+    const subtitle=document.getElementById("loginModalSubtitle");
+    if(mode==="admin"){
+        title.innerHTML='<i class="fas fa-user-shield"></i> Admin / User Login';
+        subtitle.textContent="Admin: email/password or Google • User: Google login";
+    }else{
+        title.innerHTML='<i class="fas fa-user-circle"></i> User Login';
+        subtitle.textContent="Sign in with Google to comment, reply and receive notifications";
+    }
+}
+
 async function loginWithGoogle(){
 
     const redirectTo=
@@ -4228,7 +3967,7 @@ async function insertCommentRecord({
 
 async function submitComment(songId){
     if(!currentUser){
-        await loginWithGoogle();
+        openLoginModal("user");
         return;
     }
 
@@ -4272,8 +4011,6 @@ async function submitComment(songId){
     if(!commentsBySong[id]) commentsBySong[id]=[];
     commentsBySong[id].push(data);
 
-    renderSongs();
-
     if(currentDetailSong &&
        String(currentDetailSong.id)===String(songId)){
         detailComments.innerHTML=renderComments(songId);
@@ -4282,7 +4019,7 @@ async function submitComment(songId){
 
 async function submitReply(parentCommentId,songId){
     if(!currentUser){
-        await loginWithGoogle();
+        openLoginModal("user");
         return;
     }
 
@@ -4334,8 +4071,6 @@ async function submitReply(parentCommentId,songId){
     if(parent && parent.user_id!==currentUser.id){
         await createReplyNotification(parent,data);
     }
-
-    renderSongs();
 
     if(currentDetailSong &&
        String(currentDetailSong.id)===String(songId)){
@@ -4645,56 +4380,108 @@ function requestNotificationPermission(){
 
 
 /* =========================================================
+REALTIME REPLY NOTIFICATIONS
+========================================================= */
+let notificationChannel = null;
+
+function startNotificationRealtime(){
+    if(notificationChannel){
+        try{ supabaseClient.removeChannel(notificationChannel); }catch(e){}
+        notificationChannel=null;
+    }
+    if(!currentUser) return;
+
+    notificationChannel = supabaseClient
+        .channel("reply-notifications-" + currentUser.id)
+        .on("postgres_changes", {
+            event:"INSERT",
+            schema:"public",
+            table:"comment_notifications",
+            filter:"recipient_user_id=eq." + currentUser.id
+        }, payload=>{
+            const n=payload.new;
+            notifications.unshift(n);
+            unreadNotificationCount=notifications.filter(x=>!x.is_read).length;
+            updateNotificationUI();
+            showBrowserNotification(n.message || "Someone replied to your comment.");
+        })
+        .subscribe();
+}
+
+/* =========================================================
 ADMIN LOGIN
 ========================================================= */
 
 async function login(){
-    const email=loginEmail.value.trim();
-    const password=loginPassword.value;
+
+    const email=
+    loginEmail.value.trim();
+
+    const password=
+    loginPassword.value;
+
 
     if(!email || !password){
-        loginError.textContent="Please enter Admin email and password.";
+
+        loginError.textContent=
+        "Please enter email and password.";
+
         return;
     }
 
-    loginError.textContent="Checking Admin account...";
 
-    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+    loginError.textContent=
+    "Logging in...";
+
+
+    const {
+        data,
+        error
+    }=
+    await supabaseClient.auth
+    .signInWithPassword({
+
+        email,
+        password
+
+    });
+
 
     if(error){
-        loginError.textContent="❌ "+error.message;
+
+        loginError.textContent=
+        "❌ "+error.message;
+
         return;
     }
 
+
+    /* Password login is ONLY for the configured admin account. */
     if(!isAdminUser(data.user)){
         await supabaseClient.auth.signOut();
-        currentUser=null;
-        loginError.textContent="❌ This account is not an Admin account. Use Continue with Google for normal users.";
+        loginError.textContent = "❌ This account is not an Admin account.";
         return;
     }
 
-    currentUser=data.user;
-    loginOverlay.classList.remove("active");
-    adminPanel.classList.add("active");
+    currentUser=
+    data.user;
+
+    loginOverlay.classList.remove(
+        "active"
+    );
+
+    adminPanel.classList.add(
+        "active"
+    );
+
     setAdminButton();
+
     renderAdminList();
+
     renderSongs();
-    await loadNotifications();
+
     loginEmail.value="";
     loginPassword.value="";
-}
-
-async function loginWithGoogle(){
-    loginError.textContent="";
-    const redirectTo=window.location.origin+window.location.pathname;
-    const {error}=await supabaseClient.auth.signInWithOAuth({
-        provider:"google",
-        options:{redirectTo}
-    });
-    if(error){
-        console.error(error);
-        loginError.textContent="❌ Google login failed: "+error.message;
-    }
 }
 
 
@@ -4750,23 +4537,29 @@ ADMIN BUTTON
 ========================================================= */
 
 function setAdminButton(){
-    if(isAdminUser(currentUser)){
-        adminToggleBtn.innerHTML=`<i class="fas fa-user-shield"></i> Admin · Logout`;
-        adminToggleBtn.style.background="#2ecc71";
-        adminToggleBtn.style.color="#fff";
-        return;
-    }
-    if(currentUser){
-        adminToggleBtn.innerHTML=`<i class="fas fa-user"></i> User · Logout`;
-        adminToggleBtn.style.background="#3498db";
-        adminToggleBtn.style.color="#fff";
-        return;
-    }
-    resetAdminButton();
+
+    adminToggleBtn.innerHTML=
+    `
+    <i class="fas fa-user"></i>
+    Logout
+    `;
+
+    adminToggleBtn.style.background=
+    "#2ecc71";
+
+    adminToggleBtn.style.color=
+    "#fff";
 }
 
+
 function resetAdminButton(){
-    adminToggleBtn.innerHTML=`<i class="fas fa-user-shield"></i> Admin / Login`;
+
+    adminToggleBtn.innerHTML=
+    `
+    <i class="fas fa-user-shield"></i>
+    Admin
+    `;
+
     adminToggleBtn.style.background="";
     adminToggleBtn.style.color="";
 }
@@ -4781,6 +4574,7 @@ async function logout(){
     await supabaseClient.auth.signOut();
 
     currentUser=null;
+    if(notificationChannel){ try{ await supabaseClient.removeChannel(notificationChannel); }catch(e){} notificationChannel=null; }
 
     adminPanel.classList.remove(
         "active"
@@ -5311,10 +5105,9 @@ loginBtn.addEventListener(
     login
 );
 
-googleAuthBtn.addEventListener(
-    "click",
-    loginWithGoogle
-);
+googleLoginBtn.addEventListener("click", async ()=>{
+    await loginWithGoogle();
+});
 
 loginPassword.addEventListener(
     "keydown",
@@ -5480,7 +5273,7 @@ grid.addEventListener(
             e.stopPropagation();
 
             if(!currentUser){
-                await loginWithGoogle();
+                openLoginModal("user");
                 return;
             }
 
@@ -5792,10 +5585,6 @@ async function checkUser(){
         adminPanel.classList.add("active");
         setAdminButton();
         renderAdminList();
-    }else if(currentUser){
-        adminPanel.classList.remove("active");
-        setAdminButton();
-        renderAdminList();
     }else{
         adminPanel.classList.remove("active");
         resetAdminButton();
@@ -5817,18 +5606,14 @@ supabaseClient.auth.onAuthStateChange(
                 adminPanel.classList.add("active");
                 setAdminButton();
                 renderAdminList();
-            }else if(currentUser){
-                adminPanel.classList.remove("active");
-                setAdminButton();
-                renderAdminList();
             }else{
                 adminPanel.classList.remove("active");
                 resetAdminButton();
-                renderAdminList();
             }
 
             /* Comments use currentUser, including Google users. */
             renderSongs();
+            startNotificationRealtime();
             loadNotifications();
         },0);
     }
@@ -5844,6 +5629,7 @@ async function init(){
     initializeTheme();
 
     await checkUser();
+    startNotificationRealtime();
     await loadNotifications();
 
     await loadSongs();
@@ -5859,13 +5645,7 @@ setInterval(()=>{
     if(currentUser){
         loadNotifications();
     }
-},5000);
-
-document.addEventListener("visibilitychange",()=>{
-    if(!document.hidden && currentUser){
-        loadNotifications();
-    }
-});
+},30000);
 
 </script>
 
