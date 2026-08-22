@@ -671,14 +671,11 @@ body.dark-mode .google-login-btn{
 .comment-item{
     display:flex;
     gap:.55rem;
-
-    padding:.6rem;
-
-    border-radius:9px;
-
-    background:var(--card-bg);
-
-    border:1px solid var(--soft-border);
+    padding:.9rem .15rem;
+    border:0;
+    border-bottom:1px solid var(--soft-border);
+    border-radius:0;
+    background:transparent;
 }
 
 .comment-avatar{
@@ -1064,7 +1061,7 @@ SONG DETAIL
 
     align-items:center;
 
-    padding:0;
+    padding:2rem;
 }
 
 .song-detail-overlay.active{
@@ -1076,17 +1073,15 @@ SONG DETAIL
 
     color:var(--text-color);
 
-    border-radius:0;
+    border-radius:28px;
 
-    max-width:none;
+    max-width:720px;
 
     width:100%;
 
-    height:100vh;
+    padding:2.5rem;
 
-    min-height:100vh;
-
-    padding:2.5rem clamp(1rem,4vw,4rem);
+    max-height:90vh;
 
     overflow-y:auto;
 
@@ -1211,300 +1206,76 @@ FOOTER
 }
 
 /* =========================================================
-NOTIFICATIONS
+NOTIFICATIONS / UNIFIED LOGIN / DETAIL COMMENTS
 ========================================================= */
-
-.notification-wrap{
-    position:relative;
-    z-index:5000;
-}
-
-.notification-btn{
-    position:relative;
-    width:44px;
-    height:42px;
-    border:2px solid var(--primary);
-    border-radius:50%;
-    background:transparent;
-    color:var(--primary);
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1rem;
-}
-
-.notification-btn:hover{
-    background:var(--primary);
-    color:#1a1a2e;
-}
-
-.notification-badge{
-    display:none;
-    position:absolute;
-    top:-7px;
-    right:-7px;
-    min-width:20px;
-    height:20px;
-    padding:0 5px;
-    border-radius:20px;
-    background:#e74c3c;
-    color:#fff;
-    font-size:.65rem;
-    font-weight:800;
-    align-items:center;
-    justify-content:center;
-    border:2px solid var(--header-bg-1);
-}
-
-.notification-badge.active{
-    display:flex;
-}
-
-.notification-panel{
-    display:none;
-    position:absolute;
-    right:0;
-    top:calc(100% + 10px);
-    width:360px;
-    max-width:calc(100vw - 24px);
-    max-height:460px;
-    overflow:hidden;
+.notification-btn{position:relative;min-width:48px;padding:.5rem .8rem}
+.notification-count{position:absolute;top:-7px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#e74c3c;color:#fff;font-size:.68rem;font-weight:800;display:none;align-items:center;justify-content:center;border:2px solid var(--header-bg-1)}
+.notification-count.active{display:flex}
+.login-modal{position:relative}
+.login-close{position:absolute;right:1rem;top:.8rem;border:0;background:none;color:var(--muted-text);font-size:1.7rem;cursor:pointer}
+.login-subtitle{color:var(--muted-text);font-size:.85rem;margin:-.7rem 0 1.2rem}
+.login-divider{display:flex;align-items:center;gap:.7rem;margin:1rem 0;color:var(--muted-text);font-size:.75rem}
+.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--border-color)}
+.detail-comments-wrap{margin-top:1.3rem}
+/* YouTube-style: one comments card, individual comments are NOT separate cards */
+.comments-section.youtube-comments-card{
     background:var(--card-bg);
-    color:var(--text-color);
-    border:1px solid var(--soft-border);
-    border-radius:16px;
-    box-shadow:0 18px 50px var(--strong-shadow);
-}
-
-.notification-panel.active{
-    display:block;
-}
-
-.notification-panel-head{
-    padding:.9rem 1rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid var(--soft-border);
-}
-
-.notification-panel-head button{
-    border:none;
-    background:none;
-    color:var(--link-color);
-    cursor:pointer;
-    font-size:.75rem;
-}
-
-.notification-list{
-    max-height:390px;
-    overflow-y:auto;
-}
-
-.notification-item{
-    width:100%;
-    border:0;
-    border-bottom:1px solid var(--soft-border);
-    background:var(--card-bg);
-    color:var(--text-color);
-    padding:.8rem;
-    display:flex;
-    gap:.7rem;
-    text-align:left;
-    cursor:pointer;
-}
-
-.notification-item:hover{
-    background:rgba(240,192,64,.10);
-}
-
-.notification-item.unread{
-    background:rgba(240,192,64,.08);
-}
-
-.notification-icon{
-    width:34px;
-    height:34px;
-    flex:0 0 34px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(240,192,64,.18);
-    color:var(--primary-dark);
-}
-
-.notification-content{
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    gap:.2rem;
-}
-
-.notification-content strong{
-    font-size:.78rem;
-    line-height:1.35;
-}
-
-.notification-content small{
-    color:var(--muted-text);
-    font-size:.68rem;
-}
-
-.notification-empty{
-    padding:1.2rem;
-    text-align:center;
-    color:var(--muted-text);
-    font-size:.8rem;
-}
-
-/* =========================================================
-LOGIN IMPROVEMENTS
-========================================================= */
-
-.login-subtitle{
-    color:var(--muted-text);
-    font-size:.82rem;
-    line-height:1.5;
-    margin:-.7rem 0 1.2rem;
-}
-
-.login-divider{
-    display:flex;
-    align-items:center;
-    gap:.6rem;
-    margin:.9rem 0;
-    color:var(--muted-text);
-    font-size:.7rem;
-}
-
-.login-divider::before,
-.login-divider::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--soft-border);
-}
-
-.login-google-btn{
-    margin-top:0;
-}
-
-.login-help{
-    margin-top:.8rem;
-    color:var(--muted-text);
-    font-size:.7rem;
-    line-height:1.4;
-}
-
-/* =========================================================
-DETAIL COMMENTS / INSTAGRAM STYLE REPLIES
-========================================================= */
-
-.detail-comments{
-    margin-top:1.5rem;
-}
-
-.detail-comments .comments-section{
-    border:1px solid var(--soft-border);
-    border-radius:16px;
+    border:1px solid var(--border-color);
+    border-radius:18px;
     padding:1rem;
-    background:rgba(240,192,64,.025);
+    box-shadow:0 8px 25px var(--soft-shadow);
 }
-
-.comment-actions{
-    display:flex;
-    gap:.8rem;
-    flex-wrap:wrap;
-    margin-top:.45rem;
+.youtube-comments-card .comments-list{
+    background:transparent;
 }
-
-.comment-reply,
-.comment-delete{
-    border:none;
-    background:none;
-    cursor:pointer;
-    font-size:.7rem;
-    font-weight:600;
-    padding:0;
+.youtube-comments-card .comment-item,
+.youtube-comments-card .comment-reply{
+    border:0 !important;
+    border-bottom:1px solid var(--soft-border) !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    padding:1rem .15rem !important;
 }
-
-.comment-reply{
-    color:var(--link-color);
-}
-
-.comment-delete{
-    color:#e74c3c;
-}
-
-.comment-thread{
-    width:100%;
-}
-
-.comment-replies{
-    margin-left:2.3rem;
-    margin-top:.45rem;
-    padding-left:.7rem;
+.youtube-comments-card .comment-item:last-child{border-bottom:0 !important}
+.youtube-comments-card .comment-reply-list{
+    margin-left:2.5rem;
+    padding-left:.8rem;
     border-left:2px solid var(--soft-border);
 }
-
-.comment-replies .comment-item{
-    margin-bottom:.45rem;
-}
-
-.reply-composer{
-    margin-top:.55rem;
-}
-
-.reply-input-wrap{
-    display:flex;
-    gap:.4rem;
-    width:100%;
-}
-
-.reply-input{
-    flex:1;
-    min-width:0;
-    padding:.5rem .65rem;
-    border:1px solid var(--input-border);
-    border-radius:8px;
-    background:var(--input-bg);
-    color:var(--input-text);
-    outline:none;
-}
-
-.reply-input:focus{
-    border-color:var(--primary);
-}
-
-.reply-login-btn{
-    width:auto;
-    padding:.45rem .7rem;
-    font-size:.72rem;
-}
-
-.comment-logout-inline{
-    margin-left:auto;
-    border:none;
-    background:none;
-    color:#e74c3c;
-    cursor:pointer;
-    font-size:.7rem;
-}
-
+.detail-comments-wrap .comments-section{margin-top:1rem}
+.detail-comments-wrap .comments-list{max-height:520px;overflow-y:auto;padding-right:.2rem}
+.comment-item{border:0;border-bottom:1px solid var(--soft-border);border-radius:0;padding:.85rem .2rem;background:transparent}
+.comment-item:last-child{border-bottom:0}
+.comment-thread{width:100%}
+.comment-reply-list{margin:.4rem 0 0 2.45rem;padding-left:.75rem;border-left:2px solid var(--soft-border)}
+.comment-reply{padding:.55rem 0}
+.comment-reply-btn{border:0;background:none;color:var(--muted-text);font-size:.73rem;font-weight:700;cursor:pointer;padding:.25rem 0;margin-right:.65rem}
+.comment-reply-btn:hover{color:var(--link-color)}
+.reply-box{display:none;margin-top:.4rem;gap:.4rem}
+.reply-box.active{display:flex}
+.reply-input{flex:1;min-width:0;padding:.5rem .65rem;border:1px solid var(--input-border);border-radius:18px;background:var(--input-bg);color:var(--input-text);outline:none}
+.reply-send{border:0;border-radius:18px;padding:.45rem .7rem;background:var(--primary);cursor:pointer}
+.notification-panel{position:fixed;top:76px;right:20px;width:min(390px,calc(100vw - 30px));max-height:70vh;overflow:auto;background:var(--card-bg);color:var(--text-color);border-radius:16px;box-shadow:0 15px 45px var(--strong-shadow);z-index:3500;display:none;border:1px solid var(--border-color)}
+.notification-panel.active{display:block}
+.notification-head{position:sticky;top:0;z-index:1;background:var(--card-bg);display:flex;justify-content:space-between;align-items:center;padding:.9rem 1rem;border-bottom:1px solid var(--border-color)}
+.notification-item{padding:.85rem 1rem;border-bottom:1px solid var(--soft-border);cursor:pointer}
+.notification-item:hover{background:rgba(240,192,64,.08)}
+.notification-item.unread{background:rgba(240,192,64,.12)}
+.notification-message{font-size:.84rem;font-weight:650}
+.notification-time{color:var(--muted-text);font-size:.7rem;margin-top:.25rem}
+.notification-empty{padding:1.5rem;text-align:center;color:var(--muted-text)}
+.admin-comments-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.7rem}
+.admin-comments-list{max-height:430px;overflow:auto;border:1px solid var(--border-color);border-radius:12px}
+.admin-comment-row{padding:.8rem;border-bottom:1px solid var(--soft-border)}
+.admin-comment-row:last-child{border-bottom:0}
+.admin-comment-meta{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;font-size:.76rem}
+.admin-comment-song{color:var(--link-color);font-weight:700}
+.admin-comment-text{margin-top:.3rem;font-size:.84rem;line-height:1.45}
 @media(max-width:650px){
-    .notification-panel{
-        position:fixed;
-        top:72px;
-        right:12px;
-    }
-
-    .comment-replies{
-        margin-left:1rem;
-    }
+    .notification-panel{top:120px;right:10px}
+    .comment-reply-list{margin-left:1.5rem}
 }
-
 /* =========================================================
 MOBILE
 ========================================================= */
@@ -1540,10 +1311,7 @@ MOBILE
     }
 
     .song-detail-modal{
-        padding:1.5rem 1rem;
-        height:100vh;
-        min-height:100vh;
-        border-radius:0;
+        padding:1.5rem;
     }
 
     .admin-song-item{
@@ -1566,6 +1334,7 @@ MOBILE
 </head>
 
 <body>
+<div class="notification-panel" id="notificationPanel"></div>
 
 <header class="header">
 
@@ -1622,33 +1391,12 @@ MOBILE
             </span>
         </button>
 
-        <div class="notification-wrap" id="notificationWrap">
-            <button
-                class="notification-btn"
-                id="notificationBtn"
-                type="button"
-                title="Notifications"
-                aria-label="Notifications"
-            >
-                <i class="far fa-bell"></i>
-                <span class="notification-badge" id="notificationBadge">0</span>
-            </button>
+        <button class="btn btn-outline notification-btn" id="notificationBtn" title="Notifications" type="button">
+            <i class="far fa-bell"></i>
+            <span class="notification-count" id="notificationCount">0</span>
+        </button>
 
-            <div class="notification-panel" id="notificationPanel">
-                <div class="notification-panel-head">
-                    <strong>Notifications</strong>
-                    <button id="markAllReadBtn" type="button">Mark all read</button>
-                </div>
-                <div id="notificationList" class="notification-list">
-                    <div class="notification-empty">Login to see notifications.</div>
-                </div>
-            </div>
-        </div>
-
-        <button
-            class="btn btn-outline"
-            id="adminToggleBtn"
-        >
+        <button class="btn btn-outline" id="adminToggleBtn" type="button">
             <i class="fas fa-sign-in-alt"></i>
             Login
         </button>
@@ -1668,58 +1416,22 @@ ADMIN LOGIN
 >
 
     <div class="login-modal">
+        <button class="login-close" id="loginCloseBtn" type="button">&times;</button>
+        <h2><i class="fas fa-user-circle"></i> Login</h2>
+        <p class="login-subtitle">Admin and User use the same login form.</p>
 
-        <h2>
-            <i class="fas fa-user-circle"></i>
-            Login
-        </h2>
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+        <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
 
-        <p class="login-subtitle">
-            Login with your account. Admin accounts automatically get the Admin Panel.
-        </p>
-
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Email"
-            autocomplete="email"
-        >
-
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Password"
-            autocomplete="current-password"
-        >
-
-        <button
-            class="btn"
-            id="loginBtn"
-            type="button"
-        >
-            Login
-        </button>
+        <button class="btn" id="loginBtn" type="button">Login</button>
 
         <div class="login-divider"><span>OR</span></div>
 
-        <button
-            class="google-login-btn login-google-btn"
-            id="loginGoogleBtn"
-            type="button"
-        >
-            <i class="fab fa-google"></i>
-            Continue with Google
+        <button class="google-login-btn" id="loginGoogleBtn" type="button">
+            <i class="fab fa-google"></i> Continue with Google
         </button>
 
-        <div
-            class="login-error"
-            id="loginError"
-        ></div>
-
-        <div class="login-help">
-            Users can login to comment/reply. Your configured admin email gets the Admin Panel.
-        </div>
-
+        <div class="login-error" id="loginError"></div>
     </div>
 
 </div>
@@ -1783,13 +1495,13 @@ SONG DETAIL
         ></div>
 
         <div
-            class="detail-link"
-            id="detailLink"
+            class="detail-comments-wrap"
+            id="detailCommentsWrap"
         ></div>
 
         <div
-            class="detail-comments"
-            id="detailComments"
+            class="detail-link"
+            id="detailLink"
         ></div>
 
     </div>
@@ -1938,6 +1650,19 @@ SONG DETAIL
 
         </div>
 
+        <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--border-color);">
+
+        <div class="admin-comments-head">
+            <h3><i class="far fa-comments"></i> All Comments <span style="font-size:.75rem;color:var(--muted-text);font-weight:400;">(Admin)</span></h3>
+            <button class="btn btn-outline" id="refreshAdminCommentsBtn" type="button">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        <div class="admin-comments-list" id="adminCommentsList">
+            <p style="color:var(--muted-text);padding:.8rem;">Login as admin to view all comments.</p>
+        </div>
+
         <div class="admin-search-wrap">
 
             <input
@@ -2016,25 +1741,38 @@ let searchQuery = "";
 
 let currentUser = null;
 
-/* IMPORTANT:
-   Replace this with your real Supabase Auth admin email.
-   Google login ALSO becomes Admin when the Google account email matches this.
-*/
+/* IMPORTANT: Put the SAME email you use for the Admin password login here.
+   The configured admin email can use password or Google login and will open Admin Panel. */
 const ADMIN_EMAILS = [
-    "YOUR_ADMIN_EMAIL@gmail.com"
+    // IMPORTANT: Put the exact email of your Supabase Auth admin account here.
+    // Google/password login with this email will open Admin Panel.
+    "rimsharahamth@gmail.com"
 ];
-
-let notifications = [];
-let notificationChannel = null;
 
 function isAdminUser(user){
     if(!user || !user.email) return false;
-    return ADMIN_EMAILS.some(email =>
-        email.trim().toLowerCase() === user.email.trim().toLowerCase()
+
+    const email=String(user.email).trim().toLowerCase();
+    const emailMatch=ADMIN_EMAILS.some(allowed =>
+        String(allowed).trim().toLowerCase() === email
     );
+
+    const appRole=String(
+        user.app_metadata?.role ||
+        user.user_metadata?.role ||
+        ""
+    ).trim().toLowerCase();
+
+    return emailMatch || appRole === "admin";
 }
 
 let currentDetailSong = null;
+let notifications = [];
+let notificationsChannel = null;
+let commentsChannel = null;
+let adminComments = [];
+let detailCommentsRefreshTimer = null;
+let notificationsRefreshTimer = null;
 
 
 /* =========================================================
@@ -2149,29 +1887,29 @@ document.getElementById("themeIcon");
 const themeText =
 document.getElementById("themeText");
 
-const notificationWrap =
-document.getElementById("notificationWrap");
-
 const notificationBtn =
 document.getElementById("notificationBtn");
+
+const notificationCount =
+document.getElementById("notificationCount");
 
 const notificationPanel =
 document.getElementById("notificationPanel");
 
-const notificationBadge =
-document.getElementById("notificationBadge");
-
-const notificationList =
-document.getElementById("notificationList");
-
-const markAllReadBtn =
-document.getElementById("markAllReadBtn");
-
 const loginGoogleBtn =
 document.getElementById("loginGoogleBtn");
 
-const detailComments =
-document.getElementById("detailComments");
+const loginCloseBtn =
+document.getElementById("loginCloseBtn");
+
+const detailCommentsWrap =
+document.getElementById("detailCommentsWrap");
+
+const adminCommentsList =
+document.getElementById("adminCommentsList");
+
+const refreshAdminCommentsBtn =
+document.getElementById("refreshAdminCommentsBtn");
 
 
 /* =========================================================
@@ -2864,6 +2602,10 @@ async function loadSongs(){
 
     renderAdminList();
 
+    if(isAdminUser(currentUser)){
+        await loadAdminComments();
+    }
+
     openSongFromUrl();
 }
 
@@ -2972,254 +2714,173 @@ function defaultAvatar(){
 COMMENT HTML
 ========================================================= */
 
-function getCommentChildren(commentId){
-    return (comments || [])
-        .filter(c => String(c.parent_comment_id || "") === String(commentId))
-        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-}
-
-function renderCommentNode(comment, depth=0){
-    const avatar =
-        comment.user_avatar ||
-        defaultAvatar();
-
-    const own =
-        currentUser &&
-        currentUser.id === comment.user_id;
-
-    const children =
-        getCommentChildren(comment.id);
-
-    const safeDepth =
-        Math.min(Number(depth) || 0, 4);
-
-    const replyTarget =
-        escapeHTML(comment.user_name || "User");
-
-    return `
-        <div class="comment-thread" style="--reply-depth:${safeDepth}">
-            <div
-                class="comment-item"
-                data-comment-id="${escapeHTML(comment.id)}"
-            >
-                <img
-                    class="comment-avatar"
-                    src="${escapeHTML(avatar)}"
-                    onerror="this.src='${defaultAvatar()}'"
-                    alt=""
-                >
-
-                <div class="comment-content">
-                    <div class="comment-author">
-                        ${escapeHTML(comment.user_name || "User")}
-                        <span class="comment-date">
-                            ${formatCommentDate(comment.created_at)}
-                        </span>
-                    </div>
-
-                    <div class="comment-text">
-                        ${escapeHTML(comment.comment)}
-                    </div>
-
-                    <div class="comment-actions">
-                        <button
-                            class="comment-reply"
-                            type="button"
-                            data-reply-comment="${escapeHTML(comment.id)}"
-                            data-reply-name="${replyTarget}"
-                        >
-                            <i class="fas fa-reply"></i>
-                            Reply
-                        </button>
-
-                        ${
-                            own
-                            ?
-                            `
-                            <button
-                                class="comment-delete"
-                                type="button"
-                                data-comment-id="${escapeHTML(comment.id)}"
-                            >
-                                <i class="fas fa-trash"></i>
-                                Delete
-                            </button>
-                            `
-                            :
-                            ""
-                        }
-                    </div>
-
-                    <div
-                        class="reply-composer"
-                        id="replyComposer-${escapeHTML(comment.id)}"
-                        style="display:none;"
-                    >
-                        ${
-                            currentUser
-                            ?
-                            `
-                            <div class="reply-input-wrap">
-                                <input
-                                    class="reply-input"
-                                    data-reply-input="${escapeHTML(comment.id)}"
-                                    type="text"
-                                    maxlength="1000"
-                                    placeholder="Reply to ${replyTarget}..."
-                                >
-                                <button
-                                    class="comment-submit"
-                                    type="button"
-                                    data-reply-submit="${escapeHTML(comment.id)}"
-                                    title="Send reply"
-                                >
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                            `
-                            :
-                            `
-                            <button
-                                class="google-login-btn reply-login-btn"
-                                type="button"
-                                data-google-login="true"
-                            >
-                                <i class="fab fa-google"></i>
-                                Sign in with Google to reply
-                            </button>
-                            `
-                        }
-                    </div>
-
-                    ${
-                        children.length
-                        ?
-                        `
-                        <div class="comment-replies">
-                            ${children.map(child => renderCommentNode(child, safeDepth + 1)).join("")}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 function renderComments(songId){
-    const list =
-        commentsBySong[String(songId)] || [];
+    const list=commentsBySong[String(songId)]||[];
+    const roots=list.filter(c=>!c.parent_comment_id);
+    const repliesByParent={};
 
-    const roots =
-        list
-        .filter(c => !c.parent_comment_id)
-        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+    list.forEach(c=>{
+        if(c.parent_comment_id){
+            const key=String(c.parent_comment_id);
+            if(!repliesByParent[key]) repliesByParent[key]=[];
+            repliesByParent[key].push(c);
+        }
+    });
 
-    let html =
-        roots.length
-        ?
-        roots.map(comment => renderCommentNode(comment)).join("")
-        :
-        `
-        <div class="no-comments">
-            No comments yet. Be the first to comment ❤️
-        </div>
-        `;
+    const makeComment=(comment,isReply=false)=>{
+        const avatar=comment.user_avatar||defaultAvatar();
+        const own=currentUser && currentUser.id===comment.user_id;
+        const replies=repliesByParent[String(comment.id)]||[];
 
-    const user =
-        currentUser;
+        return `
+        <div class="${isReply?'comment-reply':'comment-item'}" data-comment-id="${escapeHTML(comment.id)}">
+            <div class="comment-thread">
+                <div style="display:flex;gap:.55rem;">
+                    <img class="comment-avatar"
+                         src="${escapeHTML(avatar)}"
+                         onerror="this.src='${defaultAvatar()}'">
 
-    let loginBox = "";
+                    <div class="comment-content">
+                        <div class="comment-author">
+                            ${escapeHTML(comment.user_name||"User")}
+                            <span class="comment-date">${formatCommentDate(comment.created_at)}</span>
+                        </div>
 
-    if(!user){
-        loginBox = `
-            <div class="comment-login-box">
-                <button
-                    class="google-login-btn"
-                    type="button"
-                    data-google-login="true"
-                >
-                    <i class="fab fa-google"></i>
-                    Sign in with Google to comment
+                        <div class="comment-text">${escapeHTML(comment.comment)}</div>
+
+                        <div class="comment-actions">
+                            <button class="comment-reply-btn"
+                                    data-reply-comment-id="${escapeHTML(comment.id)}"
+                                    type="button">
+                                <i class="fas fa-reply"></i> Reply
+                            </button>
+
+                            ${own?`
+                                <button class="comment-delete"
+                                        data-comment-id="${escapeHTML(comment.id)}"
+                                        type="button">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>`:""}
+                        </div>
+
+                        <div class="reply-box" data-reply-box="${escapeHTML(comment.id)}">
+                            <input class="reply-input"
+                                   data-reply-input="${escapeHTML(comment.id)}"
+                                   maxlength="1000"
+                                   placeholder="Reply to ${escapeHTML(comment.user_name||"this comment")}...">
+                            <button class="reply-send"
+                                    data-reply-send="${escapeHTML(comment.id)}"
+                                    type="button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                ${replies.length?`
+                    <div class="comment-reply-list">
+                        ${replies.map(r=>makeComment(r,true)).join("")}
+                    </div>`:""}
+            </div>
+        </div>`;
+    };
+
+    const html=roots.length
+        ?roots.map(c=>makeComment(c)).join("")
+        :`<div class="no-comments">No comments yet. Be the first to comment ❤️</div>`;
+
+    let loginBox="";
+
+    if(!currentUser){
+        loginBox=`
+        <div class="comment-login-box">
+            <button class="google-login-btn" data-google-login="true" type="button">
+                <i class="fab fa-google"></i> Sign in with Google to comment
+            </button>
+            <button class="btn btn-outline" data-email-login="true" type="button">
+                <i class="fas fa-envelope"></i> Login with Email
+            </button>
+        </div>`;
+    }else{
+        const metadata=currentUser.user_metadata||{};
+        const name=metadata.full_name||metadata.name||currentUser.email||"User";
+        const avatar=metadata.avatar_url||metadata.picture||defaultAvatar();
+
+        loginBox=`
+        <div class="comment-user-box active">
+            <div class="comment-user-info">
+                <img src="${escapeHTML(avatar)}" onerror="this.src='${defaultAvatar()}'">
+                <span class="comment-user-name">${escapeHTML(name)}</span>
+            </div>
+            <div class="comment-input-wrap">
+                <input class="comment-input"
+                       data-comment-input="${escapeHTML(songId)}"
+                       type="text" maxlength="1000"
+                       placeholder="Write a comment...">
+                <button class="comment-submit"
+                        data-comment-submit="${escapeHTML(songId)}"
+                        type="button">
+                    <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
-        `;
-    }else{
-        const metadata =
-            user.user_metadata || {};
-
-        const name =
-            metadata.full_name ||
-            metadata.name ||
-            user.email ||
-            "User";
-
-        const avatar =
-            metadata.avatar_url ||
-            metadata.picture ||
-            defaultAvatar();
-
-        loginBox = `
-            <div class="comment-user-box active">
-                <div class="comment-user-info">
-                    <img
-                        src="${escapeHTML(avatar)}"
-                        onerror="this.src='${defaultAvatar()}'"
-                        alt=""
-                    >
-                    <span class="comment-user-name">
-                        ${escapeHTML(name)}
-                    </span>
-                    <button
-                        class="comment-logout-inline"
-                        type="button"
-                        id="commentLogoutBtn"
-                    >
-                        Logout
-                    </button>
-                </div>
-
-                <div class="comment-input-wrap">
-                    <input
-                        class="comment-input"
-                        data-comment-input="${escapeHTML(songId)}"
-                        type="text"
-                        maxlength="1000"
-                        placeholder="Write a comment..."
-                    >
-                    <button
-                        class="comment-submit"
-                        type="button"
-                        data-comment-submit="${escapeHTML(songId)}"
-                        title="Post comment"
-                    >
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        `;
+        </div>`;
     }
 
     return `
-        <div
-            class="comments-section"
-            data-song-comments="${escapeHTML(songId)}"
-        >
-            <div class="comments-title">
-                <i class="far fa-comments"></i>
-                Comments (${list.length})
-            </div>
-
-            ${loginBox}
-
-            <div class="comments-list">
-                ${html}
-            </div>
+    <div class="comments-section youtube-comments-card" data-song-comments="${escapeHTML(songId)}">
+        <div class="comments-title">
+            <i class="far fa-comments"></i> Comments (${list.length})
         </div>
-    `;
+        ${loginBox}
+        <div class="comments-list">${html}</div>
+    </div>`;
 }
+
+function renderDetailComments(songId){
+    if(detailCommentsWrap){
+        detailCommentsWrap.innerHTML=renderComments(songId);
+    }
+}
+
+function startDetailCommentsAutoRefresh(songId){
+    if(detailCommentsRefreshTimer) clearInterval(detailCommentsRefreshTimer);
+
+    const refresh=async ()=>{
+        if(!currentDetailSong || String(currentDetailSong.id)!==String(songId)){
+            stopDetailCommentsAutoRefresh();
+            return;
+        }
+
+        await loadComments();
+        renderDetailComments(songId);
+
+        if(isAdminUser(currentUser)) await loadAdminComments();
+    };
+
+    detailCommentsRefreshTimer=setInterval(refresh,2500);
+}
+
+function stopDetailCommentsAutoRefresh(){
+    if(detailCommentsRefreshTimer){
+        clearInterval(detailCommentsRefreshTimer);
+        detailCommentsRefreshTimer=null;
+    }
+}
+
+function toggleReplyBox(commentId){
+    const box=document.querySelector(
+        `[data-reply-box="${CSS.escape(String(commentId))}"]`
+    );
+    if(!box) return;
+
+    box.classList.toggle("active");
+
+    if(box.classList.contains("active")){
+        const input=box.querySelector(".reply-input");
+        if(input) input.focus();
+    }
+}
+
 
 /* =========================================================
 RENDER SONGS
@@ -3580,6 +3241,7 @@ function renderSongCards(
 
             </div>
 
+
         </div>
 
         `;
@@ -3721,6 +3383,62 @@ function renderMainSearchResults(q){
     );
 }
 
+
+/* =========================================================
+ADMIN ALL COMMENTS
+========================================================= */
+
+async function loadAdminComments(){
+    if(!isAdminUser(currentUser)){
+        adminComments=[];
+        if(adminCommentsList){
+            adminCommentsList.innerHTML=
+                `<p style="color:var(--muted-text);padding:.8rem;">Login as admin to view all comments.</p>`;
+        }
+        return;
+    }
+
+    const {data,error}=await supabaseClient
+        .from("song_comments")
+        .select("*")
+        .order("created_at",{ascending:false})
+        .limit(1000);
+
+    if(error){
+        console.warn("Admin comments load error:",error.message);
+        adminComments=[];
+        adminCommentsList.innerHTML=
+            `<p style="color:#c0392b;padding:.8rem;">${escapeHTML(error.message)}</p>`;
+        return;
+    }
+
+    adminComments=Array.isArray(data)?data:[];
+
+    const songMap={};
+    songs.forEach(song=>songMap[String(song.id)]=song);
+
+    adminCommentsList.innerHTML=adminComments.length
+        ?adminComments.map(c=>{
+            const song=songMap[String(c.song_id)];
+            const isReply=!!c.parent_comment_id;
+            return `
+            <div class="admin-comment-row ${isReply?'admin-comment-reply':''}">
+                <div class="admin-comment-meta">
+                    <strong>${escapeHTML(c.user_name||"User")}</strong>
+                    <span>${escapeHTML(c.user_email||"")}</span>
+                    <span>${formatCommentDate(c.created_at)}</span>
+                    ${isReply?'<span><i class="fas fa-reply"></i> Reply</span>':''}
+                    <span class="admin-comment-song">
+                        ${escapeHTML(song?song.title:"Unknown song")}
+                    </span>
+                </div>
+                <div class="admin-comment-text">
+                    ${escapeHTML(c.comment)}
+                </div>
+            </div>`;
+        }).join("")
+        : `<div class="notification-empty">No comments yet.</div>`;
+}
 
 /* =========================================================
 ADMIN LIST
@@ -4145,6 +3863,7 @@ function openDetail(
 
     currentDetailSong=
     song;
+    startDetailCommentsAutoRefresh(song.id);
 
     detailTitle.innerHTML=`
 
@@ -4269,12 +3988,12 @@ function openDetail(
     "";
 
 
-    detailComments.innerHTML =
-        renderComments(song.id);
-
     detailOverlay.classList.add(
         "active"
     );
+
+    renderDetailComments(song.id);
+    startDetailCommentsAutoRefresh(song.id);
 
     document.body.style.overflow=
     "hidden";
@@ -4301,7 +4020,8 @@ function closeDetail(
 
     detailPlayer.innerHTML="";
 
-    currentDetailSong=null;
+    stopDetailCommentsAutoRefresh();
+        currentDetailSong=null;
 
     document.body.style.overflow="";
 
@@ -4358,239 +4078,501 @@ function openSongFromUrl(){
 GOOGLE LOGIN
 ========================================================= */
 
+function openLogin(){
+    loginOverlay.classList.add("active");
+    loginError.textContent="";
+    loginEmail.focus();
+}
+
 async function loginWithGoogle(){
-    loginError.textContent =
-        "Opening Google login...";
+    const redirectTo=window.location.origin+window.location.pathname;
 
-    const redirectTo =
-        window.location.origin +
-        window.location.pathname;
-
-    const {
-        error
-    } =
-    await supabaseClient.auth.signInWithOAuth({
+    const {error}=await supabaseClient.auth.signInWithOAuth({
         provider:"google",
-        options:{
-            redirectTo,
-            queryParams:{
-                access_type:"offline",
-                prompt:"select_account"
-            }
-        }
+        options:{redirectTo}
     });
 
     if(error){
         console.error(error);
-        loginError.textContent =
-            "❌ Google login failed: " +
-            error.message;
+        alert("❌ Google login failed:\n\n"+error.message);
     }
+}
+
+/* =========================================================
+NOTIFICATIONS
+========================================================= */
+
+async function loadNotifications(){
+    if(!currentUser){
+        notifications=[];
+        updateNotificationBadge();
+        renderNotificationPanel();
+        return;
+    }
+
+    const {data,error}=await supabaseClient
+        .from("comment_notifications")
+        .select("*")
+        .eq("recipient_user_id",currentUser.id)
+        .order("created_at",{ascending:false})
+        .limit(100);
+
+    if(error){
+        console.warn("Notification load error:",error.message);
+        notifications=[];
+    }else{
+        notifications=Array.isArray(data)?data:[];
+    }
+
+    updateNotificationBadge();
+    renderNotificationPanel();
+}
+
+function startNotificationsAutoRefresh(){
+    if(notificationsRefreshTimer) clearInterval(notificationsRefreshTimer);
+    if(!currentUser) return;
+
+    notificationsRefreshTimer=setInterval(async ()=>{
+        if(!currentUser){
+            clearInterval(notificationsRefreshTimer);
+            notificationsRefreshTimer=null;
+            return;
+        }
+        await loadNotifications();
+    },2500);
+}
+
+function stopNotificationsAutoRefresh(){
+    if(notificationsRefreshTimer){
+        clearInterval(notificationsRefreshTimer);
+        notificationsRefreshTimer=null;
+    }
+}
+
+function updateNotificationBadge(){
+    const unread=notifications.filter(n=>!n.is_read).length;
+
+    if(unread){
+        notificationCount.textContent=unread>99?"99+":String(unread);
+        notificationCount.classList.add("active");
+    }else{
+        notificationCount.textContent="0";
+        notificationCount.classList.remove("active");
+    }
+}
+
+function renderNotificationPanel(){
+    if(!notificationPanel) return;
+
+    if(!currentUser){
+        notificationPanel.innerHTML=`
+            <div class="notification-head">
+                <strong>Notifications</strong>
+                <button class="btn btn-outline" data-notification-login type="button">Login</button>
+            </div>
+            <div class="notification-empty">Login to see your reply notifications.</div>`;
+        return;
+    }
+
+    const unread=notifications.filter(n=>!n.is_read).length;
+
+    notificationPanel.innerHTML=`
+        <div class="notification-head">
+            <strong>Notifications ${unread?`(${unread} new)`:""}</strong>
+            ${unread?`<button class="btn btn-outline" data-mark-all-read type="button">Mark all read</button>`:""}
+        </div>
+        ${
+            notifications.length
+            ? notifications.map(n=>`
+                <div class="notification-item ${n.is_read?"":"unread"}"
+                     data-notification-id="${escapeHTML(n.id)}"
+                     data-notification-song="${escapeHTML(n.song_id||"")}"
+                     data-notification-comment="${escapeHTML(n.comment_id||"")}">
+                    <div class="notification-message">
+                        <i class="fas fa-reply"></i>
+                        ${escapeHTML(n.message||"Someone replied to your comment")}
+                    </div>
+                    <div class="notification-time">
+                        ${formatCommentDate(n.created_at)}${n.is_read?"":" · New"}
+                    </div>
+                </div>
+            `).join("")
+            : `<div class="notification-empty">No notifications yet 🔔</div>`
+        }`;
+}
+
+async function markNotificationRead(id){
+    if(!currentUser) return;
+
+    const {error}=await supabaseClient
+        .from("comment_notifications")
+        .update({is_read:true})
+        .eq("id",id)
+        .eq("recipient_user_id",currentUser.id);
+
+    if(error){
+        console.warn("Notification read update failed:",error.message);
+        return;
+    }
+
+    const n=notifications.find(x=>String(x.id)===String(id));
+    if(n) n.is_read=true;
+
+    updateNotificationBadge();
+    renderNotificationPanel();
+}
+
+async function markAllNotificationsRead(){
+    if(!currentUser) return;
+
+    const {error}=await supabaseClient
+        .from("comment_notifications")
+        .update({is_read:true})
+        .eq("recipient_user_id",currentUser.id)
+        .eq("is_read",false);
+
+    if(error){
+        console.warn("Mark all read failed:",error.message);
+        return;
+    }
+
+    notifications.forEach(n=>n.is_read=true);
+    updateNotificationBadge();
+    renderNotificationPanel();
+}
+
+async function handleNotificationClick(id,songId,commentId){
+    await markNotificationRead(id);
+    notificationPanel.classList.remove("active");
+
+    // Fetch fresh database data BEFORE opening the song.
+    await loadComments();
+
+    const song=songs.find(s=>String(s.id)===String(songId));
+    if(!song) return;
+
+    openDetail(song);
+
+    // Keep the opened comments view synchronized automatically.
+    const refreshAndFocus=async ()=>{
+        await loadComments();
+        renderDetailComments(song.id);
+
+        if(commentId){
+            const el=document.querySelector(
+                `[data-comment-id="${CSS.escape(String(commentId))}"]`
+            );
+            if(el){
+                el.scrollIntoView({behavior:"smooth",block:"center"});
+                el.style.background="rgba(240,192,64,.18)";
+                setTimeout(()=>el.style.background="",1800);
+            }
+        }
+    };
+
+    setTimeout(refreshAndFocus,100);
+    setTimeout(refreshAndFocus,1000);
+    setTimeout(refreshAndFocus,2500);
+}
+
+async function setupRealtime(){
+    if(commentsChannel){
+        await supabaseClient.removeChannel(commentsChannel);
+    }
+
+    commentsChannel=supabaseClient
+        .channel("jesus-songs-comments-live")
+        .on(
+            "postgres_changes",
+            {event:"*",schema:"public",table:"song_comments"},
+            async ()=>{
+                await loadComments();
+
+                if(currentDetailSong){
+                    renderDetailComments(currentDetailSong.id);
+                }
+
+                if(isAdminUser(currentUser)){
+                    await loadAdminComments();
+                }
+            }
+        )
+        .subscribe();
+
+    // Realtime must be enabled for comments too, otherwise the open song
+    // will not update automatically when another user comments/replies.
+    if(notificationsChannel){
+        await supabaseClient.removeChannel(notificationsChannel);
+    }
+
+    notificationsChannel=supabaseClient
+        .channel("jesus-songs-notifications-live")
+        .on(
+            "postgres_changes",
+            {event:"*",schema:"public",table:"comment_notifications"},
+            async payload=>{
+                if(!currentUser) return;
+
+                const row=payload.new||payload.old||{};
+
+                if(
+                    row.recipient_user_id &&
+                    String(row.recipient_user_id)!==String(currentUser.id)
+                ){
+                    return;
+                }
+
+                await loadNotifications();
+            }
+        )
+        .subscribe((status)=>{
+            if(status === "CHANNEL_ERROR") console.warn("Realtime channel error");
+        });
 }
 
 /* =========================================================
 COMMENT SUBMIT
 ========================================================= */
 
-async function submitComment(
-    songId,
-    parentCommentId=null
-){
+async function submitComment(songId){
     if(!currentUser){
-        await loginWithGoogle();
+        openLogin();
         return;
     }
 
-    const selector =
-        parentCommentId
-        ? `[data-reply-input="${CSS.escape(String(parentCommentId))}"]`
-        : `[data-comment-input="${CSS.escape(String(songId))}"]`;
+    const input=document.querySelector(
+        `[data-comment-input="${CSS.escape(String(songId))}"]`
+    );
+    if(!input) return;
 
-    const input =
-        document.querySelector(selector);
-
-    if(!input)
-        return;
-
-    const text =
-        input.value.trim();
-
+    const text=input.value.trim();
     if(!text){
-        alert(
-            parentCommentId
-            ? "Please enter a reply."
-            : "Please enter a comment."
-        );
+        alert("Please enter a comment.");
         return;
     }
 
-    input.disabled = true;
+    input.disabled=true;
 
-    const metadata =
-        currentUser.user_metadata || {};
+    const metadata=currentUser.user_metadata||{};
+    const name=metadata.full_name||metadata.name||currentUser.email||"User";
+    const avatar=metadata.avatar_url||metadata.picture||defaultAvatar();
 
-    const name =
-        metadata.full_name ||
-        metadata.name ||
-        currentUser.email ||
-        "User";
-
-    const avatar =
-        metadata.avatar_url ||
-        metadata.picture ||
-        defaultAvatar();
-
-    const payload = {
-        song_id:Number(songId),
-        user_id:currentUser.id,
-        user_name:name,
-        user_email:currentUser.email || null,
-        user_avatar:avatar,
-        comment:text
-    };
-
-    if(parentCommentId){
-        payload.parent_comment_id =
-            Number(parentCommentId);
-    }
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
+    const {data,error}=await supabaseClient
         .from("song_comments")
-        .insert([payload])
+        .insert([{
+            song_id:Number(songId),
+            user_id:currentUser.id,
+            user_name:name,
+            user_email:currentUser.email||null,
+            user_avatar:avatar,
+            comment:text,
+            parent_comment_id:null
+        }])
         .select()
         .single();
 
-    input.disabled = false;
+    input.disabled=false;
 
     if(error){
-        console.error(error);
-        alert(
-            "❌ " +
-            (parentCommentId ? "Reply" : "Comment") +
-            " failed:\n\n" +
-            error.message
-        );
+        alert("❌ Comment failed:\n\n"+error.message);
         return;
     }
 
-    input.value = "";
+    input.value="";
+    addCommentToState(data);
+    await loadComments();
 
-    comments.push(data);
-
-    const id =
-        String(data.song_id);
-
-    if(!commentsBySong[id])
-        commentsBySong[id] = [];
-
-    commentsBySong[id].push(data);
-
-    if(currentDetailSong &&
-       Number(currentDetailSong.id) === Number(songId)){
-        detailComments.innerHTML =
-            renderComments(songId);
+    if(currentDetailSong && String(currentDetailSong.id)===String(songId)){
+        renderDetailComments(songId);
     }
 
-    renderSongs();
+    if(isAdminUser(currentUser)){
+        await loadAdminComments();
+    }
 }
+
+function addCommentToState(data){
+    comments.push(data);
+    const id=String(data.song_id);
+    if(!commentsBySong[id]) commentsBySong[id]=[];
+    commentsBySong[id].push(data);
+}
+
+async function submitReply(parentCommentId){
+    if(!currentUser){
+        openLogin();
+        return;
+    }
+
+    const input=document.querySelector(
+        `[data-reply-input="${CSS.escape(String(parentCommentId))}"]`
+    );
+    if(!input) return;
+
+    const text=input.value.trim();
+    if(!text){
+        alert("Please enter a reply.");
+        return;
+    }
+
+    const parent=comments.find(
+        c=>String(c.id)===String(parentCommentId)
+    );
+    if(!parent){
+        alert("Original comment was not found.");
+        return;
+    }
+
+    input.disabled=true;
+
+    const metadata=currentUser.user_metadata||{};
+    const name=metadata.full_name||metadata.name||currentUser.email||"User";
+    const avatar=metadata.avatar_url||metadata.picture||defaultAvatar();
+
+    const {data,error}=await supabaseClient
+        .from("song_comments")
+        .insert([{
+            song_id:Number(parent.song_id),
+            user_id:currentUser.id,
+            user_name:name,
+            user_email:currentUser.email||null,
+            user_avatar:avatar,
+            comment:text,
+            parent_comment_id:Number(parentCommentId)
+        }])
+        .select()
+        .single();
+
+    input.disabled=false;
+
+    if(error){
+        alert("❌ Reply failed:\n\n"+error.message);
+        return;
+    }
+
+    input.value="";
+    addCommentToState(data);
+    await loadComments();
+
+    if(currentDetailSong){
+        renderDetailComments(currentDetailSong.id);
+    }
+
+    if(isAdminUser(currentUser)){
+        await loadAdminComments();
+    }
+}
+
+
 
 /* =========================================================
 DELETE COMMENT
 ========================================================= */
 
-async function deleteComment(
-    commentId
-){
-    if(!currentUser)
-        return;
+async function deleteComment(commentId){
+    if(!currentUser) return;
 
-    const confirmed =
-        confirm(
-            "Delete this comment and its replies?"
-        );
+    if(!confirm("Delete this comment and its replies?")) return;
 
-    if(!confirmed)
-        return;
-
-    const {
-        error
-    } =
-    await supabaseClient
+    const {error}=await supabaseClient
         .from("song_comments")
         .delete()
         .eq("id",commentId)
         .eq("user_id",currentUser.id);
 
     if(error){
-        console.error(error);
-        alert(
-            "❌ Delete failed:\n\n" +
-            error.message
-        );
+        alert("❌ Delete failed:\n\n"+error.message);
         return;
     }
 
     await loadComments();
 
     if(currentDetailSong){
-        detailComments.innerHTML =
-            renderComments(currentDetailSong.id);
+        renderDetailComments(currentDetailSong.id);
     }
 
-    renderSongs();
+    if(isAdminUser(currentUser)){
+        await loadAdminComments();
+    }
 }
+
+
 
 /* =========================================================
 ADMIN LOGIN
 ========================================================= */
 
 async function login(){
-    const email =
-        loginEmail.value.trim();
-
-    const password =
-        loginPassword.value;
+    const email=loginEmail.value.trim();
+    const password=loginPassword.value;
 
     if(!email || !password){
-        loginError.textContent =
-            "Please enter email and password.";
+        loginError.textContent="Please enter email and password.";
         return;
     }
 
-    loginError.textContent =
-        "Logging in...";
+    loginError.textContent="Logging in...";
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient.auth
-        .signInWithPassword({
-            email,
-            password
-        });
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
 
     if(error){
-        loginError.textContent =
-            "❌ " + error.message;
+        loginError.textContent="❌ "+error.message;
         return;
     }
 
-    currentUser =
-        data.user || null;
+    currentUser=data.user;
 
-    loginOverlay.classList.remove(
-        "active"
-    );
+    loginOverlay.classList.remove("active");
+    loginEmail.value="";
+    loginPassword.value="";
+    loginError.textContent="";
 
-    loginEmail.value = "";
-    loginPassword.value = "";
+    applyUserRoleUI();
+    await refreshAllUserData();
+}
 
-    await refreshAuthUI();
+async function refreshAllUserData(){
+    await loadComments();
+
+    if(currentUser){
+        await loadNotifications();
+    }else{
+        notifications=[];
+        updateNotificationBadge();
+    }
+
+    if(isAdminUser(currentUser)){
+        await loadAdminComments();
+    }
+
+    renderSongs();
+
+    if(currentDetailSong){
+        renderDetailComments(currentDetailSong.id);
+    }
+}
+
+function applyUserRoleUI(){
+    const admin=isAdminUser(currentUser);
+
+    if(admin){
+        adminPanel.classList.add("active");
+        setAdminButton();
+        renderAdminList();
+        loadAdminComments();
+    }else{
+        adminPanel.classList.remove("active");
+        resetAdminButton();
+    }
+
+    renderSongs();
+
+    if(currentDetailSong){
+        renderDetailComments(currentDetailSong.id);
+    }
 }
 
 /* =========================================================
@@ -4598,110 +4580,48 @@ ADMIN BUTTON
 ========================================================= */
 
 function setAdminButton(){
-    if(!currentUser)
-        return;
-
-    const admin =
-        isAdminUser(currentUser);
-
-    const name =
-        currentUser.user_metadata?.full_name ||
-        currentUser.user_metadata?.name ||
-        currentUser.email ||
-        "Account";
-
-    adminToggleBtn.innerHTML =
-        admin
-        ?
-        `
+    adminToggleBtn.innerHTML=`
         <i class="fas fa-user-shield"></i>
-        Admin · Logout
-        `
-        :
-        `
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
-        `;
-
-    adminToggleBtn.title =
-        admin
-        ? `Admin: ${name}`
-        : `Logged in as ${name}`;
-
-    adminToggleBtn.style.background =
-        "#2ecc71";
-
-    adminToggleBtn.style.color =
-        "#fff";
+        Admin / Logout
+    `;
+    adminToggleBtn.style.background="#2ecc71";
+    adminToggleBtn.style.color="#fff";
 }
 
 function resetAdminButton(){
-    adminToggleBtn.innerHTML =
-        `
+    adminToggleBtn.innerHTML=`
         <i class="fas fa-sign-in-alt"></i>
         Login
-        `;
-
-    adminToggleBtn.title =
-        "Login";
-
-    adminToggleBtn.style.background = "";
-    adminToggleBtn.style.color = "";
+    `;
+    adminToggleBtn.style.background="";
+    adminToggleBtn.style.color="";
 }
 
-async function refreshAuthUI(){
-    if(isAdminUser(currentUser)){
-        adminPanel.classList.add("active");
-        setAdminButton();
-        renderAdminList();
-    }else{
-        adminPanel.classList.remove("active");
-        if(currentUser)
-            setAdminButton();
-        else
-            resetAdminButton();
-    }
-
-    await setupNotificationRealtime();
-
-    if(currentDetailSong){
-        detailComments.innerHTML =
-            renderComments(currentDetailSong.id);
-    }
-
-    renderSongs();
-}
+/* =========================================================
+LOGOUT
+========================================================= */
 
 async function logout(){
+    stopNotificationsAutoRefresh();
     await supabaseClient.auth.signOut();
 
-    currentUser = null;
+    currentUser=null;
+    notifications=[];
+    adminComments=[];
 
-    adminPanel.classList.remove(
-        "active"
-    );
-
+    adminPanel.classList.remove("active");
     resetAdminButton();
-
     cancelEdit();
+    updateNotificationBadge();
+    renderNotificationPanel();
+    notificationPanel.classList.remove("active");
+
     renderAdminList();
-
-    notifications = [];
-    renderNotifications();
-
-    if(notificationChannel){
-        await supabaseClient.removeChannel(
-            notificationChannel
-        );
-        notificationChannel = null;
-    }
+    renderSongs();
 
     if(currentDetailSong){
-        detailComments.innerHTML =
-            renderComments(currentDetailSong.id);
+        renderDetailComments(currentDetailSong.id);
     }
-
-    renderSongs();
 }
 
 /* =========================================================
@@ -5176,93 +5096,13 @@ ADMIN BUTTON
 adminToggleBtn.addEventListener(
     "click",
     async ()=>{
-        if(currentUser){
+        if(isAdminUser(currentUser)){
             await logout();
             return;
         }
-
-        loginOverlay.classList.add(
-            "active"
-        );
-
-        loginError.textContent="";
-        loginEmail.focus();
+        openLogin();
     }
-);
-
-loginGoogleBtn.addEventListener(
-    "click",
-    loginWithGoogle
-);
-
-notificationBtn.addEventListener(
-    "click",
-    e=>{
-        e.stopPropagation();
-        notificationPanel.classList.toggle(
-            "active"
-        );
-    }
-);
-
-markAllReadBtn.addEventListener(
-    "click",
-    async e=>{
-        e.stopPropagation();
-        await markAllNotificationsRead();
-    }
-);
-
-notificationList.addEventListener(
-    "click",
-    async e=>{
-        const item =
-            e.target.closest(
-                "[data-notification-id]"
-            );
-
-        if(!item)
-            return;
-
-        await markNotificationRead(
-            item.dataset.notificationId
-        );
-
-        notificationPanel.classList.remove(
-            "active"
-        );
-
-        const song =
-            songs.find(
-                s =>
-                String(s.id) ===
-                String(item.dataset.notificationSong)
-            );
-
-        if(song)
-            openDetail(song);
-    }
-);
-
-/* =========================================================
-ADMIN SEARCH
-========================================================= */
-
-adminSearchInput.addEventListener(
-    "input",
-    ()=>{
-
-        renderAdminList();
-
-    }
-);
-
-
-/* =========================================================
-LOGIN EVENTS
-========================================================= */
-
-loginBtn.addEventListener(
+);er(
     "click",
     login
 );
@@ -5287,6 +5127,57 @@ loginEmail.addEventListener(
     }
 );
 
+
+/* =========================================================
+LOGIN / NOTIFICATION EVENTS
+========================================================= */
+
+loginGoogleBtn.addEventListener("click",loginWithGoogle);
+
+loginCloseBtn.addEventListener("click",()=>{
+    loginOverlay.classList.remove("active");
+});
+
+notificationBtn.addEventListener("click",async e=>{
+    e.stopPropagation();
+    if(!currentUser){
+        openLogin();
+        return;
+    }
+    await loadNotifications();
+    notificationPanel.classList.toggle("active");
+});
+
+notificationPanel.addEventListener("click",async e=>{
+    const login=e.target.closest("[data-notification-login]");
+    if(login){
+        notificationPanel.classList.remove("active");
+        openLogin();
+        return;
+    }
+
+    const markAll=e.target.closest("[data-mark-all-read]");
+    if(markAll){
+        await markAllNotificationsRead();
+        return;
+    }
+
+    const item=e.target.closest("[data-notification-id]");
+    if(item){
+        await handleNotificationClick(
+            item.dataset.notificationId,
+            item.dataset.notificationSong,
+            item.dataset.notificationComment
+        );
+    }
+});
+
+document.addEventListener("click",e=>{
+    if(!e.target.closest("#notificationPanel") &&
+       !e.target.closest("#notificationBtn")){
+        notificationPanel.classList.remove("active");
+    }
+});
 
 /* =========================================================
 CLOSE LOGIN
@@ -5325,102 +5216,39 @@ detailOverlay.addEventListener(
             return;
         }
 
-        const googleBtn =
-            e.target.closest("[data-google-login]");
-
+        const googleBtn=e.target.closest("[data-google-login]");
         if(googleBtn){
-            e.stopPropagation();
             await loginWithGoogle();
             return;
         }
 
-        const logoutInline =
-            e.target.closest("#commentLogoutBtn");
-
-        if(logoutInline){
-            e.stopPropagation();
-            await logout();
+        const emailBtn=e.target.closest("[data-email-login]");
+        if(emailBtn){
+            openLogin();
             return;
         }
 
-        const replyBtn =
-            e.target.closest("[data-reply-comment]");
-
+        const replyBtn=e.target.closest("[data-reply-comment-id]");
         if(replyBtn){
-            e.stopPropagation();
-
-            const composer =
-                document.getElementById(
-                    "replyComposer-" +
-                    replyBtn.dataset.replyComment
-                );
-
-            if(composer){
-                composer.style.display =
-                    composer.style.display === "none"
-                    ? "block"
-                    : "none";
-
-                if(composer.style.display === "block"){
-                    const input =
-                        composer.querySelector(".reply-input");
-
-                    if(input)
-                        input.focus();
-                }
-            }
-
+            toggleReplyBox(replyBtn.dataset.replyCommentId);
             return;
         }
 
-        const replySubmit =
-            e.target.closest("[data-reply-submit]");
-
-        if(replySubmit){
-            e.stopPropagation();
-
-            if(currentDetailSong){
-                await submitComment(
-                    currentDetailSong.id,
-                    replySubmit.dataset.replySubmit
-                );
-            }
-
+        const replySend=e.target.closest("[data-reply-send]");
+        if(replySend){
+            await submitReply(replySend.dataset.replySend);
             return;
         }
 
-        const commentSubmit =
-            e.target.closest("[data-comment-submit]");
-
-        if(commentSubmit){
-            e.stopPropagation();
-
-            await submitComment(
-                commentSubmit.dataset.commentSubmit
-            );
-
+        const submitBtn=e.target.closest("[data-comment-submit]");
+        if(submitBtn){
+            await submitComment(submitBtn.dataset.commentSubmit);
             return;
         }
 
-        const deleteBtn =
-            e.target.closest(".comment-delete");
-
+        const deleteBtn=e.target.closest(".comment-delete");
         if(deleteBtn){
-            e.stopPropagation();
-
-            await deleteComment(
-                deleteBtn.dataset.commentId
-            );
-
-            return;
-        }
-
-        if(
-            e.target.closest(
-                ".comment-input,.reply-input"
-            )
-        ){
-            e.stopPropagation();
+            await deleteComment(deleteBtn.dataset.commentId);
             return;
         }
     }
@@ -5444,42 +5272,6 @@ detailPlayBtn.addEventListener(
 detailShareBtn.addEventListener(
     "click",
     shareCurrentSong
-);
-
-detailOverlay.addEventListener(
-    "keydown",
-    e=>{
-        if(e.key !== "Enter")
-            return;
-
-        if(
-            e.target.classList.contains(
-                "comment-input"
-            )
-        ){
-            e.preventDefault();
-
-            if(currentDetailSong)
-                submitComment(
-                    currentDetailSong.id
-                );
-        }
-
-        if(
-            e.target.classList.contains(
-                "reply-input"
-            )
-        ){
-            e.preventDefault();
-
-            if(currentDetailSong){
-                submitComment(
-                    currentDetailSong.id,
-                    e.target.dataset.replyInput
-                );
-            }
-        }
-    }
 );
 
 
@@ -5666,31 +5458,19 @@ grid.addEventListener(
 COMMENT ENTER KEY
 ========================================================= */
 
-grid.addEventListener(
-    "keydown",
-    e=>{
+detailOverlay.addEventListener("keydown",e=>{
+    if(e.key!=="Enter") return;
 
-        if(
-            e.key!=="Enter"
-        )
-            return;
-
-        if(
-            !e.target.classList.contains(
-                "comment-input"
-            )
-        )
-            return;
-
+    if(e.target.classList.contains("comment-input")){
         e.preventDefault();
-
-        const songId=
-        e.target.dataset.commentInput;
-
-        submitComment(songId);
-
+        submitComment(e.target.dataset.commentInput);
     }
-);
+
+    if(e.target.classList.contains("reply-input")){
+        e.preventDefault();
+        submitReply(e.target.dataset.replyInput);
+    }
+});
 
 
 /* =========================================================
@@ -5710,6 +5490,11 @@ cancelEditBtn.addEventListener(
 logoutBtn.addEventListener(
     "click",
     logout
+);
+
+refreshAdminCommentsBtn.addEventListener(
+    "click",
+    loadAdminComments
 );
 
 
@@ -5781,18 +5566,6 @@ document.addEventListener(
 
         }
 
-        if(
-            !e.target.closest(
-                "#notificationWrap"
-            )
-        ){
-
-            notificationPanel.classList.remove(
-                "active"
-            );
-
-        }
-
     }
 );
 
@@ -5802,200 +5575,20 @@ CHECK USER
 ========================================================= */
 
 async function checkUser(){
-    const {
-        data
-    } =
-    await supabaseClient.auth.getUser();
+    const {data}=await supabaseClient.auth.getUser();
+    currentUser=data && data.user ? data.user : null;
 
-    currentUser =
-        data && data.user
-        ? data.user
-        : null;
+    applyUserRoleUI();
 
-    await refreshAuthUI();
-}
-
-/* =========================================================
-NOTIFICATIONS
-========================================================= */
-
-function notificationTime(date){
-    return formatCommentDate(date);
-}
-
-function renderNotifications(){
-    if(!currentUser){
-        notificationBadge.textContent = "0";
-        notificationBadge.classList.remove("active");
-        notificationList.innerHTML =
-            `<div class="notification-empty">Login to see notifications.</div>`;
-        return;
+    if(currentUser){
+        await loadNotifications();
+        startNotificationsAutoRefresh();
+    }else{
+        stopNotificationsAutoRefresh();
+        notifications=[];
+        updateNotificationBadge();
+        renderNotificationPanel();
     }
-
-    const unread =
-        notifications.filter(n => !n.is_read).length;
-
-    notificationBadge.textContent =
-        unread > 99 ? "99+" : String(unread);
-
-    notificationBadge.classList.toggle(
-        "active",
-        unread > 0
-    );
-
-    if(!notifications.length){
-        notificationList.innerHTML =
-            `<div class="notification-empty">No notifications yet.</div>`;
-        return;
-    }
-
-    notificationList.innerHTML =
-        notifications.map(n => `
-            <button
-                class="notification-item ${n.is_read ? "" : "unread"}"
-                type="button"
-                data-notification-id="${escapeHTML(n.id)}"
-                data-notification-song="${escapeHTML(n.song_id || "")}"
-            >
-                <span class="notification-icon">
-                    <i class="fas fa-reply"></i>
-                </span>
-                <span class="notification-content">
-                    <strong>${escapeHTML(n.message || "Someone replied to your comment.")}</strong>
-                    <small>${notificationTime(n.created_at)}</small>
-                </span>
-            </button>
-        `).join("");
-}
-
-async function loadNotifications(){
-    if(!currentUser){
-        notifications = [];
-        renderNotifications();
-        return;
-    }
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("comment_notifications")
-        .select("*")
-        .eq("recipient_user_id", currentUser.id)
-        .order("created_at",{ascending:false})
-        .limit(50);
-
-    if(error){
-        console.warn(
-            "Notifications load error:",
-            error.message
-        );
-        notifications = [];
-        renderNotifications();
-        return;
-    }
-
-    notifications =
-        Array.isArray(data) ? data : [];
-
-    renderNotifications();
-}
-
-async function markNotificationRead(id){
-    if(!currentUser)
-        return;
-
-    await supabaseClient
-        .from("comment_notifications")
-        .update({is_read:true})
-        .eq("id",id)
-        .eq("recipient_user_id",currentUser.id);
-
-    const item =
-        notifications.find(
-            n => String(n.id) === String(id)
-        );
-
-    if(item)
-        item.is_read = true;
-
-    renderNotifications();
-}
-
-async function markAllNotificationsRead(){
-    if(!currentUser || !notifications.length)
-        return;
-
-    await supabaseClient
-        .from("comment_notifications")
-        .update({is_read:true})
-        .eq("recipient_user_id",currentUser.id)
-        .eq("is_read",false);
-
-    notifications.forEach(
-        n => n.is_read = true
-    );
-
-    renderNotifications();
-}
-
-async function setupNotificationRealtime(){
-    if(notificationChannel){
-        await supabaseClient.removeChannel(
-            notificationChannel
-        );
-        notificationChannel = null;
-    }
-
-    if(!currentUser){
-        notifications = [];
-        renderNotifications();
-        return;
-    }
-
-    await loadNotifications();
-
-    notificationChannel =
-        supabaseClient
-        .channel(
-            "comment-notifications-" +
-            currentUser.id +
-            "-" +
-            Date.now()
-        )
-        .on(
-            "postgres_changes",
-            {
-                event:"INSERT",
-                schema:"public",
-                table:"comment_notifications",
-                filter:
-                    `recipient_user_id=eq.${currentUser.id}`
-            },
-            payload=>{
-                const incoming =
-                    payload.new;
-
-                if(
-                    !notifications.some(
-                        n =>
-                        String(n.id) ===
-                        String(incoming.id)
-                    )
-                ){
-                    notifications.unshift(
-                        incoming
-                    );
-
-                    notifications =
-                        notifications.slice(0,50);
-
-                    renderNotifications();
-                }
-            }
-        )
-        .subscribe();
 }
 
 /* =========================================================
@@ -6003,18 +5596,26 @@ AUTH STATE
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-    (event, session)=>{
+    (event,session)=>{
         setTimeout(async ()=>{
-            currentUser =
-                session && session.user
-                ? session.user
-                : null;
+            currentUser=session && session.user ? session.user : null;
 
-            await refreshAuthUI();
+            applyUserRoleUI();
+
+            if(currentUser){
+                await loadNotifications();
+            }else{
+                notifications=[];
+                updateNotificationBadge();
+                renderNotificationPanel();
+            }
+
+            if(currentDetailSong){
+                renderDetailComments(currentDetailSong.id);
+            }
         },0);
     }
 );
-
 
 /* =========================================================
 INITIALIZE
@@ -6027,6 +5628,7 @@ async function init(){
     await checkUser();
 
     await loadSongs();
+    await setupRealtime();
 
     openSongFromUrl();
 
