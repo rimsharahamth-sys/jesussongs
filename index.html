@@ -13,896 +13,1499 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.mi
 
 <style>
 
-:root{
+:root {
     --body-bg:#f7f3ee;
     --body-text:#222;
     --card-bg:#fff;
     --panel-bg:#fff;
     --modal-bg:#fff;
+
     --header-bg-1:#1a1a2e;
     --header-bg-2:#16213e;
     --header-text:#f5e6d3;
+
     --primary:#f0c040;
     --primary-dark:#b8860b;
+
     --title-color:#1a1a2e;
     --text-color:#222;
     --muted-text:#777;
     --preview-color:#555;
+
     --border-color:#eee;
     --soft-border:#f0ebe5;
+
     --input-bg:#fff;
     --input-text:#222;
     --input-border:#ddd;
+
     --link-color:#1a6fb5;
+
     --footer-bg:#1a1a2e;
     --footer-text:rgba(255,255,255,.4);
+
     --shadow:rgba(0,0,0,.08);
     --strong-shadow:rgba(0,0,0,.15);
-    --overlay:rgba(0,0,0,.72);
+
+    --overlay:rgba(0,0,0,.65);
 }
 
-body.dark-mode{
+body.dark-mode {
+
     --body-bg:#101114;
     --body-text:#eee;
+
     --card-bg:#1b1d22;
     --panel-bg:#1b1d22;
     --modal-bg:#1b1d22;
+
     --header-bg-1:#08090d;
     --header-bg-2:#151923;
+
     --title-color:#f5f5f5;
     --text-color:#eee;
+
     --muted-text:#a8a8a8;
     --preview-color:#bdbdbd;
+
     --border-color:#30333b;
     --soft-border:#353841;
+
     --input-bg:#111318;
     --input-text:#eee;
     --input-border:#3b3e47;
+
     --link-color:#5eb7ff;
+
     --footer-bg:#08090d;
     --footer-text:rgba(255,255,255,.55);
+
     --shadow:rgba(0,0,0,.35);
     --strong-shadow:rgba(0,0,0,.55);
-    --overlay:rgba(0,0,0,.84);
+
+    --overlay:rgba(0,0,0,.78);
 }
 
-*{
+* {
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
-html{
+html {
     scroll-behavior:smooth;
 }
 
-body{
-    font-family:'Segoe UI',Roboto,sans-serif;
+body {
+
+    font-family:
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+
     background:var(--body-bg);
     color:var(--body-text);
+
     min-height:100vh;
+
     transition:.3s;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+/* ============================================================
+HEADER
+============================================================ */
 
-.header{
-    background:linear-gradient(
-        135deg,
-        var(--header-bg-1),
-        var(--header-bg-2)
-    );
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--header-bg-1),
+            var(--header-bg-2)
+        );
+
     color:var(--header-text);
+
     padding:1.2rem 2rem;
+
     display:flex;
     flex-wrap:wrap;
+
     align-items:center;
     justify-content:space-between;
-    gap:1rem;
-    box-shadow:0 4px 15px rgba(0,0,0,.3);
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.3);
+
     position:sticky;
     top:0;
+
     z-index:100;
 }
 
-.header h1{
+.header h1 {
+
     font-size:1.9rem;
+
     display:flex;
     align-items:center;
+
     gap:.5rem;
 }
 
-.header h1 i{
+.header h1 i {
     color:var(--primary);
 }
 
-.header-controls{
+.header-controls {
+
     display:flex;
     align-items:center;
+
     gap:1rem;
+
     flex-wrap:wrap;
 }
 
-/* =========================================================
-   SEARCH
-========================================================= */
+/* ============================================================
+MAIN SEARCH
+============================================================ */
 
-.search-wrap{
+.search-wrap {
+
     position:relative;
 }
 
-.search-wrap>i:first-child{
+.search-wrap > i:first-child {
+
     position:absolute;
+
     left:.8rem;
     top:50%;
+
     transform:translateY(-50%);
+
     color:rgba(255,255,255,.5);
 }
 
-#searchInput{
-    padding:.65rem 2.7rem .65rem 2.2rem;
+#searchInput {
+
+    padding:
+        .65rem
+        2.7rem
+        .65rem
+        2.2rem;
+
     border:none;
+
     border-radius:30px;
+
     font-size:.95rem;
-    background:rgba(255,255,255,.15);
+
+    background:
+        rgba(255,255,255,.15);
+
     color:#fff;
+
     outline:2px solid transparent;
+
     transition:.3s;
+
     min-width:260px;
 }
 
-#searchInput::placeholder{
-    color:rgba(255,255,255,.6);
+#searchInput::placeholder {
+
+    color:
+        rgba(255,255,255,.6);
 }
 
-#searchInput:focus{
-    outline-color:var(--primary);
-    background:rgba(255,255,255,.25);
+#searchInput:focus {
+
+    outline-color:
+        var(--primary);
+
+    background:
+        rgba(255,255,255,.25);
 }
 
-.search-clear{
+.search-clear {
+
     position:absolute;
+
     right:.8rem;
     top:50%;
+
     transform:translateY(-50%);
-    color:rgba(255,255,255,.65);
+
+    color:
+        rgba(255,255,255,.65);
+
     cursor:pointer;
+
     display:none;
 }
 
-.search-clear.active{
+.search-clear.active {
     display:block;
 }
 
-.search-info{
+.search-info {
+
     position:absolute;
+
     top:calc(100% + 8px);
+
     left:10px;
     right:10px;
+
     background:var(--card-bg);
     color:var(--text-color);
+
     border-radius:10px;
+
     padding:.55rem .8rem;
-    box-shadow:0 8px 25px var(--strong-shadow);
+
+    box-shadow:
+        0 8px 25px var(--strong-shadow);
+
     font-size:.8rem;
+
     display:none;
+
     z-index:500;
 }
 
-.song-count{
-    font-size:.9rem;
-    color:rgba(255,255,255,.7);
-}
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn{
-    padding:.5rem 1.2rem;
-    border:none;
-    border-radius:30px;
-    font-weight:600;
-    font-size:.9rem;
-    cursor:pointer;
-    transition:.25s;
-    background:var(--primary);
-    color:#1a1a2e;
-}
-
-.btn:hover{
-    transform:scale(1.03);
-    opacity:.9;
-}
-
-.btn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-    transform:none;
-}
-
-.btn-outline{
-    background:transparent;
-    border:2px solid var(--primary);
-    color:var(--primary);
-}
-
-.btn-outline:hover{
-    background:var(--primary);
-    color:#1a1a2e;
-}
-
-.btn-danger{
-    background:#c0392b;
-    color:#fff;
-}
-
-.btn-edit{
-    background:#3498db;
-    color:#fff;
-}
-
-.btn-cancel{
-    background:#777;
-    color:#fff;
-}
-
-#themeToggleBtn{
-    min-width:48px;
-    height:42px;
-    padding:.5rem .9rem;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:.4rem;
-    background:transparent;
-    border:2px solid var(--primary);
-    color:var(--primary);
-    border-radius:30px;
-    cursor:pointer;
-    font-size:1rem;
-}
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main{
-    max-width:1200px;
-    margin:0 auto;
-    padding:2rem 1.5rem;
-}
-
-.search-status{
-    margin-bottom:1rem;
-    display:none;
-    padding:.75rem 1rem;
-    background:var(--card-bg);
-    border-radius:12px;
-    color:var(--muted-text);
-    box-shadow:0 4px 15px var(--shadow);
-    font-size:.9rem;
-}
-
-.search-status.active{
+.search-info.active {
     display:block;
 }
 
-/* =========================================================
-   SONG GRID
-========================================================= */
+/* ============================================================
+BUTTONS
+============================================================ */
 
-.songs-grid{
+.btn {
+
+    padding:.5rem 1.2rem;
+
+    border:none;
+
+    border-radius:30px;
+
+    font-weight:600;
+
+    font-size:.9rem;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    background:var(--primary);
+
+    color:#1a1a2e;
+}
+
+.btn:hover {
+
+    transform:scale(1.03);
+
+    opacity:.9;
+}
+
+.btn:disabled {
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+.btn-outline {
+
+    background:transparent;
+
+    border:
+        2px solid var(--primary);
+
+    color:var(--primary);
+}
+
+.btn-outline:hover {
+
+    background:var(--primary);
+
+    color:#1a1a2e;
+}
+
+.btn-danger {
+
+    background:#c0392b;
+
+    color:#fff;
+}
+
+.btn-edit {
+
+    background:#3498db;
+
+    color:#fff;
+}
+
+.btn-cancel {
+
+    background:#777;
+
+    color:#fff;
+}
+
+#themeToggleBtn {
+
+    min-width:48px;
+
+    height:42px;
+
+    padding:.5rem .9rem;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:.4rem;
+
+    background:transparent;
+
+    border:
+        2px solid var(--primary);
+
+    color:var(--primary);
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:1rem;
+
+    transition:.25s;
+}
+
+#themeToggleBtn:hover {
+
+    background:var(--primary);
+
+    color:#1a1a2e;
+
+    transform:scale(1.05);
+}
+
+.song-count {
+
+    font-size:.9rem;
+
+    color:
+        rgba(255,255,255,.7);
+}
+
+/* ============================================================
+MAIN
+============================================================ */
+
+.main {
+
+    max-width:1200px;
+
+    margin:0 auto;
+
+    padding:2rem 1.5rem;
+}
+
+/* ============================================================
+SEARCH STATUS
+============================================================ */
+
+.search-status {
+
+    margin-bottom:1rem;
+
+    display:none;
+
+    padding:.75rem 1rem;
+
+    background:var(--card-bg);
+
+    border-radius:12px;
+
+    color:var(--muted-text);
+
+    box-shadow:
+        0 4px 15px var(--shadow);
+
+    font-size:.9rem;
+}
+
+.search-status.active {
+    display:block;
+}
+
+/* ============================================================
+SONG GRID
+============================================================ */
+
+.songs-grid {
+
     display:grid;
+
     grid-template-columns:
-        repeat(auto-fill,minmax(300px,1fr));
+        repeat(
+            auto-fill,
+            minmax(300px,1fr)
+        );
+
     gap:1.5rem;
 }
 
-.song-card{
+/* ============================================================
+SONG CARD
+============================================================ */
+
+.song-card {
+
     background:var(--card-bg);
+
     border-radius:16px;
-    box-shadow:0 6px 20px var(--shadow);
+
+    box-shadow:
+        0 6px 20px var(--shadow);
+
     transition:.3s;
-    border-left:5px solid var(--primary-dark);
+
+    border-left:
+        5px solid var(--primary-dark);
+
     cursor:pointer;
+
     overflow:hidden;
+
     display:flex;
+
     flex-direction:column;
+
     user-select:none;
 }
 
-.song-card:hover{
+.song-card:hover {
+
     transform:translateY(-4px);
-    box-shadow:0 12px 30px var(--strong-shadow);
+
+    box-shadow:
+        0 12px 30px var(--strong-shadow);
 }
 
-.song-card-header{
-    padding:1.2rem 1.5rem .5rem;
+.song-card-header {
+
+    padding:
+        1.2rem
+        1.5rem
+        .5rem;
 }
 
-.song-title{
+.song-title {
+
     font-size:1.15rem;
+
     font-weight:700;
+
     color:var(--title-color);
 }
 
-.song-title i{
+.song-title i {
+
     color:var(--primary-dark);
+
     margin-right:.4rem;
 }
 
-.song-card-body{
-    padding:0 1.5rem .8rem;
+.song-card-body {
+
+    padding:
+        0
+        1.5rem
+        .8rem;
+
     flex:1;
 }
 
-.song-preview{
+.song-preview {
+
     color:var(--preview-color);
+
     font-style:italic;
+
     font-size:.9rem;
+
     display:-webkit-box;
+
     -webkit-line-clamp:2;
+
     -webkit-box-orient:vertical;
+
     overflow:hidden;
 }
 
-.song-link{
-    padding:0 1.5rem .7rem;
+.song-link {
+
+    padding:
+        0
+        1.5rem
+        .7rem;
 }
 
-.song-link a{
+.song-link a {
+
     color:var(--link-color);
+
     text-decoration:none;
+
     font-size:.9rem;
 }
 
-.song-footer{
-    padding:.7rem 1.5rem 1rem;
-    border-top:1px solid var(--soft-border);
+.song-link a:hover {
+    text-decoration:underline;
+}
+
+.song-footer {
+
+    padding:
+        .7rem
+        1.5rem
+        1rem;
+
+    border-top:
+        1px solid var(--soft-border);
+
     display:flex;
+
     justify-content:space-between;
+
     font-size:.8rem;
+
     color:var(--muted-text);
 }
 
-.relevance-badge{
+.relevance-badge {
+
     display:inline-block;
+
     margin-top:.5rem;
+
     padding:.18rem .55rem;
+
     border-radius:20px;
-    background:rgba(240,192,64,.15);
+
+    background:
+        rgba(240,192,64,.15);
+
     color:var(--primary-dark);
+
     font-size:.7rem;
+
     font-weight:700;
 }
 
-/* =========================================================
-   NO RESULTS
-========================================================= */
+/* ============================================================
+NO RESULTS
+============================================================ */
 
-.no-results{
+.no-results {
+
     text-align:center;
+
     padding:5rem 2rem;
+
     grid-column:1/-1;
+
     color:var(--muted-text);
 }
 
-.no-results-icon{
+.no-results-icon {
+
     font-size:3.5rem;
+
     margin-bottom:1rem;
+
     color:var(--primary-dark);
+
+    opacity:.8;
 }
 
-.no-results-title{
+.no-results-title {
+
     font-size:1.25rem;
+
     font-weight:700;
+
     color:var(--title-color);
+
     margin-bottom:.5rem;
 }
 
-/* =========================================================
-   ADMIN PANEL
-========================================================= */
+.no-results-text {
 
-.admin-panel{
+    font-size:.95rem;
+
+    color:var(--muted-text);
+}
+
+/* ============================================================
+ADMIN
+============================================================ */
+
+.admin-panel {
+
     display:none;
+
     background:var(--panel-bg);
+
     color:var(--text-color);
+
     border-radius:20px;
-    box-shadow:0 8px 30px var(--shadow);
+
+    box-shadow:
+        0 8px 30px var(--shadow);
+
     padding:2rem;
+
     margin-bottom:2rem;
 }
 
-.admin-panel.active{
+.admin-panel.active {
     display:block;
 }
 
 .admin-panel h2,
-.admin-panel h3{
+.admin-panel h3 {
+
     color:var(--title-color);
 }
 
-.form-group{
+.admin-panel h2 {
     margin-bottom:1rem;
 }
 
-.form-group label{
+/* ============================================================
+FORM
+============================================================ */
+
+.form-group {
+
+    margin-bottom:1rem;
+}
+
+.form-group label {
+
     font-weight:600;
+
     display:block;
+
     margin-bottom:.3rem;
+
+    color:var(--text-color);
 }
 
 .form-group input,
-.form-group textarea{
+.form-group textarea {
+
     width:100%;
+
     padding:.7rem 1rem;
-    border:2px solid var(--input-border);
+
+    border:
+        2px solid var(--input-border);
+
     border-radius:8px;
+
     font-size:.95rem;
+
     font-family:inherit;
+
     background:var(--input-bg);
+
     color:var(--input-text);
+
     outline:none;
+
+    transition:.25s;
 }
 
-.form-group textarea{
+.form-group input:focus,
+.form-group textarea:focus {
+
+    border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(240,192,64,.12);
+}
+
+.form-group textarea {
+
     min-height:140px;
+
     resize:vertical;
 }
 
-.form-actions{
+.form-actions {
+
     display:flex;
+
     gap:.7rem;
+
     flex-wrap:wrap;
 }
 
-.status-message{
+.status-message {
+
     margin-top:.8rem;
+
     font-size:.9rem;
+
     min-height:1.2rem;
 }
 
-/* =========================================================
-   ADMIN SEARCH
-   IMPORTANT: SEARCH RESULTS ARE DIRECTLY UNDER SEARCH BAR
-========================================================= */
+/* ============================================================
+ADMIN SEARCH
+============================================================ */
 
-.admin-search-wrap{
+/*
+   IMPORTANT:
+   Admin search bar and search results are now one
+   dedicated section.
+
+   Search bar is always first.
+   Results appear DIRECTLY UNDER the search bar.
+*/
+
+.admin-search-section {
+
+    margin-top:1.5rem;
+
+    background:
+        var(--input-bg);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:16px;
+
+    padding:1rem;
+
+    box-shadow:
+        0 4px 15px var(--shadow);
+}
+
+.admin-search-title {
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    color:var(--title-color);
+
+    margin-bottom:.7rem;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.5rem;
+}
+
+.admin-search-title i {
+
+    color:var(--primary-dark);
+}
+
+.admin-search-wrap {
+
     position:relative;
-    margin-top:1rem;
-    margin-bottom:1rem;
-}
 
-#adminSearchInput{
     width:100%;
-    padding:.8rem 1rem .8rem 2.5rem;
-    border:2px solid var(--input-border);
+}
+
+#adminSearchInput {
+
+    width:100%;
+
+    padding:
+        .85rem
+        3rem
+        .85rem
+        2.7rem;
+
+    border:
+        2px solid var(--input-border);
+
     border-radius:12px;
+
     background:var(--input-bg);
+
     color:var(--input-text);
+
     outline:none;
+
     font-size:.95rem;
+
+    transition:.25s;
 }
 
-#adminSearchInput:focus{
+#adminSearchInput:focus {
+
     border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(240,192,64,.12);
 }
 
-.admin-search-icon{
+.admin-search-icon {
+
     position:absolute;
+
     left:.9rem;
-    top:1rem;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
     color:var(--muted-text);
-    z-index:2;
+
+    pointer-events:none;
 }
 
-/* NEW DROPDOWN */
+.admin-search-clear {
 
-.admin-search-dropdown{
-    display:none;
     position:absolute;
-    left:0;
-    right:0;
-    top:calc(100% + 6px);
-    background:var(--card-bg);
-    border:1px solid var(--border-color);
-    border-radius:14px;
-    box-shadow:0 15px 40px var(--strong-shadow);
-    max-height:360px;
-    overflow-y:auto;
-    z-index:1000;
+
+    right:.9rem;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:var(--muted-text);
+
+    cursor:pointer;
+
+    display:none;
 }
 
-.admin-search-dropdown.active{
+.admin-search-clear.active {
     display:block;
 }
 
-.admin-search-dropdown-header{
-    padding:.7rem 1rem;
-    border-bottom:1px solid var(--border-color);
+.admin-search-result {
+
+    margin-top:.7rem;
+
+    margin-bottom:.7rem;
+
+    font-size:.85rem;
+
     color:var(--muted-text);
-    font-size:.8rem;
-    background:var(--card-bg);
-    position:sticky;
-    top:0;
-    z-index:2;
+
+    min-height:1.2rem;
 }
 
-.admin-search-result-item{
-    padding:.8rem 1rem;
-    border-bottom:1px solid var(--border-color);
+/*
+   Search results container directly below search bar.
+*/
+
+.admin-song-list {
+
+    margin-top:.5rem;
+
+    border-top:
+        1px solid var(--border-color);
+
+    padding-top:.5rem;
+}
+
+/* Individual admin result */
+
+.admin-song-item {
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     gap:1rem;
+
+    padding:.8rem .7rem;
+
+    border-bottom:
+        1px solid var(--border-color);
+
+    color:var(--text-color);
+
+    border-radius:10px;
+
     transition:.2s;
 }
 
-.admin-search-result-item:last-child{
+.admin-song-item:last-child {
     border-bottom:none;
 }
 
-.admin-search-result-item:hover{
-    background:rgba(240,192,64,.08);
+.admin-song-item:hover {
+
+    background:
+        rgba(240,192,64,.07);
 }
 
-.admin-search-song-info{
-    min-width:0;
-    flex:1;
+.admin-song-item.match-first {
+
+    border-left:
+        4px solid var(--primary);
+
+    padding-left:.7rem;
+
+    background:
+        rgba(240,192,64,.09);
 }
 
-.admin-search-song-title{
-    font-weight:700;
-    color:var(--title-color);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
+.admin-song-name {
 
-.admin-search-song-meta{
-    margin-top:.2rem;
-    color:var(--muted-text);
-    font-size:.75rem;
-}
-
-.admin-search-actions{
     display:flex;
-    gap:.4rem;
+
+    align-items:center;
+
+    gap:.6rem;
+
+    min-width:0;
+
+    font-weight:600;
+}
+
+.admin-song-name i {
+
+    color:var(--primary-dark);
+
     flex-shrink:0;
 }
 
-.admin-search-actions .btn{
-    padding:.3rem .65rem;
-    font-size:.75rem;
+.admin-song-name span {
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
 }
 
-.admin-search-empty{
-    padding:1.2rem;
-    text-align:center;
-    color:var(--muted-text);
-}
+.admin-song-item .actions {
 
-.admin-search-match{
-    border-left:4px solid var(--primary);
-}
-
-.admin-search-result{
-    margin:.4rem 0 0;
-    font-size:.8rem;
-    color:var(--muted-text);
-    min-height:1rem;
-}
-
-/* =========================================================
-   EXISTING SONG LIST
-========================================================= */
-
-.admin-song-list{
-    margin-top:1rem;
-    border-top:2px dashed var(--input-border);
-    padding-top:1.5rem;
-}
-
-.admin-song-item{
     display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:.7rem 0;
-    border-bottom:1px solid var(--border-color);
-}
 
-.admin-song-item .actions{
-    display:flex;
     gap:.5rem;
+
     flex-wrap:wrap;
+
+    justify-content:flex-end;
+
+    flex-shrink:0;
 }
 
-.edit-badge{
+.edit-badge {
+
     display:inline-block;
+
     margin-left:.5rem;
+
     padding:.2rem .55rem;
+
     border-radius:12px;
+
     background:#eaf4ff;
+
     color:#2471a3;
+
     font-size:.72rem;
+
     font-weight:700;
 }
 
-.admin-song-item.match-first{
-    border-left:4px solid var(--primary);
-    padding-left:.7rem;
-    background:rgba(240,192,64,.07);
-    border-radius:8px;
-}
+/* ============================================================
+LOGIN
+============================================================ */
 
-/* =========================================================
-   LOGIN
-========================================================= */
+.login-overlay {
 
-.login-overlay{
     display:none;
+
     position:fixed;
+
     inset:0;
+
     background:var(--overlay);
-    backdrop-filter:blur(5px);
-    z-index:2000;
+
+    backdrop-filter:blur(4px);
+
+    z-index:200;
+
     justify-content:center;
+
     align-items:center;
 }
 
-.login-overlay.active{
+.login-overlay.active {
     display:flex;
 }
 
-.login-modal{
+.login-modal {
+
     background:var(--modal-bg);
+
     color:var(--text-color);
+
     padding:2.5rem 2rem;
+
     border-radius:24px;
+
     max-width:380px;
+
     width:90%;
-    box-shadow:0 20px 50px var(--strong-shadow);
+
+    box-shadow:
+        0 20px 50px var(--strong-shadow);
+
     text-align:center;
 }
 
-.login-modal h2{
+.login-modal h2 {
+
     margin-bottom:1.5rem;
+
     color:var(--title-color);
 }
 
-.login-modal input{
+.login-modal input {
+
     width:100%;
+
     padding:.7rem 1rem;
+
     margin-bottom:1rem;
-    border:2px solid var(--input-border);
+
+    border:
+        2px solid var(--input-border);
+
     border-radius:8px;
+
     font-size:1rem;
+
     background:var(--input-bg);
+
     color:var(--input-text);
+
     outline:none;
 }
 
-.login-modal .btn{
+.login-modal input:focus {
+
+    border-color:var(--primary);
+}
+
+.login-modal .btn {
+
     width:100%;
+
     padding:.7rem;
 }
 
-.login-error{
+.login-error {
+
     color:#e74c3c;
+
     font-size:.9rem;
+
     margin-top:.7rem;
 }
 
-/* =========================================================
-   FULL SCREEN SONG DETAIL
-========================================================= */
+/* ============================================================
+FULL SCREEN SONG DETAIL
+============================================================ */
 
-.song-detail-overlay{
+/*
+   Song detail now uses the COMPLETE screen.
+*/
+
+.song-detail-overlay {
+
     display:none;
+
     position:fixed;
+
     inset:0;
-    background:var(--overlay);
-    backdrop-filter:blur(8px);
-    z-index:3000;
+
+    width:100vw;
+
+    height:100vh;
+
+    background:
+        var(--body-bg);
+
+    backdrop-filter:none;
+
+    z-index:1000;
+
     justify-content:center;
-    align-items:center;
+
+    align-items:stretch;
+
     padding:0;
+
+    overflow:hidden;
 }
 
-.song-detail-overlay.active{
+.song-detail-overlay.active {
     display:flex;
 }
 
-.song-detail-modal{
+.song-detail-modal {
+
     background:var(--modal-bg);
+
     color:var(--text-color);
-    width:100vw;
-    height:100vh;
-    max-width:none;
-    max-height:none;
+
     border-radius:0;
-    padding:2rem 4rem;
+
+    width:100%;
+
+    max-width:none;
+
+    height:100vh;
+
+    max-height:none;
+
+    padding:0;
+
     overflow-y:auto;
+
     position:relative;
+
     box-shadow:none;
 }
 
-.close-btn{
-    position:fixed;
-    top:1rem;
-    right:1.5rem;
-    z-index:20;
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    font-size:2rem;
-    line-height:1;
-    color:var(--muted-text);
-    cursor:pointer;
-    border:1px solid var(--border-color);
-    background:var(--card-bg);
-    box-shadow:0 5px 20px var(--shadow);
-}
+.song-detail-header {
 
-.close-btn:hover{
+    position:sticky;
+
+    top:0;
+
+    z-index:10;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--header-bg-1),
+            var(--header-bg-2)
+        );
+
     color:#fff;
-    background:#c0392b;
+
+    padding:
+        1rem
+        1.5rem;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:1rem;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.25);
 }
 
-.detail-content{
-    max-width:1100px;
+.song-detail-content {
+
+    width:100%;
+
+    max-width:1000px;
+
     margin:0 auto;
-    padding-bottom:3rem;
+
+    padding:
+        2rem
+        2rem
+        4rem;
 }
 
-.detail-title{
-    font-size:2.5rem;
+.close-btn {
+
+    position:relative;
+
+    top:auto;
+    right:auto;
+
+    width:44px;
+    height:44px;
+
+    font-size:1.8rem;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    border:none;
+
+    background:
+        rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    transition:.2s;
+}
+
+.close-btn:hover {
+
+    background:
+        rgba(255,255,255,.25);
+
+    transform:scale(1.05);
+}
+
+.detail-title {
+
+    font-size:2rem;
+
     font-weight:700;
-    color:var(--title-color);
-    padding:1rem 4rem 1rem 0;
+
+    color:#fff;
+
+    line-height:1.3;
 }
 
-.detail-title i{
-    color:var(--primary-dark);
+.detail-title i {
+
+    color:var(--primary);
+
     margin-right:.5rem;
 }
 
-.detail-player{
-    margin:1rem auto 1.5rem;
+/* ============================================================
+DETAIL PLAYER
+============================================================ */
+
+.detail-player {
+
+    margin:
+        1.5rem 0;
+
     background:#000;
+
     border-radius:18px;
+
     overflow:hidden;
-    box-shadow:0 8px 30px var(--shadow);
-    max-width:1000px;
+
+    box-shadow:
+        0 8px 25px var(--shadow);
 }
 
-.detail-player iframe{
+.detail-player iframe {
+
     width:100%;
+
     aspect-ratio:16/9;
+
     border:0;
+
     display:block;
 }
 
-.detail-player audio{
+.detail-player audio {
+
     width:100%;
+
     display:block;
 }
 
-.detail-actions{
+/* ============================================================
+DETAIL ACTIONS
+============================================================ */
+
+.detail-actions {
+
     display:flex;
+
     gap:.7rem;
+
     flex-wrap:wrap;
+
     margin:1rem 0 1.5rem;
 }
 
-.detail-lyrics{
+.detail-actions .btn {
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:.45rem;
+}
+
+/* ============================================================
+LYRICS
+============================================================ */
+
+.detail-lyrics {
+
     font-family:Georgia,serif;
-    font-size:1.2rem;
+
+    font-size:1.15rem;
+
     line-height:2;
+
     white-space:pre-line;
+
     color:var(--text-color);
-    margin:1.5rem auto;
+
+    margin:1.5rem 0;
+
     padding:1.5rem 0;
-    border-top:2px solid var(--soft-border);
-    border-bottom:2px solid var(--soft-border);
-    max-width:1000px;
+
+    border-top:
+        2px solid var(--soft-border);
+
+    border-bottom:
+        2px solid var(--soft-border);
 }
 
-.detail-link{
-    max-width:1000px;
-    margin:auto;
-}
+.detail-link a {
 
-.detail-link a{
     color:var(--link-color);
+
     text-decoration:none;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
+.detail-link a:hover {
+    text-decoration:underline;
+}
 
-.footer{
+/* ============================================================
+FOOTER
+============================================================ */
+
+.footer {
+
     background:var(--footer-bg);
+
     color:var(--footer-text);
+
     text-align:center;
+
     padding:1.2rem;
+
     font-size:.8rem;
+
     margin-top:2rem;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* ============================================================
+MOBILE
+============================================================ */
 
-@media(max-width:650px){
+@media(max-width:650px) {
 
-    .header{
+    .header {
+
         flex-direction:column;
+
         align-items:stretch;
+
+        gap:.8rem;
     }
 
-    .header-controls{
+    .header-controls {
+
         justify-content:center;
     }
 
-    #searchInput{
+    #searchInput {
+
         width:100%;
+
         min-width:150px;
     }
 
-    .songs-grid{
+    .songs-grid {
+
         grid-template-columns:1fr;
     }
 
-    .admin-panel{
+    .admin-panel {
+
         padding:1.2rem;
     }
 
-    .admin-search-result-item{
+    .admin-song-item {
+
         align-items:flex-start;
+
         flex-direction:column;
-    }
 
-    .admin-search-actions{
-        width:100%;
-    }
-
-    .admin-search-actions .btn{
-        flex:1;
-    }
-
-    .admin-song-item{
-        flex-direction:column;
-        align-items:flex-start;
         gap:.7rem;
     }
 
-    .admin-song-item .actions{
+    .admin-song-item .actions {
+
         width:100%;
+
+        justify-content:flex-start;
     }
 
-    .song-detail-modal{
-        padding:1rem;
+    .admin-search-section {
+
+        padding:.8rem;
     }
 
-    .detail-title{
-        font-size:1.6rem;
-        padding-right:3.5rem;
+    .song-detail-content {
+
+        padding:
+            1.2rem
+            1rem
+            3rem;
     }
 
-    .detail-lyrics{
-        font-size:1.05rem;
+    .song-detail-header {
+
+        padding:
+            .8rem
+            1rem;
+    }
+
+    .detail-title {
+
+        font-size:1.2rem;
+    }
+
+    .detail-lyrics {
+
+        font-size:1rem;
+
         line-height:1.8;
-    }
-
-    .close-btn{
-        right:.8rem;
-        top:.7rem;
     }
 }
 
@@ -911,9 +1514,9 @@ body{
 
 <body>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
+<!-- ============================================================
+HEADER
+============================================================ -->
 
 <header class="header">
 
@@ -958,6 +1561,7 @@ body{
             id="themeToggleBtn"
             title="Change Theme"
         >
+
             <i
                 class="fas fa-moon"
                 id="themeIcon"
@@ -966,23 +1570,28 @@ body{
             <span id="themeText">
                 Dark
             </span>
+
         </button>
 
         <button
             class="btn btn-outline"
             id="adminToggleBtn"
         >
+
             <i class="fas fa-user-shield"></i>
+
             Admin
+
         </button>
 
     </div>
 
 </header>
 
-<!-- =========================================================
-     LOGIN
-========================================================= -->
+
+<!-- ============================================================
+LOGIN
+============================================================ -->
 
 <div
     class="login-overlay"
@@ -992,8 +1601,11 @@ body{
     <div class="login-modal">
 
         <h2>
+
             <i class="fas fa-lock"></i>
+
             Admin Login
+
         </h2>
 
         <input
@@ -1024,9 +1636,10 @@ body{
 
 </div>
 
-<!-- =========================================================
-     FULL SCREEN SONG DETAIL
-========================================================= -->
+
+<!-- ============================================================
+FULL SCREEN SONG DETAIL
+============================================================ -->
 
 <div
     class="song-detail-overlay"
@@ -1035,15 +1648,7 @@ body{
 
     <div class="song-detail-modal">
 
-        <button
-            class="close-btn"
-            id="detailCloseBtn"
-            title="Close"
-        >
-            &times;
-        </button>
-
-        <div class="detail-content">
+        <div class="song-detail-header">
 
             <div
                 class="detail-title"
@@ -1051,6 +1656,18 @@ body{
             >
                 Song
             </div>
+
+            <button
+                class="close-btn"
+                id="detailCloseBtn"
+                title="Close"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+
+        </div>
+
+        <div class="song-detail-content">
 
             <div
                 class="detail-player"
@@ -1095,9 +1712,10 @@ body{
 
 </div>
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
+
+<!-- ============================================================
+MAIN
+============================================================ -->
 
 <main class="main">
 
@@ -1106,9 +1724,10 @@ body{
         id="searchStatus"
     ></div>
 
-    <!-- =====================================================
-         ADMIN
-    ===================================================== -->
+
+    <!-- ========================================================
+    ADMIN PANEL
+    ======================================================== -->
 
     <div
         class="admin-panel"
@@ -1122,9 +1741,15 @@ body{
         >
 
         <h2>
+
             <i class="fas fa-plus-circle"></i>
+
             Add New Song
+
         </h2>
+
+
+        <!-- SONG FORM -->
 
         <div class="form-group">
 
@@ -1140,6 +1765,7 @@ body{
 
         </div>
 
+
         <div class="form-group">
 
             <label>
@@ -1152,6 +1778,7 @@ body{
             ></textarea>
 
         </div>
+
 
         <div class="form-group">
 
@@ -1167,6 +1794,7 @@ body{
 
         </div>
 
+
         <div class="form-group">
 
             <label>
@@ -1181,14 +1809,18 @@ body{
 
         </div>
 
+
         <div class="form-actions">
 
             <button
                 class="btn"
                 id="addSongBtn"
             >
+
                 <i class="fas fa-save"></i>
+
                 Add Song
+
             </button>
 
             <button
@@ -1197,32 +1829,38 @@ body{
                 type="button"
                 style="display:none;"
             >
+
                 <i class="fas fa-times"></i>
+
                 Cancel Edit
+
             </button>
 
         </div>
+
 
         <div
             class="status-message"
             id="formStatus"
         ></div>
 
+
         <hr
             style="
-            margin:1.5rem 0;
-            border:none;
-            border-top:1px solid var(--border-color);
+                margin:1.5rem 0;
+                border:none;
+                border-top:1px solid var(--border-color);
             "
         >
 
+
         <div
             style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:1rem;
-            flex-wrap:wrap;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:1rem;
+                flex-wrap:wrap;
             "
         >
 
@@ -1239,50 +1877,66 @@ body{
 
         </div>
 
-        <!-- =================================================
-             ADMIN SEARCH
-             RESULTS NOW APPEAR DIRECTLY UNDER THIS BAR
-        ================================================== -->
 
-        <div class="admin-search-wrap">
+        <!-- ====================================================
+        ADMIN SEARCH SECTION
+        ==================================================== -->
 
-            <i
-                class="fas fa-search admin-search-icon"
-            ></i>
+        <div class="admin-search-section">
 
-            <input
-                type="text"
-                id="adminSearchInput"
-                placeholder="Search songs in admin panel..."
-                autocomplete="off"
-            >
+            <div class="admin-search-title">
+
+                <i class="fas fa-search"></i>
+
+                Search Songs
+
+            </div>
+
+
+            <div class="admin-search-wrap">
+
+                <i
+                    class="fas fa-search admin-search-icon"
+                ></i>
+
+                <input
+                    type="text"
+                    id="adminSearchInput"
+                    placeholder="Search songs in admin panel..."
+                    autocomplete="off"
+                >
+
+                <i
+                    class="fas fa-times admin-search-clear"
+                    id="adminSearchClear"
+                ></i>
+
+            </div>
+
+
+            <!-- RESULT COUNT DIRECTLY BELOW SEARCH -->
 
             <div
                 class="admin-search-result"
                 id="adminSearchResult"
             ></div>
 
-            <!-- NEW SEARCH RESULTS DROPDOWN -->
+
+            <!-- MATCHING SONGS DIRECTLY BELOW SEARCH -->
 
             <div
-                class="admin-search-dropdown"
-                id="adminSearchDropdown"
+                class="admin-song-list"
+                id="adminSongList"
             ></div>
 
         </div>
 
-        <!-- NORMAL ALL SONGS LIST -->
-
-        <div
-            class="admin-song-list"
-            id="adminSongList"
-        ></div>
-
     </div>
 
-    <!-- =====================================================
-         SONGS
-    ===================================================== -->
+
+    <!-- ========================================================
+    SONGS
+    ======================================================== -->
 
     <div
         class="songs-grid"
@@ -1290,6 +1944,7 @@ body{
     ></div>
 
 </main>
+
 
 <footer class="footer">
 
@@ -1299,170 +1954,223 @@ body{
 
 </footer>
 
+
 <script>
 
 /* ============================================================
-   SUPABASE
+SUPABASE
 ============================================================ */
 
 const SUPABASE_URL =
-"https://nlybxlbtqvueulacwwju.supabase.co";
+    "https://nlybxlbtqvueulacwwju.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_PzB8o8cCresQ496jXnimbA_UyJ0yJ-6";
+    "sb_publishable_PzB8o8cCresQ496jXnimbA_UyJ0yJ-6";
 
 const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
 
 /* ============================================================
-   STATE
+STATE
 ============================================================ */
 
 let songs = [];
+
 let searchQuery = "";
+
 let currentUser = null;
+
 let currentDetailSong = null;
 
+
 /* ============================================================
-   DOM
+DOM
 ============================================================ */
 
 const grid =
-document.getElementById("songsGrid");
+    document.getElementById("songsGrid");
 
 const searchInput =
-document.getElementById("searchInput");
+    document.getElementById("searchInput");
 
 const searchClear =
-document.getElementById("searchClear");
+    document.getElementById("searchClear");
+
+const searchInfo =
+    document.getElementById("searchInfo");
 
 const searchStatus =
-document.getElementById("searchStatus");
+    document.getElementById("searchStatus");
 
 const songCount =
-document.getElementById("songCount");
+    document.getElementById("songCount");
 
 const adminPanel =
-document.getElementById("adminPanel");
+    document.getElementById("adminPanel");
 
 const adminToggleBtn =
-document.getElementById("adminToggleBtn");
+    document.getElementById("adminToggleBtn");
 
 const loginOverlay =
-document.getElementById("loginOverlay");
+    document.getElementById("loginOverlay");
 
 const loginEmail =
-document.getElementById("loginEmail");
+    document.getElementById("loginEmail");
 
 const loginPassword =
-document.getElementById("loginPassword");
+    document.getElementById("loginPassword");
 
 const loginBtn =
-document.getElementById("loginBtn");
+    document.getElementById("loginBtn");
 
 const loginError =
-document.getElementById("loginError");
+    document.getElementById("loginError");
 
 const logoutBtn =
-document.getElementById("logoutBtn");
+    document.getElementById("logoutBtn");
 
 const addSongBtn =
-document.getElementById("addSongBtn");
+    document.getElementById("addSongBtn");
 
 const cancelEditBtn =
-document.getElementById("cancelEditBtn");
+    document.getElementById("cancelEditBtn");
 
 const editingSongId =
-document.getElementById("editingSongId");
+    document.getElementById("editingSongId");
 
 const formStatus =
-document.getElementById("formStatus");
+    document.getElementById("formStatus");
 
 const songTitle =
-document.getElementById("songTitle");
+    document.getElementById("songTitle");
 
 const songLyrics =
-document.getElementById("songLyrics");
+    document.getElementById("songLyrics");
 
 const songLink =
-document.getElementById("songLink");
+    document.getElementById("songLink");
 
 const songCategory =
-document.getElementById("songCategory");
+    document.getElementById("songCategory");
 
-const adminSongList =
-document.getElementById("adminSongList");
+
+/* ADMIN SEARCH */
 
 const adminSearchInput =
-document.getElementById("adminSearchInput");
+    document.getElementById(
+        "adminSearchInput"
+    );
+
+const adminSearchClear =
+    document.getElementById(
+        "adminSearchClear"
+    );
 
 const adminSearchResult =
-document.getElementById("adminSearchResult");
+    document.getElementById(
+        "adminSearchResult"
+    );
 
-const adminSearchDropdown =
-document.getElementById("adminSearchDropdown");
+const adminSongList =
+    document.getElementById(
+        "adminSongList"
+    );
+
+
+/* DETAIL */
 
 const detailOverlay =
-document.getElementById("songDetailOverlay");
+    document.getElementById(
+        "songDetailOverlay"
+    );
 
 const detailCloseBtn =
-document.getElementById("detailCloseBtn");
+    document.getElementById(
+        "detailCloseBtn"
+    );
 
 const detailTitle =
-document.getElementById("detailTitle");
+    document.getElementById(
+        "detailTitle"
+    );
 
 const detailLyrics =
-document.getElementById("detailLyrics");
-
-const detailLink =
-document.getElementById("detailLink");
+    document.getElementById(
+        "detailLyrics"
+    );
 
 const detailPlayer =
-document.getElementById("detailPlayer");
+    document.getElementById(
+        "detailPlayer"
+    );
+
+const detailLink =
+    document.getElementById(
+        "detailLink"
+    );
 
 const detailPlayBtn =
-document.getElementById("detailPlayBtn");
+    document.getElementById(
+        "detailPlayBtn"
+    );
 
 const detailShareBtn =
-document.getElementById("detailShareBtn");
+    document.getElementById(
+        "detailShareBtn"
+    );
+
+
+/* THEME */
 
 const themeToggleBtn =
-document.getElementById("themeToggleBtn");
+    document.getElementById(
+        "themeToggleBtn"
+    );
 
 const themeIcon =
-document.getElementById("themeIcon");
+    document.getElementById(
+        "themeIcon"
+    );
 
 const themeText =
-document.getElementById("themeText");
+    document.getElementById(
+        "themeText"
+    );
+
 
 /* ============================================================
-   THEME
+THEME
 ============================================================ */
 
-function applyTheme(theme){
+function applyTheme(theme) {
 
-    if(theme === "dark"){
+    if (theme === "dark") {
 
-        document.body.classList.add("dark-mode");
-
-        themeIcon.className =
-        "fas fa-sun";
-
-        themeText.textContent =
-        "Light";
-
-    }else{
-
-        document.body.classList.remove("dark-mode");
+        document.body.classList.add(
+            "dark-mode"
+        );
 
         themeIcon.className =
-        "fas fa-moon";
+            "fas fa-sun";
 
         themeText.textContent =
-        "Dark";
+            "Light";
+
+    } else {
+
+        document.body.classList.remove(
+            "dark-mode"
+        );
+
+        themeIcon.className =
+            "fas fa-moon";
+
+        themeText.textContent =
+            "Dark";
     }
 
     localStorage.setItem(
@@ -1471,292 +2179,410 @@ function applyTheme(theme){
     );
 }
 
-function initializeTheme(){
+
+function initializeTheme() {
 
     const saved =
-    localStorage.getItem(
-        "jesusSongsTheme"
-    );
+        localStorage.getItem(
+            "jesusSongsTheme"
+        );
 
-    if(saved){
+    if (saved) {
 
         applyTheme(saved);
+
         return;
     }
 
     const dark =
-    window.matchMedia &&
-    window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
+        window.matchMedia &&
+        window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches;
 
     applyTheme(
         dark ? "dark" : "light"
     );
 }
 
+
 themeToggleBtn.addEventListener(
     "click",
-    ()=>{
+    () => {
 
         const dark =
-        document.body.classList.contains(
-            "dark-mode"
-        );
+            document.body.classList.contains(
+                "dark-mode"
+            );
 
         applyTheme(
             dark ? "light" : "dark"
         );
-
     }
 );
 
+
 /* ============================================================
-   TELUGU TRANSLITERATION
+TELUGU TRANSLITERATION
 ============================================================ */
 
-const TELUGU_VOWELS={
+const TELUGU_VOWELS = {
 
-"అ":"a","ఆ":"aa","ఇ":"i","ఈ":"ee",
-"ఉ":"u","ఊ":"oo","ఋ":"ru","ఎ":"e",
-"ఏ":"ee","ఐ":"ai","ఒ":"o","ఓ":"oo",
-"ఔ":"au"
-
+    "అ":"a",
+    "ఆ":"aa",
+    "ఇ":"i",
+    "ఈ":"ee",
+    "ఉ":"u",
+    "ఊ":"oo",
+    "ఋ":"ru",
+    "ఎ":"e",
+    "ఏ":"ee",
+    "ఐ":"ai",
+    "ఒ":"o",
+    "ఓ":"oo",
+    "ఔ":"au"
 };
 
-const TELUGU_CONSONANTS={
 
-"క":"k","ఖ":"kh","గ":"g","ఘ":"gh","ఙ":"ng",
-"చ":"ch","ఛ":"chh","జ":"j","ఝ":"jh","ఞ":"ny",
-"ట":"t","ఠ":"th","డ":"d","ఢ":"dh","ణ":"n",
-"త":"t","థ":"th","ద":"d","ధ":"dh","న":"n",
-"ప":"p","ఫ":"ph","బ":"b","భ":"bh","మ":"m",
-"య":"y","ర":"r","ల":"l","వ":"v",
-"శ":"sh","ష":"sh","స":"s","హ":"h",
-"ళ":"l","ఱ":"r"
+const TELUGU_CONSONANTS = {
 
+    "క":"k",
+    "ఖ":"kh",
+    "గ":"g",
+    "ఘ":"gh",
+    "ఙ":"ng",
+
+    "చ":"ch",
+    "ఛ":"chh",
+    "జ":"j",
+    "ఝ":"jh",
+    "ఞ":"ny",
+
+    "ట":"t",
+    "ఠ":"th",
+    "డ":"d",
+    "ఢ":"dh",
+    "ణ":"n",
+
+    "త":"t",
+    "థ":"th",
+    "ద":"d",
+    "ధ":"dh",
+    "న":"n",
+
+    "ప":"p",
+    "ఫ":"ph",
+    "బ":"b",
+    "భ":"bh",
+    "మ":"m",
+
+    "య":"y",
+    "ర":"r",
+    "ల":"l",
+    "వ":"v",
+
+    "శ":"sh",
+    "ష":"sh",
+    "స":"s",
+    "హ":"h",
+
+    "ళ":"l",
+    "ఱ":"r"
 };
 
-const TELUGU_SIGNS={
 
-"ా":"aa","ి":"i","ీ":"ee","ు":"u",
-"ూ":"oo","ృ":"ru","ె":"e","ే":"ee",
-"ై":"ai","ొ":"o","ో":"oo","ౌ":"au"
+const TELUGU_SIGNS = {
 
+    "ా":"aa",
+    "ి":"i",
+    "ీ":"ee",
+    "ు":"u",
+    "ూ":"oo",
+    "ృ":"ru",
+    "ె":"e",
+    "ే":"ee",
+    "ై":"ai",
+    "ొ":"o",
+    "ో":"oo",
+    "ౌ":"au"
 };
 
-const TELUGU_SPECIAL={
 
-"ం":"m",
-"ః":"h",
-"ఁ":"m"
+const TELUGU_SPECIAL = {
 
+    "ం":"m",
+    "ః":"h",
+    "ఁ":"m"
 };
 
-function transliterateTelugu(text){
 
-    if(!text) return "";
+function transliterateTelugu(text) {
 
-    const chars=Array.from(String(text));
+    if (!text) return "";
 
-    let result="";
+    const chars =
+        Array.from(String(text));
 
-    for(let i=0;i<chars.length;i++){
+    let result = "";
 
-        const ch=chars[i];
+    for (
+        let i = 0;
+        i < chars.length;
+        i++
+    ) {
 
-        if(TELUGU_VOWELS[ch]){
+        const ch =
+            chars[i];
 
-            result+=TELUGU_VOWELS[ch];
+        if (TELUGU_VOWELS[ch]) {
+
+            result +=
+                TELUGU_VOWELS[ch];
+
             continue;
-
         }
 
-        if(TELUGU_SPECIAL[ch]){
+        if (TELUGU_SPECIAL[ch]) {
 
-            result+=TELUGU_SPECIAL[ch];
+            result +=
+                TELUGU_SPECIAL[ch];
+
             continue;
-
         }
 
-        if(TELUGU_CONSONANTS[ch]){
+        if (TELUGU_CONSONANTS[ch]) {
 
-            const base=
-            TELUGU_CONSONANTS[ch];
+            const base =
+                TELUGU_CONSONANTS[ch];
 
-            const next=
-            chars[i+1];
+            const next =
+                chars[i + 1];
 
-            if(next && TELUGU_SIGNS[next]){
+            if (
+                next &&
+                TELUGU_SIGNS[next]
+            ) {
 
-                result+=
-                base+
-                TELUGU_SIGNS[next];
+                result +=
+                    base +
+                    TELUGU_SIGNS[next];
 
                 i++;
 
                 continue;
             }
 
-            if(next==="్"){
+            if (next === "్") {
 
-                result+=base;
+                result += base;
 
                 i++;
 
                 continue;
             }
 
-            result+=base+"a";
+            result +=
+                base + "a";
 
             continue;
         }
 
-        if(ch==="్") continue;
+        if (ch === "్") {
+            continue;
+        }
 
-        result+=ch;
+        result += ch;
     }
 
     return result;
 }
 
+
 /* ============================================================
-   NORMALIZE
+NORMALIZE
 ============================================================ */
 
-function normalizeBasic(text){
+function normalizeBasic(text) {
 
-    if(!text) return "";
+    if (!text) return "";
 
     return String(text)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/[\u200B-\u200D\uFEFF]/g,"")
-    .replace(/[’‘`]/g,"'")
-    .replace(
-        /[^a-z0-9\u0C00-\u0C7F\s']/gi,
-        " "
-    )
-    .replace(/\s+/g," ")
-    .trim();
+
+        .toLowerCase()
+
+        .normalize("NFD")
+
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+
+        .replace(
+            /[\u200B-\u200D\uFEFF]/g,
+            ""
+        )
+
+        .replace(
+            /[’‘`]/g,
+            "'"
+        )
+
+        .replace(
+            /[^a-z0-9\u0C00-\u0C7F\s']/gi,
+            " "
+        )
+
+        .replace(
+            /\s+/g,
+            " "
+        )
+
+        .trim();
 }
 
-function tokenize(text){
+
+function tokenize(text) {
 
     return normalizeBasic(text)
-    .split(/\s+/)
-    .filter(Boolean);
+
+        .split(/\s+/)
+
+        .filter(
+            word =>
+                word.length > 0
+        );
 }
 
-function createRomanVariants(text){
 
-    const base=
-    normalizeBasic(text);
+/* ============================================================
+ROMAN VARIANTS
+============================================================ */
 
-    const variants=
-    new Set();
+function createRomanVariants(text) {
 
-    if(!base) return [];
+    const base =
+        normalizeBasic(text);
+
+    const variants =
+        new Set();
+
+    if (!base) return [];
 
     variants.add(base);
 
     variants.add(
         base
-        .replace(/aa/g,"a")
-        .replace(/ee/g,"i")
-        .replace(/ii/g,"i")
-        .replace(/oo/g,"u")
-        .replace(/uu/g,"u")
+            .replace(/aa/g,"a")
+            .replace(/ee/g,"i")
+            .replace(/ii/g,"i")
+            .replace(/oo/g,"u")
+            .replace(/uu/g,"u")
     );
 
     variants.add(
         base
-        .replace(/ee/g,"e")
-        .replace(/aa/g,"a")
-        .replace(/oo/g,"o")
-        .replace(/uu/g,"u")
+            .replace(/ee/g,"e")
+            .replace(/aa/g,"a")
+            .replace(/oo/g,"o")
+            .replace(/uu/g,"u")
     );
 
     variants.add(
         base
-        .replace(/chh/g,"ch")
-        .replace(/sh/g,"s")
-        .replace(/kh/g,"k")
-        .replace(/gh/g,"g")
-        .replace(/dh/g,"d")
-        .replace(/bh/g,"b")
-        .replace(/ph/g,"p")
-        .replace(/th/g,"t")
-        .replace(/jh/g,"j")
+            .replace(/sh/g,"s")
+            .replace(/chh/g,"ch")
+            .replace(/kh/g,"k")
+            .replace(/gh/g,"g")
+            .replace(/dh/g,"d")
+            .replace(/bh/g,"b")
+            .replace(/ph/g,"p")
+            .replace(/th/g,"t")
+            .replace(/jh/g,"j")
     );
 
     return [...variants];
 }
 
+
 /* ============================================================
-   SEARCH DATA
+QUERY VARIANTS
 ============================================================ */
 
-function buildSearchData(song){
+function getQueryVariants(query) {
 
-    const title=
-    song.title || "";
+    const raw =
+        normalizeBasic(query);
 
-    const titleOriginal=
-    normalizeBasic(title);
+    const teluguToRoman =
+        normalizeBasic(
+            transliterateTelugu(query)
+        );
 
-    const titleRoman=
-    normalizeBasic(
-        transliterateTelugu(title)
-    );
+    const variants =
+        new Set();
 
-    return{
+    if (raw) {
+        variants.add(raw);
+    }
+
+    if (teluguToRoman) {
+        variants.add(
+            teluguToRoman
+        );
+    }
+
+    createRomanVariants(raw)
+        .forEach(
+            x => variants.add(x)
+        );
+
+    createRomanVariants(
+        teluguToRoman
+    )
+        .forEach(
+            x => variants.add(x)
+        );
+
+    return [...variants];
+}
+
+
+/* ============================================================
+SEARCH DATA
+============================================================ */
+
+function buildSearchData(song) {
+
+    const title =
+        song.title || "";
+
+    const titleOriginal =
+        normalizeBasic(title);
+
+    const titleRoman =
+        normalizeBasic(
+            transliterateTelugu(title)
+        );
+
+    return {
 
         titleOriginal,
+
         titleRoman,
 
         titleWords:[
             ...tokenize(titleOriginal),
             ...tokenize(titleRoman)
         ]
-
     };
 }
 
-function getQueryVariants(query){
-
-    const raw=
-    normalizeBasic(query);
-
-    const roman=
-    normalizeBasic(
-        transliterateTelugu(query)
-    );
-
-    const variants=
-    new Set();
-
-    if(raw)
-        variants.add(raw);
-
-    if(roman)
-        variants.add(roman);
-
-    createRomanVariants(raw)
-    .forEach(x=>variants.add(x));
-
-    createRomanVariants(roman)
-    .forEach(x=>variants.add(x));
-
-    return [...variants];
-}
 
 /* ============================================================
-   LEVENSHTEIN
+LEVENSHTEIN
 ============================================================ */
 
-function levenshtein(a,b){
+function levenshtein(a,b) {
 
     a=String(a||"");
     b=String(b||"");
@@ -1764,29 +2590,38 @@ function levenshtein(a,b){
     if(a===b) return 0;
 
     if(!a.length) return b.length;
+
     if(!b.length) return a.length;
 
-    let previous=
-    Array.from(
-        {length:b.length+1},
-        (_,i)=>i
-    );
+    let previous =
+        Array.from(
+            {length:b.length+1},
+            (_,i)=>i
+        );
 
-    for(let i=0;i<a.length;i++){
+    for(
+        let i=0;
+        i<a.length;
+        i++
+    ){
 
         const current=[i+1];
 
-        for(let j=0;j<b.length;j++){
+        for(
+            let j=0;
+            j<b.length;
+            j++
+        ){
 
-            const insert=
-            current[j]+1;
+            const insert =
+                current[j]+1;
 
-            const remove=
-            previous[j+1]+1;
+            const remove =
+                previous[j+1]+1;
 
-            const replace=
-            previous[j]+
-            (a[i]===b[j]?0:1);
+            const replace =
+                previous[j]+
+                (a[i]===b[j]?0:1);
 
             current.push(
                 Math.min(
@@ -1803,11 +2638,21 @@ function levenshtein(a,b){
     return previous[b.length];
 }
 
-function fuzzyTokenMatch(queryWord,targetWords){
+
+/* ============================================================
+FUZZY MATCH
+============================================================ */
+
+function fuzzyTokenMatch(
+    queryWord,
+    targetWords
+){
 
     if(!queryWord) return false;
 
-    for(const target of targetWords){
+    for(
+        const target of targetWords
+    ){
 
         if(!target) continue;
 
@@ -1819,12 +2664,13 @@ function fuzzyTokenMatch(queryWord,targetWords){
             queryWord.startsWith(target)
         ){
 
-            if(
+            const difference =
                 Math.abs(
                     target.length-
                     queryWord.length
-                )<=2
-            )
+                );
+
+            if(difference<=2)
                 return true;
         }
 
@@ -1833,14 +2679,16 @@ function fuzzyTokenMatch(queryWord,targetWords){
             target.length>=4
         ){
 
-            const distance=
-            levenshtein(
-                queryWord,
-                target
-            );
+            const distance =
+                levenshtein(
+                    queryWord,
+                    target
+                );
 
-            const allowed=
-            queryWord.length>=7?2:1;
+            const allowed =
+                queryWord.length>=7
+                ?2
+                :1;
 
             if(distance<=allowed)
                 return true;
@@ -1850,200 +2698,275 @@ function fuzzyTokenMatch(queryWord,targetWords){
     return false;
 }
 
+
+/* ============================================================
+SCORE
+============================================================ */
+
 function scoreSong(song,query){
 
     if(!query) return 0;
 
-    const data=
-    buildSearchData(song);
+    const data =
+        buildSearchData(song);
 
-    const variants=
-    getQueryVariants(query);
+    const variants =
+        getQueryVariants(query);
 
-    const queryWords=
-    tokenize(query);
+    const queryWords =
+        tokenize(query);
 
-    let score=0;
+    let bestScore=0;
 
-    for(const q of variants){
+    const titleOriginal =
+        data.titleOriginal;
+
+    const titleRoman =
+        data.titleRoman;
+
+    const titleWords =
+        data.titleWords;
+
+    for(
+        const q of variants
+    ){
 
         if(
-            q===data.titleOriginal ||
-            q===data.titleRoman
-        )
-            score=Math.max(score,1000);
+            q===titleOriginal ||
+            q===titleRoman
+        ){
+
+            bestScore =
+                Math.max(
+                    bestScore,
+                    1000
+                );
+        }
+    }
+
+    for(
+        const q of variants
+    ){
 
         if(
-            data.titleOriginal.startsWith(q) ||
-            data.titleRoman.startsWith(q)
-        )
-            score=Math.max(score,850);
+            titleOriginal.startsWith(q) ||
+            titleRoman.startsWith(q)
+        ){
+
+            bestScore =
+                Math.max(
+                    bestScore,
+                    850
+                );
+        }
+    }
+
+    for(
+        const q of variants
+    ){
 
         if(
             q.length>=2 &&
             (
-                data.titleOriginal.includes(q) ||
-                data.titleRoman.includes(q)
+                titleOriginal.includes(q) ||
+                titleRoman.includes(q)
             )
-        )
-            score=Math.max(score,700);
+        ){
+
+            bestScore =
+                Math.max(
+                    bestScore,
+                    700
+                );
+        }
     }
 
     let matches=0;
 
-    for(const word of queryWords){
+    for(
+        const word of queryWords
+    ){
 
-        const vars=
-        getQueryVariants(word);
+        const variants2 =
+            getQueryVariants(word);
 
-        if(
-            vars.some(
-                v=>
+        let matched=false;
+
+        for(
+            const variant of variants2
+        ){
+
+            if(
                 fuzzyTokenMatch(
-                    v,
-                    data.titleWords
+                    variant,
+                    titleWords
                 )
-            )
-        )
+            ){
+
+                matched=true;
+                break;
+            }
+        }
+
+        if(matched)
             matches++;
     }
 
     if(
-        queryWords.length &&
+        queryWords.length>0 &&
         matches===queryWords.length
     ){
 
-        score=
-        Math.max(
-            score,
-            800
-        );
+        bestScore =
+            Math.max(
+                bestScore,
+                800
+            );
 
-    }else if(matches){
+    }else if(matches>0){
 
-        score=
-        Math.max(
-            score,
-            500+
-            matches*30
-        );
+        bestScore =
+            Math.max(
+                bestScore,
+                500+
+                matches*30
+            );
     }
 
-    return score;
+    return bestScore;
 }
 
+
 /* ============================================================
-   ESCAPE
+ESCAPE
 ============================================================ */
 
 function escapeHTML(value){
 
     return String(value??"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+}
+
+
 /* ============================================================
-   LOAD SONGS
+LOAD SONGS
 ============================================================ */
 
 async function loadSongs(){
 
     songCount.textContent=
-    "Loading...";
+        "Loading...";
 
-    const {data,error}=
+    const {
+        data,
+        error
+    }=
     await supabaseClient
-    .from("songs")
-    .select("*")
-    .order(
-        "id",
-        {ascending:true}
-    );
+        .from("songs")
+        .select("*")
+        .order(
+            "id",
+            {
+                ascending:true
+            }
+        );
 
     if(error){
 
-        console.error(error);
-
-        songCount.textContent=
-        "0 songs";
+        console.error(
+            "Supabase Error:",
+            error
+        );
 
         grid.innerHTML=`
 
-        <div class="no-results">
+            <div class="no-results">
 
-            <div class="no-results-icon">
-                <i class="fas fa-exclamation-triangle"></i>
+                <div class="no-results-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+
+                <div class="no-results-title">
+                    Unable to load songs
+                </div>
+
+                <div class="no-results-text">
+                    ${escapeHTML(error.message)}
+                </div>
+
             </div>
-
-            <div class="no-results-title">
-                Unable to load songs
-            </div>
-
-            <div>
-                ${escapeHTML(error.message)}
-            </div>
-
-        </div>
 
         `;
+
+        songCount.textContent=
+            "0 songs";
 
         return;
     }
 
-    songs=
-    Array.isArray(data)?data:[];
+    songs =
+        Array.isArray(data)
+        ? data
+        : [];
 
     renderSongs();
+
     renderAdminList();
 }
 
+
 /* ============================================================
-   MAIN SONG RENDER
+MAIN SONG RENDER
 ============================================================ */
 
 function renderSongs(){
 
-    const q=
-    searchQuery.trim();
+    const q =
+        searchQuery.trim();
 
     if(!songs.length){
 
         songCount.textContent=
-        "0 songs";
+            "0 songs";
 
         grid.innerHTML=`
 
-        <div class="no-results">
+            <div class="no-results">
 
-            <div class="no-results-icon">
-                <i class="fas fa-music"></i>
+                <div class="no-results-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+
+                <div class="no-results-title">
+                    No songs found
+                </div>
+
+                <div class="no-results-text">
+                    Admin hasn't added any songs yet.
+                </div>
+
             </div>
-
-            <div class="no-results-title">
-                No songs found
-            </div>
-
-            <div>
-                Admin hasn't added any songs yet.
-            </div>
-
-        </div>
 
         `;
+
+        searchStatus.classList.remove(
+            "active"
+        );
 
         return;
     }
 
     if(!q){
-
-        songCount.textContent=
-        `${songs.length} song${songs.length!==1?"s":""}`;
-
-        searchStatus.classList.remove("active");
 
         renderSongCards(
             songs.map(
@@ -2055,80 +2978,168 @@ function renderSongs(){
             false
         );
 
+        songCount.textContent=
+            `${songs.length} song${songs.length!==1?"s":""}`;
+
+        searchStatus.classList.remove(
+            "active"
+        );
+
         return;
     }
 
-    const variants=
-    getQueryVariants(q);
+    const variants =
+        [
+            ...new Set(
+                getQueryVariants(q)
+                    .map(
+                        v=>normalizeBasic(v)
+                    )
+                    .filter(Boolean)
+            )
+        ];
 
-    const results=
-    songs
-    .map(
-        (song,index)=>({
+    function startsWithSearch(song){
 
-            song,
-            index,
-            score:scoreSong(song,q)
-
-        })
-    )
-    .filter(item=>{
-
-        const data=
-        buildSearchData(item.song);
+        const data =
+            buildSearchData(song);
 
         return variants.some(
             v=>
-            data.titleOriginal.startsWith(v) ||
-            data.titleRoman.startsWith(v)
+                data.titleOriginal.startsWith(v) ||
+                data.titleRoman.startsWith(v)
+        );
+    }
+
+    const matches =
+        songs
+
+        .map(
+            (song,index)=>({
+
+                song,
+
+                index,
+
+                score:
+                    scoreSong(
+                        song,
+                        q
+                    )
+            })
+        )
+
+        .filter(
+            item=>
+                startsWithSearch(
+                    item.song
+                )
+        )
+
+        .sort(
+            (a,b)=>{
+
+                const aTitle =
+                    normalizeBasic(
+                        a.song.title||""
+                    );
+
+                const bTitle =
+                    normalizeBasic(
+                        b.song.title||""
+                    );
+
+                const aRoman =
+                    normalizeBasic(
+                        transliterateTelugu(
+                            a.song.title||""
+                        )
+                    );
+
+                const bRoman =
+                    normalizeBasic(
+                        transliterateTelugu(
+                            b.song.title||""
+                        )
+                    );
+
+                const aExact =
+                    variants.some(
+                        v=>
+                            aTitle===v ||
+                            aRoman===v
+                    );
+
+                const bExact =
+                    variants.some(
+                        v=>
+                            bTitle===v ||
+                            bRoman===v
+                    );
+
+                if(
+                    aExact!==bExact
+                ){
+
+                    return aExact
+                        ?-1
+                        :1;
+                }
+
+                if(
+                    aTitle.length!==
+                    bTitle.length
+                ){
+
+                    return
+                        aTitle.length-
+                        bTitle.length;
+                }
+
+                return
+                    a.index-
+                    b.index;
+            }
         );
 
-    })
-    .sort(
-        (a,b)=>{
-
-            if(b.score!==a.score)
-                return b.score-a.score;
-
-            return a.index-b.index;
-        }
-    );
-
-    if(!results.length){
+    if(!matches.length){
 
         songCount.textContent=
-        "0 results";
+            "0 results";
 
-        searchStatus.classList.add("active");
+        searchStatus.classList.add(
+            "active"
+        );
 
         searchStatus.innerHTML=`
 
-        <i class="fas fa-search"></i>
+            <i class="fas fa-search"></i>
 
-        No song title starts with
-        <strong>
-            "${escapeHTML(q)}"
-        </strong>
+            No song title starts with
+
+            <strong>
+                "${escapeHTML(q)}"
+            </strong>
 
         `;
 
         grid.innerHTML=`
 
-        <div class="no-results">
+            <div class="no-results">
 
-            <div class="no-results-icon">
-                <i class="fas fa-search"></i>
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="no-results-title">
+                    No starting-name matches
+                </div>
+
+                <div class="no-results-text">
+                    Try the beginning of the song name.
+                </div>
+
             </div>
-
-            <div class="no-results-title">
-                No starting-name matches
-            </div>
-
-            <div>
-                Try the beginning of the song name.
-            </div>
-
-        </div>
 
         `;
 
@@ -2136,557 +3147,597 @@ function renderSongs(){
     }
 
     songCount.textContent=
-    `${results.length} result${results.length!==1?"s":""}`;
+        `${matches.length} result${matches.length!==1?"s":""}`;
 
-    searchStatus.classList.add("active");
+    searchStatus.classList.add(
+        "active"
+    );
 
     searchStatus.innerHTML=`
 
-    <i class="fas fa-search"></i>
+        <i class="fas fa-search"></i>
 
-    Songs starting with
-    <strong>
-        "${escapeHTML(q)}"
-    </strong>
+        Songs starting with
 
-    · ${results.length} found
+        <strong>
+            "${escapeHTML(q)}"
+        </strong>
+
+        <span style="opacity:.75;">
+            · ${matches.length} found
+        </span>
 
     `;
 
-    renderSongCards(results,true);
-}
-
-/* ============================================================
-   SONG CARDS
-============================================================ */
-
-function renderSongCards(results,showScore){
-
-    grid.innerHTML=
-    results.map(item=>{
-
-        const song=item.song;
-
-        const preview=
-        (song.lyrics||"")
-        .split("\n")
-        .find(x=>x.trim())||
-        "...";
-
-        return`
-
-        <div
-            class="song-card"
-            data-id="${escapeHTML(song.id)}"
-        >
-
-            <div class="song-card-header">
-
-                <div class="song-title">
-
-                    <i class="fas fa-music"></i>
-
-                    ${escapeHTML(song.title)}
-
-                </div>
-
-                ${
-                    showScore
-                    ?
-                    `
-                    <div>
-                        <span class="relevance-badge">
-                            <i class="fas fa-play"></i>
-                            Starts With
-                        </span>
-                    </div>
-                    `
-                    :""
-                }
-
-            </div>
-
-            <div class="song-card-body">
-
-                <div class="song-preview">
-                    ${escapeHTML(preview)}
-                </div>
-
-            </div>
-
-            ${
-                song.audio_url
-                ?
-                `
-                <div class="song-link">
-
-                    <a
-                        href="#"
-                        class="inline-play-link"
-                        data-id="${escapeHTML(song.id)}"
-                    >
-                        <i class="fas fa-play-circle"></i>
-                        Play / Watch
-                    </a>
-
-                </div>
-                `
-                :""
-            }
-
-            <div class="song-footer">
-
-                <span>
-                    <i class="far fa-eye"></i>
-                    Tap to view full
-                </span>
-
-                <i
-                    class="fas fa-arrow-right"
-                    style="color:var(--primary-dark)"
-                ></i>
-
-            </div>
-
-        </div>
-
-        `;
-
-    }).join("");
-}
-
-/* ============================================================
-   ADMIN SEARCH DROPDOWN
-   THIS IS THE MAIN NEW FEATURE
-============================================================ */
-
-function renderAdminSearchDropdown(){
-
-    if(!currentUser){
-
-        adminSearchDropdown.classList.remove(
-            "active"
-        );
-
-        return;
-    }
-
-    const raw=
-    adminSearchInput.value.trim();
-
-    if(!raw){
-
-        adminSearchDropdown.innerHTML="";
-
-        adminSearchDropdown.classList.remove(
-            "active"
-        );
-
-        adminSearchResult.textContent=
-        `${songs.length} song${songs.length!==1?"s":""}`;
-
-        return;
-    }
-
-    const variants=
-    getQueryVariants(raw);
-
-    const results=
-    songs
-    .map(
-        (song,index)=>{
-
-            const data=
-            buildSearchData(song);
-
-            const title=
-            data.titleOriginal;
-
-            const roman=
-            data.titleRoman;
-
-            const starts=
-            variants.some(
-                v=>
-                title.startsWith(v) ||
-                roman.startsWith(v)
-            );
-
-            const contains=
-            variants.some(
-                v=>
-                title.includes(v) ||
-                roman.includes(v)
-            );
-
-            return{
-
-                song,
-                index,
-                starts,
-                contains,
-                score:scoreSong(song,raw)
-
-            };
-
-        }
-    )
-    .filter(
-        x=>x.contains
-    )
-    .sort(
-        (a,b)=>{
-
-            if(a.starts!==b.starts)
-                return a.starts?-1:1;
-
-            if(b.score!==a.score)
-                return b.score-a.score;
-
-            return a.index-b.index;
-
-        }
+    renderSongCards(
+        matches,
+        true
     );
+}
 
-    adminSearchResult.innerHTML=
-    results.length
-    ?
-    `<i class="fas fa-search"></i>
-     ${results.length}
-     result${results.length!==1?"s":""}
-     found`
-    :
-    `<i class="fas fa-search"></i>
-     No songs found`;
 
-    if(!results.length){
+/* ============================================================
+SONG CARDS
+============================================================ */
 
-        adminSearchDropdown.innerHTML=`
+function renderSongCards(
+    results,
+    showScore
+){
 
-        <div class="admin-search-empty">
+    grid.innerHTML =
+        results.map(
+            item=>{
 
-            <i
-                class="fas fa-search"
-                style="font-size:1.5rem;margin-bottom:.5rem;"
-            ></i>
+                const song =
+                    item.song;
 
-            <div>
-                No songs found for
-                <strong>
-                    "${escapeHTML(raw)}"
-                </strong>
-            </div>
+                const preview =
+                    (song.lyrics||"")
+                        .split("\n")
+                        .filter(
+                            x=>x.trim()
+                        )[0] ||
+                    "...";
 
-        </div>
+                const link =
+                    song.audio_url||"";
 
-        `;
+                return `
 
-        adminSearchDropdown.classList.add(
-            "active"
-        );
+                    <div
+                        class="song-card"
+                        data-id="${escapeAttribute(song.id)}"
+                    >
 
-        return;
-    }
+                        <div class="song-card-header">
 
-    adminSearchDropdown.innerHTML=`
+                            <span class="song-title">
 
-    <div class="admin-search-dropdown-header">
+                                <i class="fas fa-music"></i>
 
-        <i class="fas fa-search"></i>
+                                ${escapeHTML(song.title)}
 
-        Search results for
-        <strong>
-            "${escapeHTML(raw)}"
-        </strong>
+                            </span>
 
-    </div>
+                            ${
+                                showScore
+                                ?
+                                `
+                                <div>
 
-    ${
-        results.map(item=>{
+                                    <span class="relevance-badge">
 
-            const song=
-            item.song;
+                                        <i class="fas fa-play"></i>
 
-            return`
+                                        Starts With
 
-            <div
-                class="
-                    admin-search-result-item
-                    ${item.starts?"admin-search-match":""}
-                "
-            >
+                                    </span>
 
-                <div class="admin-search-song-info">
+                                </div>
+                                `
+                                :
+                                ""
+                            }
 
-                    <div class="admin-search-song-title">
+                        </div>
 
-                        <i
-                            class="fas fa-music"
-                            style="color:var(--primary-dark);margin-right:.4rem;"
-                        ></i>
 
-                        ${escapeHTML(song.title)}
+                        <div class="song-card-body">
 
-                    </div>
+                            <div class="song-preview">
 
-                    <div class="admin-search-song-meta">
+                                ${escapeHTML(preview)}
+
+                            </div>
+
+                        </div>
+
 
                         ${
-                            item.starts
+                            link
                             ?
-                            "✓ Starts with search"
-                            :
-                            "Matching song"
-                        }
+                            `
+                            <div class="song-link">
 
-                        ${
-                            song.category
-                            ?
-                            " · "+escapeHTML(song.category)
+                                <a
+                                    href="#"
+                                    class="inline-play-link"
+                                    data-id="${escapeAttribute(song.id)}"
+                                >
+
+                                    <i class="fas fa-play-circle"></i>
+
+                                    Play / Watch
+
+                                </a>
+
+                            </div>
+                            `
                             :
                             ""
                         }
 
+
+                        <div class="song-footer">
+
+                            <span>
+
+                                <i class="far fa-eye"></i>
+
+                                Tap to view full
+
+                            </span>
+
+                            <i
+                                class="fas fa-arrow-right"
+                                style="color:var(--primary-dark);"
+                            ></i>
+
+                        </div>
+
                     </div>
 
-                </div>
-
-                <div class="admin-search-actions">
-
-                    <button
-                        class="btn btn-edit
-                        admin-dropdown-edit"
-                        data-id="${escapeHTML(song.id)}"
-                    >
-                        <i class="fas fa-pen"></i>
-                        Edit
-                    </button>
-
-                    <button
-                        class="btn btn-danger
-                        admin-dropdown-delete"
-                        data-id="${escapeHTML(song.id)}"
-                    >
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-            `;
-
-        }).join("")
-    }
-
-    `;
-
-    adminSearchDropdown.classList.add(
-        "active"
-    );
-
-    /*
-       Attach Edit buttons
-    */
-
-    adminSearchDropdown
-    .querySelectorAll(
-        ".admin-dropdown-edit"
-    )
-    .forEach(button=>{
-
-        button.addEventListener(
-            "click",
-            e=>{
-
-                e.stopPropagation();
-
-                const id=
-                Number(
-                    button.dataset.id
-                );
-
-                startEditSong(id);
-
-                adminSearchDropdown
-                .classList.remove(
-                    "active"
-                );
-
+                `;
             }
-        );
-
-    });
-
-    /*
-       Attach Delete buttons
-    */
-
-    adminSearchDropdown
-    .querySelectorAll(
-        ".admin-dropdown-delete"
-    )
-    .forEach(button=>{
-
-        button.addEventListener(
-            "click",
-            async e=>{
-
-                e.stopPropagation();
-
-                const id=
-                Number(
-                    button.dataset.id
-                );
-
-                await deleteSong(id);
-
-                /*
-                   Re-run search after delete.
-                */
-
-                renderAdminSearchDropdown();
-
-            }
-        );
-
-    });
+        )
+        .join("");
 }
 
+
 /* ============================================================
-   ADMIN NORMAL LIST
+ADMIN SEARCH
 ============================================================ */
+
+/*
+   THIS IS THE IMPORTANT UPDATED FUNCTION.
+
+   Search bar:
+       ↓
+   Search result count:
+       ↓
+   Matching songs
+
+   Only matching songs are shown while searching.
+*/
 
 function renderAdminList(){
 
     if(!currentUser){
 
         adminSongList.innerHTML="";
+
         adminSearchResult.textContent="";
 
         return;
     }
 
-    if(!songs.length){
+    const raw =
+        adminSearchInput.value.trim();
 
-        adminSongList.innerHTML=
-        `<p style="color:var(--muted-text)">
-            No songs added yet.
-        </p>`;
+    const q =
+        normalizeBasic(raw);
+
+
+    /*
+       NO SEARCH:
+       Show all songs directly under the search bar.
+    */
+
+    if(!q){
+
+        adminSearchClear.classList.remove(
+            "active"
+        );
+
+        adminSearchResult.innerHTML=
+            `${songs.length} song${songs.length!==1?"s":""}`;
+
+        if(!songs.length){
+
+            adminSongList.innerHTML=`
+
+                <div
+                    style="
+                        padding:1rem 0;
+                        color:var(--muted-text);
+                        text-align:center;
+                    "
+                >
+
+                    <i class="fas fa-music"></i>
+
+                    No songs added yet.
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+        adminSongList.innerHTML =
+            songs.map(
+                (song,index)=>
+                    createAdminSongItem(
+                        song,
+                        index,
+                        false
+                    )
+            )
+            .join("");
+
+        attachAdminEvents();
 
         return;
     }
 
+
     /*
-       IMPORTANT:
-       The normal Existing Songs list remains below.
-       The search results are displayed separately above.
+       SEARCH ACTIVE
     */
 
-    adminSongList.innerHTML=
-    songs.map(song=>{
+    adminSearchClear.classList.add(
+        "active"
+    );
 
-        const editing=
-        Number(editingSongId.value)===
-        Number(song.id);
+    const variants =
+        getQueryVariants(q)
+            .map(
+                normalizeBasic
+            )
+            .filter(Boolean);
 
-        return`
 
-        <div class="admin-song-item">
+    const results =
+        songs
 
-            <span>
+        .map(
+            (song,index)=>{
 
-                ${escapeHTML(song.title)}
+                const title =
+                    normalizeBasic(
+                        song.title||""
+                    );
 
-                ${
-                    editing
-                    ?
-                    `
-                    <span class="edit-badge">
-                        Editing
-                    </span>
-                    `
-                    :""
+                const roman =
+                    normalizeBasic(
+                        transliterateTelugu(
+                            song.title||""
+                        )
+                    );
+
+                const starts =
+                    variants.some(
+                        v=>
+                            title.startsWith(v) ||
+                            roman.startsWith(v)
+                    );
+
+                const contains =
+                    variants.some(
+                        v=>
+                            title.includes(v) ||
+                            roman.includes(v)
+                    );
+
+                return {
+
+                    song,
+
+                    index,
+
+                    starts,
+
+                    contains
+                };
+            }
+        )
+
+        .filter(
+            item=>
+                item.contains
+        )
+
+        .sort(
+            (a,b)=>{
+
+                if(
+                    a.starts!==b.starts
+                ){
+
+                    return a.starts
+                        ?-1
+                        :1;
                 }
 
-            </span>
+                return
+                    a.index-
+                    b.index;
+            }
+        );
+
+
+    /*
+       RESULT COUNT
+       appears directly under search bar
+    */
+
+    if(results.length){
+
+        adminSearchResult.innerHTML=`
+
+            <i class="fas fa-check-circle"
+               style="color:#2ecc71;">
+            </i>
+
+            <strong>
+                ${results.length}
+            </strong>
+
+            result${results.length!==1?"s":""}
+            found for
+
+            <strong>
+                "${escapeHTML(raw)}"
+            </strong>
+
+        `;
+
+    }else{
+
+        adminSearchResult.innerHTML=`
+
+            <i class="fas fa-search"></i>
+
+            No songs found for
+
+            <strong>
+                "${escapeHTML(raw)}"
+            </strong>
+
+        `;
+    }
+
+
+    /*
+       SHOW RESULTS DIRECTLY BELOW SEARCH
+    */
+
+    if(!results.length){
+
+        adminSongList.innerHTML=`
+
+            <div
+                style="
+                    padding:1.5rem 1rem;
+                    text-align:center;
+                    color:var(--muted-text);
+                "
+            >
+
+                <div
+                    style="
+                        font-size:2rem;
+                        margin-bottom:.5rem;
+                    "
+                >
+                    <i class="fas fa-search"></i>
+                </div>
+
+                No matching songs.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    adminSongList.innerHTML =
+        results.map(
+            item=>
+                createAdminSongItem(
+                    item.song,
+                    item.index,
+                    item.starts
+                )
+        )
+        .join("");
+
+
+    attachAdminEvents();
+}
+
+
+/* ============================================================
+CREATE ADMIN SONG ITEM
+============================================================ */
+
+function createAdminSongItem(
+    song,
+    index,
+    starts
+){
+
+    const editing =
+        Number(
+            editingSongId.value
+        ) === Number(song.id);
+
+    return `
+
+        <div
+            class="admin-song-item
+            ${starts ? "match-first" : ""}"
+        >
+
+            <div class="admin-song-name">
+
+                <i class="fas fa-music"></i>
+
+                <span>
+
+                    ${escapeHTML(song.title)}
+
+                    ${
+                        editing
+                        ?
+                        `
+                        <span class="edit-badge">
+                            Editing
+                        </span>
+                        `
+                        :
+                        ""
+                    }
+
+                </span>
+
+            </div>
+
 
             <div class="actions">
 
                 <button
                     class="btn btn-edit edit-song"
-                    data-id="${escapeHTML(song.id)}"
+                    data-id="${escapeAttribute(song.id)}"
                     style="
-                        padding:.25rem .8rem;
+                        padding:.35rem .85rem;
                         font-size:.8rem;
                     "
                 >
+
                     <i class="fas fa-pen"></i>
+
                     Edit
+
                 </button>
+
 
                 <button
                     class="btn btn-danger delete-song"
-                    data-id="${escapeHTML(song.id)}"
+                    data-id="${escapeAttribute(song.id)}"
                     style="
-                        padding:.25rem .8rem;
+                        padding:.35rem .85rem;
                         font-size:.8rem;
                     "
                 >
+
                     <i class="fas fa-trash"></i>
+
                     Delete
+
                 </button>
 
             </div>
 
         </div>
 
-        `;
-
-    }).join("");
-
-    document
-    .querySelectorAll(".edit-song")
-    .forEach(button=>{
-
-        button.addEventListener(
-            "click",
-            ()=>{
-
-                startEditSong(
-                    Number(
-                        button.dataset.id
-                    )
-                );
-
-            }
-        );
-
-    });
-
-    document
-    .querySelectorAll(".delete-song")
-    .forEach(button=>{
-
-        button.addEventListener(
-            "click",
-            ()=>{
-
-                deleteSong(
-                    Number(
-                        button.dataset.id
-                    )
-                );
-
-            }
-        );
-
-    });
+    `;
 }
 
+
 /* ============================================================
-   YOUTUBE
+ADMIN EVENTS
+============================================================ */
+
+function attachAdminEvents(){
+
+    document
+        .querySelectorAll(".edit-song")
+        .forEach(
+            button=>{
+
+                button.addEventListener(
+                    "click",
+                    ()=>{
+
+                        startEditSong(
+                            Number(
+                                button.dataset.id
+                            )
+                        );
+                    }
+                );
+            }
+        );
+
+
+    document
+        .querySelectorAll(".delete-song")
+        .forEach(
+            button=>{
+
+                button.addEventListener(
+                    "click",
+                    ()=>{
+
+                        deleteSong(
+                            Number(
+                                button.dataset.id
+                            )
+                        );
+                    }
+                );
+            }
+        );
+}
+
+
+/* ============================================================
+ADMIN SEARCH INPUT
+============================================================ */
+
+adminSearchInput.addEventListener(
+    "input",
+    function(){
+
+        renderAdminList();
+    }
+);
+
+
+/* ============================================================
+ADMIN SEARCH CLEAR
+============================================================ */
+
+adminSearchClear.addEventListener(
+    "click",
+    function(){
+
+        adminSearchInput.value="";
+
+        renderAdminList();
+
+        adminSearchInput.focus();
+    }
+);
+
+
+/* ============================================================
+YOUTUBE ID
 ============================================================ */
 
 function getYouTubeId(url){
@@ -2695,8 +3746,8 @@ function getYouTubeId(url){
 
     try{
 
-        const u=
-        new URL(url);
+        const u =
+            new URL(url);
 
         if(
             u.hostname.includes(
@@ -2705,9 +3756,8 @@ function getYouTubeId(url){
         ){
 
             return u.pathname
-            .replace("/","")
-            .split("?")[0];
-
+                .replace("/","")
+                .split("?")[0];
         }
 
         if(
@@ -2718,56 +3768,62 @@ function getYouTubeId(url){
 
             if(
                 u.pathname==="/watch"
-            )
-                return u.searchParams.get("v");
+            ){
+
+                return u.searchParams.get(
+                    "v"
+                );
+            }
 
             if(
                 u.pathname.startsWith(
                     "/shorts/"
                 )
-            )
+            ){
+
                 return u.pathname
-                .split("/")[2];
+                    .split("/")[2];
+            }
 
             if(
                 u.pathname.startsWith(
                     "/embed/"
                 )
-            )
+            ){
+
                 return u.pathname
-                .split("/")[2];
+                    .split("/")[2];
+            }
         }
 
-    }catch(e){
-
-        console.error(e);
-
-    }
+    }catch(e){}
 
     return null;
 }
 
+
 /* ============================================================
-   SHARE URL
+SHARE URL
 ============================================================ */
 
 function buildShareUrl(song){
 
-    const url=
-    new URL(
-        window.location.href
-    );
+    const u =
+        new URL(
+            window.location.href
+        );
 
-    url.search="";
+    u.search="";
 
-    url.hash=
-    `song=${encodeURIComponent(song.id)}`;
+    u.hash =
+        `song=${encodeURIComponent(song.id)}`;
 
-    return url.toString();
+    return u.toString();
 }
 
+
 /* ============================================================
-   OPEN SONG FULL SCREEN
+OPEN FULL SCREEN SONG
 ============================================================ */
 
 function openDetail(
@@ -2775,44 +3831,49 @@ function openDetail(
     updateUrl=true
 ){
 
-    currentDetailSong=
-    song;
+    currentDetailSong =
+        song;
+
 
     detailTitle.innerHTML=`
 
-    <i class="fas fa-music"></i>
+        <i class="fas fa-music"></i>
 
-    ${escapeHTML(song.title)}
+        ${escapeHTML(song.title)}
 
     `;
 
-    detailLyrics.textContent=
-    song.lyrics ||
-    "No lyrics available.";
+
+    detailLyrics.textContent =
+        song.lyrics ||
+        "No lyrics available.";
+
 
     detailPlayer.innerHTML="";
 
-    const youtubeId=
-    getYouTubeId(
-        song.audio_url||""
-    );
 
-    if(youtubeId){
-
-        const iframe=
-        document.createElement(
-            "iframe"
+    const yt =
+        getYouTubeId(
+            song.audio_url||""
         );
 
-        iframe.src=
-        `https://www.youtube.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&rel=0&playsinline=1`;
 
-        iframe.title=
-        song.title ||
-        "Jesus Song";
+    if(yt){
 
-        iframe.allow=
-        "autoplay; encrypted-media; picture-in-picture";
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+        iframe.src =
+            `https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&rel=0&playsinline=1`;
+
+        iframe.title =
+            song.title ||
+            "Jesus Song";
+
+        iframe.allow =
+            "autoplay; encrypted-media; picture-in-picture";
 
         iframe.allowFullscreen=true;
 
@@ -2821,93 +3882,118 @@ function openDetail(
         );
 
         detailPlayBtn.innerHTML=`
+
             <i class="fas fa-play"></i>
+
             Playing / Watching
+
         `;
 
     }else if(song.audio_url){
 
-        const audio=
-        document.createElement(
-            "audio"
-        );
+        const audio =
+            document.createElement(
+                "audio"
+            );
 
         audio.controls=true;
+
         audio.autoplay=true;
-        audio.src=song.audio_url;
-        audio.preload="metadata";
+
+        audio.src =
+            song.audio_url;
+
+        audio.preload=
+            "metadata";
 
         detailPlayer.appendChild(
             audio
         );
 
         detailPlayBtn.innerHTML=`
+
             <i class="fas fa-play"></i>
+
             Playing
+
         `;
 
     }else{
 
         detailPlayer.innerHTML=`
 
-        <div
-            style="
-                color:#fff;
-                padding:2rem;
-                text-align:center;
-            "
-        >
+            <div
+                style="
+                    color:#fff;
+                    padding:2rem;
+                    text-align:center;
+                "
+            >
 
-            <i class="fas fa-music"></i>
+                <i class="fas fa-music"></i>
 
-            No audio / YouTube link available.
+                No audio / YouTube link available.
 
-        </div>
+            </div>
 
         `;
 
         detailPlayBtn.innerHTML=`
+
             <i class="fas fa-play"></i>
+
             Play / Watch
+
         `;
     }
 
-    detailLink.innerHTML=
-    song.audio_url
-    ?
-    `
-    <a
-        href="${escapeHTML(song.audio_url)}"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        <i class="fas fa-external-link-alt"></i>
-        Open original link
-    </a>
-    `
-    :
-    "";
+
+    detailLink.innerHTML =
+        song.audio_url
+        ?
+        `
+
+        <a
+            href="${escapeAttribute(song.audio_url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <i class="fas fa-external-link-alt"></i>
+
+            Open original link
+
+        </a>
+
+        `
+        :
+        "";
+
 
     detailOverlay.classList.add(
         "active"
     );
 
+
     document.body.style.overflow=
-    "hidden";
+        "hidden";
+
 
     if(updateUrl){
 
         history.pushState(
-            {songId:song.id},
+            {
+                songId:song.id
+            },
             "",
             buildShareUrl(song)
         );
-
     }
 }
 
+
 /* ============================================================
-   CLOSE SONG
+CLOSE DETAIL
 ============================================================ */
 
 function closeDetail(
@@ -2924,6 +4010,7 @@ function closeDetail(
 
     document.body.style.overflow="";
 
+
     if(
         clearUrl &&
         window.location.hash.startsWith(
@@ -2934,15 +4021,15 @@ function closeDetail(
         history.pushState(
             {},
             "",
-            window.location.pathname+
+            window.location.pathname +
             window.location.search
         );
-
     }
 }
 
+
 /* ============================================================
-   SHARE
+SHARE
 ============================================================ */
 
 function shareCurrentSong(){
@@ -2950,32 +4037,35 @@ function shareCurrentSong(){
     if(!currentDetailSong)
         return;
 
-    const url=
-    buildShareUrl(
-        currentDetailSong
-    );
+    const url =
+        buildShareUrl(
+            currentDetailSong
+        );
 
     const data={
 
         title:
-        currentDetailSong.title ||
-        "Jesus Song",
+            currentDetailSong.title ||
+            "Jesus Song",
 
         text:
-        `Listen to ${currentDetailSong.title||"this Jesus song"}`,
+            `Listen to ${currentDetailSong.title || "this Jesus song"}`,
 
         url
-
     };
+
 
     if(navigator.share){
 
         navigator
-        .share(data)
-        .catch(()=>{});
+            .share(data)
+            .catch(
+                ()=>{}
+            );
 
         return;
     }
+
 
     if(
         navigator.clipboard &&
@@ -2983,18 +4073,22 @@ function shareCurrentSong(){
     ){
 
         navigator.clipboard
-        .writeText(url)
-        .then(
-            ()=>alert(
-                "✅ Song share link copied!"
+            .writeText(url)
+            .then(
+                ()=>{
+                    alert(
+                        "✅ Song share link copied!"
+                    );
+                }
             )
-        )
-        .catch(
-            ()=>window.prompt(
-                "Copy this song link:",
-                url
-            )
-        );
+            .catch(
+                ()=>{
+                    window.prompt(
+                        "Copy this song link:",
+                        url
+                    );
+                }
+            );
 
     }else{
 
@@ -3002,131 +4096,164 @@ function shareCurrentSong(){
             "Copy this song link:",
             url
         );
-
     }
 }
 
+
 /* ============================================================
-   URL SONG
+OPEN SONG FROM URL
 ============================================================ */
 
 function openSongFromUrl(){
 
-    const hash=
-    window.location.hash;
+    const hash =
+        window.location.hash;
 
     if(
         !hash.startsWith(
             "#song="
         )
-    )
+    ){
+
         return;
+    }
 
-    const id=
-    decodeURIComponent(
-        hash.substring(6)
-    );
+    const id =
+        decodeURIComponent(
+            hash.substring(6)
+        );
 
-    const song=
-    songs.find(
-        s=>
-        String(s.id)===
-        String(id)
-    );
+    const song =
+        songs.find(
+            s=>
+                String(s.id)===
+                String(id)
+        );
 
-    if(song)
+    if(song){
+
         openDetail(
             song,
             false
         );
+    }
 }
 
+
 /* ============================================================
-   LOGIN
+LOGIN
 ============================================================ */
 
 async function login(){
 
-    const email=
-    loginEmail.value.trim();
+    const email =
+        loginEmail.value.trim();
 
-    const password=
-    loginPassword.value;
+    const password =
+        loginPassword.value;
 
-    if(!email||!password){
+
+    if(!email || !password){
 
         loginError.textContent=
-        "Please enter email and password.";
+            "Please enter email and password.";
 
         return;
     }
 
+
     loginError.textContent=
-    "Logging in...";
+        "Logging in...";
 
-    const {data,error}=
+
+    const {
+        data,
+        error
+    }=
     await supabaseClient.auth
-    .signInWithPassword({
+        .signInWithPassword({
 
-        email,
-        password
+            email,
+            password
+        });
 
-    });
 
     if(error){
 
+        console.error(error);
+
         loginError.textContent=
-        "❌ "+error.message;
+            "❌ "+error.message;
 
         return;
     }
 
-    currentUser=
-    data.user;
+
+    currentUser =
+        data.user;
+
 
     loginOverlay.classList.remove(
         "active"
     );
 
+
     adminPanel.classList.add(
         "active"
     );
+
 
     setAdminButton();
 
     renderAdminList();
 
+
     loginEmail.value="";
+
     loginPassword.value="";
 }
 
+
 /* ============================================================
-   ADMIN BUTTON
+ADMIN BUTTON
 ============================================================ */
 
 function setAdminButton(){
 
-    adminToggleBtn.innerHTML=
-    `<i class="fas fa-user"></i> Logout`;
+    adminToggleBtn.innerHTML=`
+
+        <i class="fas fa-user"></i>
+
+        Logout
+
+    `;
 
     adminToggleBtn.style.background=
-    "#2ecc71";
+        "#2ecc71";
 
     adminToggleBtn.style.color=
-    "#fff";
+        "#fff";
 }
+
 
 function resetAdminButton(){
 
-    adminToggleBtn.innerHTML=
-    `<i class="fas fa-user-shield"></i> Admin`;
+    adminToggleBtn.innerHTML=`
+
+        <i class="fas fa-user-shield"></i>
+
+        Admin
+
+    `;
 
     adminToggleBtn.style.background="";
+
     adminToggleBtn.style.color="";
 }
 
+
 /* ============================================================
-   LOGOUT
+LOGOUT
 ============================================================ */
 
 async function logout(){
@@ -3143,16 +4270,12 @@ async function logout(){
 
     cancelEdit();
 
-    adminSearchDropdown
-    .classList.remove(
-        "active"
-    );
-
     renderAdminList();
 }
 
+
 /* ============================================================
-   ADD SONG
+ADD SONG
 ============================================================ */
 
 async function addSong(){
@@ -3166,31 +4289,37 @@ async function addSong(){
         return;
     }
 
-    const editId=
-    Number(
-        editingSongId.value
-    );
+
+    const editId =
+        Number(
+            editingSongId.value
+        );
+
 
     if(editId){
 
-        await updateSong(editId);
-        return;
+        await updateSong(
+            editId
+        );
 
+        return;
     }
 
-    const title=
-    songTitle.value.trim();
 
-    const lyrics=
-    songLyrics.value.trim();
+    const title =
+        songTitle.value.trim();
 
-    const link=
-    songLink.value.trim();
+    const lyrics =
+        songLyrics.value.trim();
 
-    const category=
-    songCategory.value.trim();
+    const link =
+        songLink.value.trim();
 
-    if(!title||!lyrics){
+    const category =
+        songCategory.value.trim();
+
+
+    if(!title || !lyrics){
 
         alert(
             "Song title and lyrics are required."
@@ -3199,30 +4328,58 @@ async function addSong(){
         return;
     }
 
+
     addSongBtn.disabled=true;
 
-    addSongBtn.innerHTML=
-    `<i class="fas fa-spinner fa-spin"></i> Saving...`;
 
-    const {error}=
+    addSongBtn.innerHTML=`
+
+        <i class="fas fa-spinner fa-spin"></i>
+
+        Saving...
+
+    `;
+
+
+    const {
+        error
+    }=
     await supabaseClient
-    .from("songs")
-    .insert([{
+        .from("songs")
+        .insert([{
 
-        title,
-        artist:"Jesus Songs",
-        lyrics,
-        audio_url:link||null,
-        category:category||"Worship"
+            title,
 
-    }]);
+            artist:
+                "Jesus Songs",
+
+            lyrics,
+
+            audio_url:
+                link || null,
+
+            category:
+                category ||
+                "Worship"
+
+        }]);
+
 
     addSongBtn.disabled=false;
 
-    addSongBtn.innerHTML=
-    `<i class="fas fa-save"></i> Add Song`;
+
+    addSongBtn.innerHTML=`
+
+        <i class="fas fa-save"></i>
+
+        Add Song
+
+    `;
+
 
     if(error){
+
+        console.error(error);
 
         alert(
             "❌ Failed to add song:\n\n"+
@@ -3232,74 +4389,91 @@ async function addSong(){
         return;
     }
 
+
     cancelEdit();
 
     await loadSongs();
+
 
     alert(
         "✅ Song added successfully!"
     );
 }
 
+
 /* ============================================================
-   EDIT SONG
+EDIT SONG
 ============================================================ */
 
 function startEditSong(id){
 
-    const song=
-    songs.find(
-        s=>
-        Number(s.id)===
-        Number(id)
-    );
+    const song =
+        songs.find(
+            s=>
+                Number(s.id)===
+                Number(id)
+        );
 
-    if(!song) return;
+
+    if(!song)
+        return;
+
 
     editingSongId.value=
-    song.id;
+        song.id;
+
 
     songTitle.value=
-    song.title||"";
+        song.title||"";
 
     songLyrics.value=
-    song.lyrics||"";
+        song.lyrics||"";
 
     songLink.value=
-    song.audio_url||"";
+        song.audio_url||"";
 
     songCategory.value=
-    song.category||"";
+        song.category||"";
 
-    addSongBtn.innerHTML=
-    `<i class="fas fa-save"></i> Update Song`;
+
+    addSongBtn.innerHTML=`
+
+        <i class="fas fa-save"></i>
+
+        Update Song
+
+    `;
+
 
     cancelEditBtn.style.display=
-    "inline-block";
+        "inline-block";
+
 
     formStatus.textContent=
-    `Editing: ${song.title}`;
+        `Editing: ${song.title}`;
 
     formStatus.style.color=
-    "#2471a3";
+        "#2471a3";
+
 
     renderAdminList();
 
-    adminSearchDropdown
-    .classList.remove(
-        "active"
-    );
 
     songTitle.scrollIntoView({
+
         behavior:"smooth",
+
         block:"center"
+
     });
+
 
     songTitle.focus();
 }
 
+
 /* ============================================================
-   CANCEL EDIT
+CANCEL EDIT
 ============================================================ */
 
 function cancelEdit(){
@@ -3307,44 +4481,59 @@ function cancelEdit(){
     editingSongId.value="";
 
     songTitle.value="";
+
     songLyrics.value="";
+
     songLink.value="";
+
     songCategory.value="";
+
 
     addSongBtn.disabled=false;
 
-    addSongBtn.innerHTML=
-    `<i class="fas fa-save"></i> Add Song`;
+
+    addSongBtn.innerHTML=`
+
+        <i class="fas fa-save"></i>
+
+        Add Song
+
+    `;
+
 
     cancelEditBtn.disabled=false;
 
     cancelEditBtn.style.display=
-    "none";
+        "none";
+
 
     formStatus.textContent="";
+
 
     renderAdminList();
 }
 
+
 /* ============================================================
-   UPDATE SONG
+UPDATE SONG
 ============================================================ */
 
 async function updateSong(id){
 
-    const title=
-    songTitle.value.trim();
+    const title =
+        songTitle.value.trim();
 
-    const lyrics=
-    songLyrics.value.trim();
+    const lyrics =
+        songLyrics.value.trim();
 
-    const link=
-    songLink.value.trim();
+    const link =
+        songLink.value.trim();
 
-    const category=
-    songCategory.value.trim();
+    const category =
+        songCategory.value.trim();
 
-    if(!title||!lyrics){
+
+    if(!title || !lyrics){
 
         alert(
             "Song title and lyrics are required."
@@ -3353,54 +4542,88 @@ async function updateSong(id){
         return;
     }
 
+
     addSongBtn.disabled=true;
+
     cancelEditBtn.disabled=true;
 
-    addSongBtn.innerHTML=
-    `<i class="fas fa-spinner fa-spin"></i> Updating...`;
 
-    const {error}=
+    addSongBtn.innerHTML=`
+
+        <i class="fas fa-spinner fa-spin"></i>
+
+        Updating...
+
+    `;
+
+
+    const {
+        error
+    }=
     await supabaseClient
-    .from("songs")
-    .update({
+        .from("songs")
+        .update({
 
-        title,
-        lyrics,
-        audio_url:link||null,
-        category:category||"Worship"
+            title,
 
-    })
-    .eq("id",id);
+            lyrics,
+
+            audio_url:
+                link || null,
+
+            category:
+                category ||
+                "Worship"
+
+        })
+        .eq(
+            "id",
+            id
+        );
+
 
     addSongBtn.disabled=false;
+
     cancelEditBtn.disabled=false;
+
 
     if(error){
 
+        console.error(error);
+
         formStatus.textContent=
-        "❌ Update failed: "+
-        error.message;
+            "❌ Update failed: "+
+            error.message;
 
         formStatus.style.color=
-        "#c0392b";
+            "#c0392b";
 
-        addSongBtn.innerHTML=
-        `<i class="fas fa-save"></i> Update Song`;
+
+        addSongBtn.innerHTML=`
+
+            <i class="fas fa-save"></i>
+
+            Update Song
+
+        `;
 
         return;
     }
 
+
     cancelEdit();
 
     await loadSongs();
+
 
     alert(
         "✅ Song updated successfully!"
     );
 }
 
+
 /* ============================================================
-   DELETE
+DELETE
 ============================================================ */
 
 async function deleteSong(id){
@@ -3408,21 +4631,32 @@ async function deleteSong(id){
     if(!currentUser)
         return;
 
-    const confirmed=
-    confirm(
-        "Are you sure you want to delete this song?"
-    );
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this song?"
+        );
+
 
     if(!confirmed)
         return;
 
-    const {error}=
+
+    const {
+        error
+    }=
     await supabaseClient
-    .from("songs")
-    .delete()
-    .eq("id",id);
+        .from("songs")
+        .delete()
+        .eq(
+            "id",
+            id
+        );
+
 
     if(error){
+
+        console.error(error);
 
         alert(
             "❌ Delete failed:\n\n"+
@@ -3432,33 +4666,37 @@ async function deleteSong(id){
         return;
     }
 
+
     if(
-        Number(editingSongId.value)===
-        Number(id)
+        Number(
+            editingSongId.value
+        )===Number(id)
     ){
 
         cancelEdit();
     }
 
+
     await loadSongs();
 
-    renderAdminSearchDropdown();
 
     alert(
         "✅ Song deleted successfully."
     );
 }
 
+
 /* ============================================================
-   WEBSITE SEARCH
+MAIN SEARCH
 ============================================================ */
 
 searchInput.addEventListener(
     "input",
     function(){
 
-        searchQuery=
-        this.value;
+        searchQuery =
+            this.value;
+
 
         if(
             this.value.trim()
@@ -3473,19 +4711,24 @@ searchInput.addEventListener(
             searchClear.classList.remove(
                 "active"
             );
-
         }
 
-        renderSongs();
 
+        renderSongs();
     }
 );
 
+
+/* ============================================================
+CLEAR MAIN SEARCH
+============================================================ */
+
 searchClear.addEventListener(
     "click",
-    ()=>{
+    function(){
 
         searchInput.value="";
+
         searchQuery="";
 
         searchClear.classList.remove(
@@ -3495,82 +4738,25 @@ searchClear.addEventListener(
         searchInput.focus();
 
         renderSongs();
-
     }
 );
+
 
 /* ============================================================
-   ADMIN SEARCH INPUT
-   NEW BEHAVIOR
-============================================================ */
-
-adminSearchInput.addEventListener(
-    "input",
-    ()=>{
-
-        /*
-           Results appear immediately under
-           the admin search bar.
-        */
-
-        renderAdminSearchDropdown();
-
-    }
-);
-
-adminSearchInput.addEventListener(
-    "focus",
-    ()=>{
-
-        if(
-            adminSearchInput.value.trim()
-        ){
-
-            renderAdminSearchDropdown();
-
-        }
-
-    }
-);
-
-/* ============================================================
-   CLICK OUTSIDE ADMIN SEARCH
-============================================================ */
-
-document.addEventListener(
-    "click",
-    e=>{
-
-        if(
-            !e.target.closest(
-                ".admin-search-wrap"
-            )
-        ){
-
-            adminSearchDropdown
-            .classList.remove(
-                "active"
-            );
-
-        }
-
-    }
-);
-
-/* ============================================================
-   ADMIN BUTTON
+ADMIN TOGGLE
 ============================================================ */
 
 adminToggleBtn.addEventListener(
     "click",
-    async ()=>{
+    async function(){
 
         if(currentUser){
 
             await logout();
-            return;
 
+            return;
         }
+
 
         loginOverlay.classList.add(
             "active"
@@ -3579,12 +4765,12 @@ adminToggleBtn.addEventListener(
         loginError.textContent="";
 
         loginEmail.focus();
-
     }
 );
 
+
 /* ============================================================
-   LOGIN EVENTS
+LOGIN EVENTS
 ============================================================ */
 
 loginBtn.addEventListener(
@@ -3592,19 +4778,21 @@ loginBtn.addEventListener(
     login
 );
 
+
 loginPassword.addEventListener(
     "keydown",
-    e=>{
+    function(e){
 
         if(e.key==="Enter")
             login();
 
     }
 );
+
 
 loginEmail.addEventListener(
     "keydown",
-    e=>{
+    function(e){
 
         if(e.key==="Enter")
             login();
@@ -3612,27 +4800,27 @@ loginEmail.addEventListener(
     }
 );
 
+
 /* ============================================================
-   CLOSE LOGIN
+CLOSE LOGIN
 ============================================================ */
 
 loginOverlay.addEventListener(
     "click",
-    e=>{
+    function(e){
 
-        if(e.target===loginOverlay){
+        if(e.target===this){
 
             loginOverlay.classList.remove(
                 "active"
             );
-
         }
-
     }
 );
 
+
 /* ============================================================
-   CLOSE DETAIL
+DETAIL EVENTS
 ============================================================ */
 
 detailCloseBtn.addEventListener(
@@ -3640,131 +4828,140 @@ detailCloseBtn.addEventListener(
     ()=>closeDetail()
 );
 
+
 detailOverlay.addEventListener(
     "click",
-    e=>{
+    function(e){
 
-        if(e.target===detailOverlay)
+        if(e.target===this){
+
             closeDetail();
-
+        }
     }
 );
 
-/* ============================================================
-   DETAIL BUTTONS
-============================================================ */
 
 detailPlayBtn.addEventListener(
     "click",
     ()=>{
 
-        if(currentDetailSong)
+        if(currentDetailSong){
+
             openDetail(
                 currentDetailSong,
                 false
             );
-
+        }
     }
 );
+
 
 detailShareBtn.addEventListener(
     "click",
     shareCurrentSong
 );
 
+
 /* ============================================================
-   ESCAPE
+ESCAPE
 ============================================================ */
 
 document.addEventListener(
     "keydown",
-    e=>{
+    function(e){
 
         if(e.key!=="Escape")
             return;
 
-        if(
-            detailOverlay.classList.contains(
-                "active"
-            )
-        ){
-
-            closeDetail();
-
-        }
+        closeDetail();
 
         loginOverlay.classList.remove(
             "active"
         );
-
-        adminSearchDropdown
-        .classList.remove(
-            "active"
-        );
-
     }
 );
 
+
 /* ============================================================
-   SONG CARD CLICK
+SONG CARD CLICK
 ============================================================ */
 
 grid.addEventListener(
     "click",
-    e=>{
+    function(e){
 
-        const playLink=
-        e.target.closest(
-            ".inline-play-link"
-        );
+        const playLink =
+            e.target.closest(
+                ".inline-play-link"
+            );
+
 
         if(playLink){
 
             e.preventDefault();
 
-            const song=
-            songs.find(
-                s=>
-                Number(s.id)===
-                Number(
-                    playLink.dataset.id
-                )
-            );
 
-            if(song)
-                openDetail(song);
+            const playSong =
+                songs.find(
+                    s=>
+                        Number(s.id)===
+                        Number(
+                            playLink.dataset.id
+                        )
+                );
+
+
+            if(playSong){
+
+                openDetail(
+                    playSong
+                );
+            }
 
             return;
         }
+
 
         if(
             e.target.closest("a")
         )
             return;
 
-        const card=
-        e.target.closest(
-            ".song-card"
-        );
+
+        const card =
+            e.target.closest(
+                ".song-card"
+            );
+
 
         if(!card)
             return;
 
-        const song=
-        songs.find(
-            s=>
-            Number(s.id)===
-            Number(card.dataset.id)
-        );
 
-        if(song)
+        const id =
+            Number(
+                card.dataset.id
+            );
+
+
+        const song =
+            songs.find(
+                s=>
+                    Number(s.id)===
+                    id
+            );
+
+
+        if(song){
+
             openDetail(song);
-
+        }
     }
 );
 
+
 /* ============================================================
-   ADMIN EVENTS
+ADMIN EVENTS
 ============================================================ */
 
 addSongBtn.addEventListener(
@@ -3772,24 +4969,26 @@ addSongBtn.addEventListener(
     addSong
 );
 
+
 cancelEditBtn.addEventListener(
     "click",
     cancelEdit
 );
+
 
 logoutBtn.addEventListener(
     "click",
     logout
 );
 
+
 /* ============================================================
-   BROWSER HISTORY
+URL EVENTS
 ============================================================ */
 
 window.addEventListener(
     "popstate",
     ()=>{
-
         if(
             window.location.hash.startsWith(
                 "#song="
@@ -3801,16 +5000,14 @@ window.addEventListener(
         }else{
 
             closeDetail(false);
-
         }
-
     }
 );
+
 
 window.addEventListener(
     "hashchange",
     ()=>{
-
         if(
             window.location.hash.startsWith(
                 "#song="
@@ -3822,21 +5019,23 @@ window.addEventListener(
         }else{
 
             closeDetail(false);
-
         }
-
     }
 );
 
+
 /* ============================================================
-   CHECK LOGIN
+CHECK USER
 ============================================================ */
 
 async function checkUser(){
 
-    const {data}=
+    const {
+        data
+    }=
     await supabaseClient.auth
-    .getUser();
+        .getUser();
+
 
     if(
         data &&
@@ -3844,19 +5043,21 @@ async function checkUser(){
     ){
 
         currentUser=
-        data.user;
+            data.user;
+
 
         adminPanel.classList.add(
             "active"
         );
 
-        setAdminButton();
 
+        setAdminButton();
     }
 }
 
+
 /* ============================================================
-   INIT
+INIT
 ============================================================ */
 
 async function init(){
@@ -3868,29 +5069,35 @@ async function init(){
     await loadSongs();
 
     openSongFromUrl();
-
 }
+
 
 init();
 
+
 /* ============================================================
-   AUTH STATE
+AUTH STATE
 ============================================================ */
 
 supabaseClient.auth.onAuthStateChange(
-    (event,session)=>{
+    (
+        event,
+        session
+    )=>{
 
         if(
             session &&
             session.user
         ){
 
-            currentUser=
-            session.user;
+            currentUser =
+                session.user;
+
 
             adminPanel.classList.add(
                 "active"
             );
+
 
             setAdminButton();
 
@@ -3906,13 +5113,7 @@ supabaseClient.auth.onAuthStateChange(
 
             resetAdminButton();
 
-            adminSearchDropdown
-            .classList.remove(
-                "active"
-            );
-
         }
-
     }
 );
 
